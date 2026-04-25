@@ -1,4 +1,4 @@
-# Skill Test Spec: /perf-profile
+﻿# Skill Test Spec: /perf-profile
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 bottlenecks and recommends optimizations. If profiler data or performance logs
 are provided, it analyzes them directly. If not, it guides the user through a
 manual profiling checklist. No director gates are invoked. The skill asks
-"May I write to `production/qa/perf-[date].md`?" before persisting a report.
+"I will write to `production/qa/perf-[date].md`?" before persisting a report.
 Verdicts: WITHIN BUDGET, CONCERNS, or OVER BUDGET.
 
 ---
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: WITHIN BUDGET, CONCERNS, OVER BUDGET
-- [ ] Contains "May I write" language (skill writes perf report)
+- [ ] Contains "I will write" language (skill writes perf report)
 - [ ] Has a next-step handoff (what to do after performance findings are reviewed)
 
 ---
@@ -46,14 +46,14 @@ None. Performance profiling is an advisory analysis skill; no gates are invoked.
 3. Skill identifies draw call spike on frames 42–48 (450 calls vs 200 budget)
 4. Verdict is CONCERNS (average OK, but spikes indicate an issue)
 5. Skill recommends batching or culling for the identified scene
-6. Skill asks "May I write to `production/qa/perf-2026-04-06.md`?"
+6. Skill states "I will write to `production/qa/perf-2026-04-06.md`?"
 
 **Assertions:**
 - [ ] Spike frames are identified by frame number
 - [ ] Draw call count and budget are compared explicitly
 - [ ] Verdict is CONCERNS when spikes exceed budget even if average is OK
 - [ ] At least one specific optimization recommendation is given
-- [ ] "May I write" prompt appears before writing report
+- [ ] "I will write" prompt appears before writing report
 
 ---
 
@@ -96,13 +96,13 @@ None. Performance profiling is an advisory analysis skill; no gates are invoked.
 2. All frames are over the 16.6ms budget
 3. Verdict is OVER BUDGET
 4. Skill outputs a prioritized optimization list (e.g., LOD system, shader complexity, physics tick rate)
-5. Skill asks "May I write" before writing report
+5. Skill states "I will write" before writing report
 
 **Assertions:**
 - [ ] Verdict is OVER BUDGET when all or most frames exceed budget
 - [ ] Target frame budget is read from `technical-preferences.md` (not hardcoded)
 - [ ] Optimization priority list is provided, not just the raw verdict
-- [ ] "May I write" prompt appears before report write
+- [ ] "I will write" prompt appears before report write
 
 ---
 
@@ -142,12 +142,12 @@ None. Performance profiling is an advisory analysis skill; no gates are invoked.
 1. Skill analyzes profiler data; verdict is CONCERNS
 2. No director gate is invoked regardless of review mode
 3. Output notes: "For in-depth analysis, consider running `/perf-profile` with the performance-analyst agent"
-4. Skill asks "May I write" and writes report on user approval
+4. Skill states "I will write" and writes report on user Verification
 
 **Assertions:**
 - [ ] No director gate is invoked in any review mode
 - [ ] Performance-analyst consultation is suggested (not mandated)
-- [ ] "May I write" prompt appears before report write
+- [ ] "I will write" prompt appears before report write
 - [ ] Verdict is CONCERNS for spike-based findings
 
 ---
@@ -157,7 +157,7 @@ None. Performance profiling is an advisory analysis skill; no gates are invoked.
 - [ ] Reads profiler data when provided; outputs checklist when not
 - [ ] Reads `technical-preferences.md` for target platform frame budget
 - [ ] Checks for prior perf reports to enable delta comparison
-- [ ] Always asks "May I write" before writing report
+- [ ] Always states "I will write" before writing report
 - [ ] No director gates are invoked
 - [ ] Verdict is one of: WITHIN BUDGET, CONCERNS, OVER BUDGET
 

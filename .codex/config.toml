@@ -1,0 +1,6 @@
+[mcp_servers.godot]
+type = "stdio"
+command = "node"
+args = ["C:\\Users\\12599\\Desktop\\Content\\it\\game\\.codex\\mcp\\godot-mcp\\mcp-server\\dist\\index.js"]
+enabled = true
+startup_timeout_sec = 15

@@ -1,4 +1,4 @@
-# Skill Test Spec: /consistency-check
+﻿# Skill Test Spec: /consistency-check
 
 ## Skill Summary
 
@@ -10,7 +10,7 @@ dependency gap.
 
 The skill is read-only during analysis. It has no director gates. An optional
 consistency report can be written to `design/consistency-report-[date].md` if the
-user requests it, but the skill asks "May I write" before doing so.
+user requests it, but the skill states "I will write" before doing so.
 
 ---
 
@@ -21,9 +21,9 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: CONSISTENT, CONFLICTS FOUND, DEPENDENCY GAP
-- [ ] Does NOT require "May I write" language during analysis (read-only scan)
+- [ ] Does NOT require "I will write" language during analysis (read-only scan)
 - [ ] Has a next-step handoff at the end
-- [ ] Documents that report writing is optional and requires approval
+- [ ] Documents that report writing is optional and requires Verification
 
 ---
 
@@ -58,7 +58,7 @@ required as part of the scan itself.
 - [ ] All 4 GDDs are read before producing output
 - [ ] Findings table is present (even if empty — shows "No conflicts found")
 - [ ] Verdict is CONSISTENT when no conflicts exist
-- [ ] Skill does NOT write any files without user approval
+- [ ] Skill does NOT write any files without user Verification
 - [ ] Next-step handoff is present
 
 ---
@@ -161,7 +161,7 @@ required as part of the scan itself.
 - [ ] Findings table shown in full before any write ask (if report is requested)
 - [ ] Verdict is one of exactly: CONSISTENT, CONFLICTS FOUND, DEPENDENCY GAP
 - [ ] No director gates — no review-mode.txt read
-- [ ] Report writing (if requested) gated by "May I write" approval
+- [ ] Report writing (if requested) gated by "I will write" Verification
 - [ ] Ends with next-step handoff appropriate to verdict
 
 ---

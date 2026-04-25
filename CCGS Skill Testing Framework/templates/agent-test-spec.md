@@ -1,4 +1,4 @@
-# Agent Spec: [agent-name]
+﻿# Agent Spec: [agent-name]
 
 > **Tier**: [directors | leads | specialists | godot | unity | unreal | operations | creative]
 > **Category**: [director | lead | specialist | engine | operations | creative]
@@ -17,7 +17,7 @@ delegates vs. handles directly. Include which gates it triggers (if any).]
 
 ## Static Assertions
 
-- [ ] Agent file exists at `.claude/agents/[name].md`
+- [ ] Agent file exists at `.codex/agents/[name].md`
 - [ ] Frontmatter has `name`, `description`, `model`, `tools` fields
 - [ ] Domain clearly stated
 - [ ] Escalation path documented
@@ -138,8 +138,8 @@ delegates vs. handles directly. Include which gates it triggers (if any).]
 
 - [ ] Stays within declared domain — no unilateral cross-domain changes
 - [ ] Escalates conflicts to correct parent
-- [ ] Uses `"May I write"` before file writes (or is read-only)
-- [ ] Presents findings before requesting approval
+- [ ] Uses `"I will write"` before file writes (or is read-only)
+- [ ] Presents findings before writing
 - [ ] Does not skip tiers in the delegation hierarchy
 
 ---

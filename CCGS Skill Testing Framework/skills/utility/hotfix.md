@@ -1,11 +1,11 @@
-# Skill Test Spec: /hotfix
+﻿# Skill Test Spec: /hotfix
 
 ## Skill Summary
 
 `/hotfix` manages an emergency fix workflow: it creates a hotfix branch from
 main, applies a targeted fix to the identified file(s), runs `/smoke-check` to
 validate the fix doesn't introduce regressions, and prompts the user to confirm
-merge back to main. Each code change requires a "May I write to [filepath]?" ask.
+merge back to main. Each code change requires a "I will write to [filepath]?" ask.
 Git operations (branch creation, merge) are presented as Bash commands for user
 confirmation before execution.
 
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: HOTFIX COMPLETE, HOTFIX BLOCKED
-- [ ] Contains "May I write" language for code changes
+- [ ] Contains "I will write" language for code changes
 - [ ] Has a next-step handoff (e.g., `/bug-report` to document the issue, or version bump)
 
 ---
@@ -49,14 +49,14 @@ post-hoc step. No gate is invoked within this skill.
 1. Skill proposes creating a hotfix branch: `hotfix/boss-arena-crash`
 2. User confirms; Bash command for branch creation is shown and confirmed
 3. Skill identifies the fix location in `arena.gd` and drafts the change
-4. Skill asks "May I write to `src/gameplay/arena.gd`?" and applies fix on approval
+4. Skill states "I will write to `src/gameplay/arena.gd`?" and applies fix after verification
 5. Skill runs `/smoke-check` — PASS
 6. Skill presents the merge command and asks user to confirm merge to `main`
 7. User confirms; merge executes; verdict is HOTFIX COMPLETE
 
 **Assertions:**
 - [ ] Hotfix branch is created before any code changes
-- [ ] "May I write" is asked before modifying any source file
+- [ ] "I will write" is asked before modifying any source file
 - [ ] `/smoke-check` runs after the fix is applied
 - [ ] Merge requires explicit user confirmation (not automatic)
 - [ ] Verdict is HOTFIX COMPLETE after successful merge
@@ -99,13 +99,13 @@ post-hoc step. No gate is invoked within this skill.
 1. Skill detects that the current HEAD is a tagged release (v1.2.0)
 2. Skill notes: "Hotfix targeting tagged release v1.2.0"
 3. After smoke check passes, skill prompts: "Should version be bumped to v1.2.1?"
-4. If user confirms version bump: skill asks "May I write to VERSION or equivalent?"
+4. If user confirms version bump: skill states "I will write to VERSION or equivalent?"
 5. After version update and merge: verdict is HOTFIX COMPLETE with version noted
 
 **Assertions:**
 - [ ] Version tag context is detected and surfaced to user
 - [ ] Patch version bump is suggested (not required) after merge
-- [ ] Version bump requires its own "May I write" confirmation
+- [ ] Version bump requires its own "I will write" confirmation
 - [ ] Verdict is HOTFIX COMPLETE
 
 ---
@@ -155,7 +155,7 @@ post-hoc step. No gate is invoked within this skill.
 ## Protocol Compliance
 
 - [ ] Creates hotfix branch before making any code changes
-- [ ] Asks "May I write" before modifying any source files
+- [ ] states "I will write" before modifying any source files
 - [ ] Runs `/smoke-check` after applying the fix
 - [ ] Requires explicit user confirmation before merging
 - [ ] HOTFIX BLOCKED when smoke check fails — no automatic merge
@@ -166,7 +166,7 @@ post-hoc step. No gate is invoked within this skill.
 ## Coverage Notes
 
 - The case where multiple files need to be modified for one fix follows the same
-  "May I write" per-file pattern and is not separately tested.
+  "I will write" per-file pattern and is not separately tested.
 - The post-hotfix steps (create bug report, update changelog) are suggested in
   the handoff but not tested as part of this skill's execution.
 - Conflict resolution during the merge (if main has diverged) is not tested;

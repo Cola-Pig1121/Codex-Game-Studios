@@ -1,4 +1,4 @@
-# Skill Test Spec: /brainstorm
+﻿# Skill Test Spec: /brainstorm
 
 ## Skill Summary
 
@@ -12,7 +12,7 @@ In `full` review mode, four director gates spawn in parallel after the concept
 is drafted: CD-PILLARS (creative-director), AD-CONCEPT-VISUAL (art-director),
 TD-FEASIBILITY (technical-director), and PR-SCOPE (producer). In `lean` mode,
 all 4 inline gates are skipped (lean mode only runs PHASE-GATEs, and brainstorm
-has none). In `solo` mode, all gates are skipped. The skill asks "May I write"
+has none). In `solo` mode, all gates are skipped. The skill states "I will write"
 before writing `design/gdd/game-concept.md`.
 
 ---
@@ -24,7 +24,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: APPROVED, REJECTED, CONCERNS
-- [ ] Contains "May I write" collaborative protocol language (for game-concept.md)
+- [ ] Contains "I will write" collaborative protocol language (for game-concept.md)
 - [ ] Has a next-step handoff at the end (`/map-systems`)
 - [ ] Documents 4 director gates in full mode: CD-PILLARS, AD-CONCEPT-VISUAL, TD-FEASIBILITY, PR-SCOPE
 - [ ] Documents that all 4 gates are skipped in lean and solo modes
@@ -60,15 +60,15 @@ In `solo` mode: all 4 gates are skipped. Output notes all 4 as: "[GATE-ID] skipp
 4. Skill elaborates the chosen concept into a structured draft
 5. All 4 director gates spawn in parallel: CD-PILLARS, AD-CONCEPT-VISUAL, TD-FEASIBILITY, PR-SCOPE
 6. All 4 return APPROVED
-7. Skill asks "May I write `design/gdd/game-concept.md`?"
-8. Concept written after approval
+7. Skill states "I will write `design/gdd/game-concept.md`?"
+8. Concept written after verification
 
 **Assertions:**
 - [ ] Exactly 3 concept options are presented (not 1, not 5+)
 - [ ] All 4 director gates spawn in parallel (not sequentially)
-- [ ] All 4 gates complete before the "May I write" ask
-- [ ] "May I write `design/gdd/game-concept.md`?" is asked before writing
-- [ ] Concept file is NOT written without user approval
+- [ ] All 4 gates complete before the "I will write" ask
+- [ ] "I will write `design/gdd/game-concept.md`?" is asked before writing
+- [ ] Concept file is NOT written without user Verification
 - [ ] Next-step handoff to `/map-systems` is present
 
 ---
@@ -110,17 +110,17 @@ In `solo` mode: all 4 gates are skipped. Output notes all 4 as: "[GATE-ID] skipp
 2. Concept is elaborated into a structured draft
 3. All 4 director gates are skipped — each noted: "[GATE-ID] skipped — lean mode"
 4. Skill asks user to confirm the concept is ready to write
-5. "May I write `design/gdd/game-concept.md`?" asked after confirmation
-6. Concept written after approval
+5. "I will write `design/gdd/game-concept.md`?" asked after confirmation
+6. Concept written after verification
 
 **Assertions:**
 - [ ] All 4 gate skip notes appear: "CD-PILLARS skipped — lean mode", "AD-CONCEPT-VISUAL skipped — lean mode", "TD-FEASIBILITY skipped — lean mode", "PR-SCOPE skipped — lean mode"
-- [ ] Concept is written after user confirmation only (no director approval needed in lean)
-- [ ] "May I write" is still asked before writing
+- [ ] Concept is written after user confirmation only (no director Verification needed in lean)
+- [ ] "I will write" is still asked before writing
 
 ---
 
-### Case 4: Solo Mode — All gates skipped; concept written with only user approval
+### Case 4: Solo Mode — All gates skipped; concept written with only user Verification
 
 **Fixture:**
 - No existing game concept
@@ -132,13 +132,13 @@ In `solo` mode: all 4 gates are skipped. Output notes all 4 as: "[GATE-ID] skipp
 1. Concept options are presented and user selects one
 2. Concept draft is shown to user
 3. All 4 director gates are skipped — each noted with "solo mode"
-4. "May I write `design/gdd/game-concept.md`?" asked
-5. Concept written after user approval
+4. "I will write `design/gdd/game-concept.md`?" asked
+5. Concept written after user Verification
 
 **Assertions:**
 - [ ] All 4 skip notes appear with "solo mode" label
 - [ ] No director agents are spawned
-- [ ] Concept is written with only user approval
+- [ ] Concept is written with only user Verification
 - [ ] Behavior is otherwise equivalent to lean mode for this skill
 
 ---
@@ -160,7 +160,7 @@ In `solo` mode: all 4 gates are skipped. Output notes all 4 as: "[GATE-ID] skipp
 5. If concerns are accepted: concept is written with a "Scope Risk" note embedded
 
 **Assertions:**
-- [ ] PR-SCOPE concerns are shown to the user before the "May I write" ask
+- [ ] PR-SCOPE concerns are shown to the user before the "I will write" ask
 - [ ] Skill does NOT write concept without surfacing scope concerns
 - [ ] If user accepts: scope concerns are documented in the concept file
 - [ ] Skill does NOT auto-reject a concept due to PR-SCOPE CONCERNS (user decides)
@@ -173,7 +173,7 @@ In `solo` mode: all 4 gates are skipped. Output notes all 4 as: "[GATE-ID] skipp
 - [ ] User confirms concept direction before director gates are invoked
 - [ ] All 4 director gates spawn in parallel in full mode
 - [ ] All 4 gates skipped in lean AND solo mode — each noted by name
-- [ ] "May I write `design/gdd/game-concept.md`?" asked before writing
+- [ ] "I will write `design/gdd/game-concept.md`?" asked before writing
 - [ ] Ends with next-step handoff: `/map-systems`
 
 ---

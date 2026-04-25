@@ -1,4 +1,4 @@
-# Skill Test Spec: /retrospective
+﻿# Skill Test Spec: /retrospective
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 covering three categories: what went well, what didn't, and action items.
 It reads sprint files and session logs to compile observations, then produces
 a retrospective document. No director gates are used — retrospectives are
-team self-reflection artifacts. The skill asks "May I write to
+team self-reflection artifacts. The skill states "I will write to
 `production/retrospectives/retro-sprint-NNN.md`?" before persisting.
 Verdict is always COMPLETE (retrospective is structured output, not a pass/fail
 assessment).
@@ -20,7 +20,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" language (skill writes retrospective document)
+- [ ] Contains "I will write" language (skill writes retrospective document)
 - [ ] Has a next-step handoff (what to do after retrospective is written)
 
 ---
@@ -47,14 +47,14 @@ None. Retrospectives are team self-reflection documents; no gates are invoked.
 2. Skill compiles three retrospective categories: went well (4 stories shipped), 
    didn't (1 blocked, 1 deferred), and action items (address blocker root cause)
 3. Skill presents retrospective draft to user
-4. Skill asks "May I write to `production/retrospectives/retro-sprint-005.md`?"
+4. Skill states "I will write to `production/retrospectives/retro-sprint-005.md`?"
 5. User approves; file is written; verdict COMPLETE
 
 **Assertions:**
 - [ ] Retrospective contains all three categories (went well / didn't / actions)
 - [ ] Blocked and deferred stories appear in the "what didn't" section
 - [ ] At least one action item is generated from the blocked story
-- [ ] Skill asks "May I write" before writing file
+- [ ] Skill states "I will write" before writing file
 - [ ] Verdict is COMPLETE after successful write
 
 ---
@@ -73,13 +73,13 @@ None. Retrospectives are team self-reflection documents; no gates are invoked.
 2. Skill informs user that no sprint data was found for sprint-009
 3. Skill prompts user to provide retrospective input manually (went well, didn't, actions)
 4. User provides input; skill formats it into the retrospective structure
-5. Skill asks "May I write" and writes the document on approval
+5. Skill states "I will write" and writes the document after verification
 
 **Assertions:**
 - [ ] Skill does not crash or produce an empty document when sprint file is absent
 - [ ] User is prompted to provide manual input
 - [ ] Manual input is formatted into the three-category structure
-- [ ] "May I write" prompt still appears before file write
+- [ ] "I will write" prompt still appears before file write
 
 ---
 
@@ -95,13 +95,13 @@ None. Retrospectives are team self-reflection documents; no gates are invoked.
 1. Skill detects that `retro-sprint-005.md` already exists
 2. Skill presents user with choice: append new observations or replace existing file
 3. User selects "replace"; skill compiles fresh retrospective
-4. Skill asks "May I write to `production/retrospectives/retro-sprint-005.md`?" (confirming overwrite)
+4. Skill states "I will write to `production/retrospectives/retro-sprint-005.md`?" (confirming overwrite)
 5. File is overwritten; verdict COMPLETE
 
 **Assertions:**
 - [ ] Skill checks for existing retrospective file before compiling
 - [ ] User is offered append or replace choice — not silently overwritten
-- [ ] "May I write" prompt reflects the overwrite scenario
+- [ ] "I will write" prompt reflects the overwrite scenario
 - [ ] Verdict is COMPLETE after write regardless of append vs. replace
 
 ---
@@ -139,13 +139,13 @@ None. Retrospectives are team self-reflection documents; no gates are invoked.
 **Expected behavior:**
 1. Skill compiles retrospective in full mode
 2. No director gate is invoked (retrospectives are team self-reflection, not delivery gates)
-3. Skill asks user for approval and writes file on confirmation
+3. Skill asks user for verification and writes file on confirmation
 4. Verdict is COMPLETE
 
 **Assertions:**
 - [ ] No director gate is invoked regardless of review mode
 - [ ] Output does not contain any gate invocation or gate result notation
-- [ ] Skill proceeds directly from compilation to "May I write" prompt
+- [ ] Skill proceeds directly from compilation to "I will write" prompt
 - [ ] Review mode file content is irrelevant to this skill's behavior
 
 ---
@@ -153,7 +153,7 @@ None. Retrospectives are team self-reflection documents; no gates are invoked.
 ## Protocol Compliance
 
 - [ ] Always shows retrospective draft before asking to write
-- [ ] Always asks "May I write" before writing retrospective file
+- [ ] Always states "I will write" before writing retrospective file
 - [ ] No director gates are invoked
 - [ ] Verdict is always COMPLETE (not a pass/fail skill)
 - [ ] Checks prior retrospective for unresolved action items

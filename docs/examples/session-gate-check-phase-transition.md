@@ -1,4 +1,4 @@
-# Example Session: /gate-check Phase Transition — Systems Design → Technical Setup
+﻿# Example Session: /gate-check Phase Transition — Systems Design → Technical Setup
 
 **Context:** Solo indie dev, end of week 5. The Systems Design phase feels complete — 6 MVP GDDs written, cross-review done, engine set up. User wants to formally advance to Technical Setup.
 
@@ -37,7 +37,7 @@
 > | `/design-review` per GDD | Each GDD reviewed | ✅ (6/6 review comments found) |
 > | Cross-GDD review report | `design/gdd/gdd-cross-review-*.md` exists | ✅ |
 > | Cross-review verdict | PASS or CONCERNS (not FAIL) | ✅ CONCERNS |
-> | Engine configured | `production/stage.txt` or CLAUDE.md engine entry | ✅ Godot 4.6 |
+> | Engine configured | `production/stage.txt` or AGENTS.md engine entry | ✅ Godot 4.6 |
 >
 > ---
 > **Content Scan:**

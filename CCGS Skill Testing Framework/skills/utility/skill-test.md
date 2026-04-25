@@ -1,4 +1,4 @@
-# Skill Test Spec: /skill-test
+﻿# Skill Test Spec: /skill-test
 
 ## Skill Summary
 
@@ -6,13 +6,13 @@
 compliance, and category-rubric scoring. It operates in three modes:
 
 - **static**: Checks a single skill file for structural requirements
-  (frontmatter fields, phase headings, verdict keywords, "May I write" language,
+  (frontmatter fields, phase headings, verdict keywords, "I will write" language,
   next-step handoff) without needing a fixture. Produces a per-check PASS/FAIL
   table.
 - **spec**: Reads a test spec file from `tests/skills/` and evaluates the skill
   against each test case assertion, producing a case-by-case verdict.
-- **audit**: Produces a coverage table of all skills in `.claude/skills/` and
-  all agents in `.claude/agents/`, showing which have spec files and which do not.
+- **audit**: Produces a coverage table of all skills in `.codex/skills/` and
+  all agents in `.codex/agents/`, showing which have spec files and which do not.
 
 An additional **category** mode reads the quality rubric for a skill category
 (e.g., gate skills) and scores the skill against rubric criteria. The verdict
@@ -27,7 +27,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdicts: COMPLIANT, NON-COMPLIANT, WARNINGS (static mode); PASS, FAIL, PARTIAL (spec mode); COMPLETE (audit mode)
-- [ ] Does NOT contain "May I write" language (skill is read-only in all modes)
+- [ ] Does NOT contain "I will write" language (skill is read-only in all modes)
 - [ ] Has a next-step handoff (e.g., `/skill-improve` to fix issues found)
 
 ---
@@ -43,11 +43,11 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 ### Case 1: Static Mode — Well-formed skill, all 7 checks pass, COMPLIANT
 
 **Fixture:**
-- `.claude/skills/brainstorm/SKILL.md` exists and is well-formed:
+- `.codex/skills/brainstorm/SKILL.md` exists and is well-formed:
   - Has all required frontmatter fields
   - Has ≥2 phase headings
   - Has verdict keywords
-  - Has "May I write" language
+  - Has "I will write" language
   - Has a next-step handoff
   - Documents director gates
   - Documents gate mode behavior (lean/solo skips)
@@ -55,7 +55,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 **Input:** `/skill-test static brainstorm`
 
 **Expected behavior:**
-1. Skill reads `.claude/skills/brainstorm/SKILL.md`
+1. Skill reads `.codex/skills/brainstorm/SKILL.md`
 2. Skill runs all 7 structural checks
 3. All 7 checks pass
 4. Skill outputs a PASS/FAIL table with all 7 checks marked PASS
@@ -69,25 +69,25 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 
 ---
 
-### Case 2: Static Mode — Skill Missing "May I Write" Despite Write Tool in allowed-tools
+### Case 2: Static Mode — Skill Missing "I will write" Despite Write Tool in allowed-tools
 
 **Fixture:**
-- `.claude/skills/some-skill/SKILL.md` has `Write` in `allowed-tools` frontmatter
-- The skill body has no "May I write" or "May I update" language
+- `.codex/skills/some-skill/SKILL.md` has `Write` in `allowed-tools` frontmatter
+- The skill body has no "I will write" or "I will update" language
 
 **Input:** `/skill-test static some-skill`
 
 **Expected behavior:**
 1. Skill reads `some-skill/SKILL.md`
 2. Check 4 (collaborative write protocol) fails: `Write` in allowed-tools but no
-   "May I write" language found
+   "I will write" language found
 3. All other checks may pass
 4. Verdict is NON-COMPLIANT with Check 4 as the failing assertion
 5. Output lists Check 4 as FAIL with explanation
 
 **Assertions:**
 - [ ] Check 4 is marked FAIL
-- [ ] Explanation identifies the specific mismatch (Write tool without "May I write" language)
+- [ ] Explanation identifies the specific mismatch (Write tool without "I will write" language)
 - [ ] Verdict is NON-COMPLIANT
 - [ ] Other passing checks are shown (not only the failure)
 
@@ -97,7 +97,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 
 **Fixture:**
 - `tests/skills/gate-check.md` exists with 5 test cases
-- `.claude/skills/gate-check/SKILL.md` exists
+- `.codex/skills/gate-check/SKILL.md` exists
 
 **Input:** `/skill-test spec gate-check`
 
@@ -119,14 +119,14 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 ### Case 4: Audit Mode — Coverage Table of All Skills and Agents
 
 **Fixture:**
-- `.claude/skills/` contains 72+ skill directories
-- `.claude/agents/` contains 49+ agent files
+- `.codex/skills/` contains 72+ skill directories
+- `.codex/agents/` contains 49+ agent files
 - `tests/skills/` contains spec files for a subset of skills
 
 **Input:** `/skill-test audit`
 
 **Expected behavior:**
-1. Skill enumerates all skills in `.claude/skills/` and all agents in `.claude/agents/`
+1. Skill enumerates all skills in `.codex/skills/` and all agents in `.codex/agents/`
 2. Skill checks `tests/skills/` for a corresponding spec file for each
 3. Skill produces a coverage table:
    - Each skill/agent listed
@@ -147,7 +147,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 **Fixture:**
 - `tests/skills/quality-rubric.md` exists with a "Gate Skills" section defining
   criteria G1-G5 (e.g., G1: has mode guard, G2: has verdict table, etc.)
-- `.claude/skills/gate-check/SKILL.md` is a gate skill
+- `.codex/skills/gate-check/SKILL.md` is a gate skill
 
 **Input:** `/skill-test category gate-check`
 
@@ -183,6 +183,6 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
   mode case for skill-test's own SKILL.md is not separately fixture-tested to
   avoid infinite recursion in test design.
 - The specific 7 structural checks are defined in the skill body; only Check 4
-  (May I write) is individually tested here because it has the most nuanced logic.
+  (I will write) is individually tested here because it has the most nuanced logic.
 - Audit mode counts are approximate — the exact number of skills and agents will
   change as the system grows; assertions use "all" rather than fixed counts.

@@ -1,4 +1,4 @@
-# Skill Test Spec: /map-systems
+﻿# Skill Test Spec: /map-systems
 
 ## Skill Summary
 
@@ -7,9 +7,9 @@ approved game concept and pillars, enumerates both explicit and implicit systems
 maps dependencies between systems, assigns priority tiers (MVP / Vertical Slice /
 Alpha / Full Vision), and organizes systems into a layered design order
 (Foundation → Core → Feature → Presentation). The output is written to
-`design/systems-index.md` after user approval.
+`design/systems-index.md` after user Verification.
 
-This skill is required between game concept approval and per-system GDD creation
+This skill is required between game concept Verification and per-system GDD creation
 — it is a mandatory gate in the pipeline. In `full` review mode, CD-SYSTEMS
 (creative-director) and TD-SYSTEM-BOUNDARY (technical-director) spawn in parallel
 after the decomposition is drafted. In `lean` or `solo` mode, both gates are
@@ -24,7 +24,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
-- [ ] Contains "May I write" collaborative protocol language (for systems-index.md)
+- [ ] Contains "I will write" collaborative protocol language (for systems-index.md)
 - [ ] Has a next-step handoff at the end (`/design-system`)
 - [ ] Documents gate behavior: CD-SYSTEMS + TD-SYSTEM-BOUNDARY in parallel in full mode
 
@@ -60,16 +60,16 @@ In `solo` mode: both gates are skipped with equivalent notes.
 2. Identifies 5-8 systems (explicit + implicit)
 3. Maps dependencies between systems and assigns layers
 4. CD-SYSTEMS and TD-SYSTEM-BOUNDARY spawn in parallel and return APPROVED
-5. Asks "May I write `design/systems-index.md`?"
-6. Writes systems-index.md after approval
+5. states "I will write `design/systems-index.md`?"
+6. Writes systems-index.md after verification
 7. Updates `production/session-state/active.md`
 
 **Assertions:**
 - [ ] Between 5 and 8 systems are identified (not fewer, not more without explanation)
 - [ ] CD-SYSTEMS and TD-SYSTEM-BOUNDARY spawn in parallel (not sequentially)
-- [ ] Both gates complete before the "May I write" ask
-- [ ] "May I write `design/systems-index.md`?" is asked before writing
-- [ ] systems-index.md is NOT written without approval
+- [ ] Both gates complete before the "I will write" ask
+- [ ] "I will write `design/systems-index.md`?" is asked before writing
+- [ ] systems-index.md is NOT written without verification
 - [ ] Session state is updated after writing
 - [ ] Verdict is COMPLETE
 
@@ -112,13 +112,13 @@ In `solo` mode: both gates are skipped with equivalent notes.
 3. TD-SYSTEM-BOUNDARY returns APPROVED
 4. Skill surfaces CD-SYSTEMS concerns to user
 5. User is asked: revise systems list to add the missing system, or proceed as-is
-6. If revised: updated systems list shown before "May I write" ask
+6. If revised: updated systems list shown before "I will write" ask
 
 **Assertions:**
 - [ ] CD-SYSTEMS concerns are shown to the user before writing
 - [ ] Skill does NOT auto-write systems-index.md while CONCERNS are unresolved
 - [ ] User is given the option to revise or proceed
-- [ ] Revised systems list is re-shown after revision before final "May I write"
+- [ ] Revised systems list is re-shown after revision before final "I will write"
 
 ---
 
@@ -154,12 +154,12 @@ In `solo` mode: both gates are skipped with equivalent notes.
 1. Systems are decomposed and drafted
 2. Both CD-SYSTEMS and TD-SYSTEM-BOUNDARY are skipped
 3. Output notes: "CD-SYSTEMS skipped — lean mode" and "TD-SYSTEM-BOUNDARY skipped — lean mode"
-4. "May I write" ask proceeds directly
+4. "I will write" ask proceeds directly
 
 **Assertions (lean mode):**
 - [ ] Both gate skip notes appear in output
-- [ ] Skill proceeds to "May I write" without gate approval
-- [ ] systems-index.md is written after user approval
+- [ ] Skill proceeds to "I will write" without gate Verification
+- [ ] systems-index.md is written after user Verification
 
 **Fixture (solo mode):**
 - Same game concept, `production/session-state/review-mode.txt` contains `solo`
@@ -167,7 +167,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 **Solo mode expected behavior:**
 1. Same decomposition workflow
 2. Both gates skipped — noted in output with "solo mode"
-3. "May I write" ask proceeds
+3. "I will write" ask proceeds
 
 **Assertions (solo mode):**
 - [ ] Both skip notes appear with "solo mode" label
@@ -178,8 +178,8 @@ In `solo` mode: both gates are skipped with equivalent notes.
 ## Protocol Compliance
 
 - [ ] Reads game-concept.md and game-pillars.md before any decomposition
-- [ ] "May I write `design/systems-index.md`?" asked before writing
-- [ ] systems-index.md is NOT written without user approval
+- [ ] "I will write `design/systems-index.md`?" asked before writing
+- [ ] systems-index.md is NOT written without user Verification
 - [ ] CD-SYSTEMS and TD-SYSTEM-BOUNDARY spawn in parallel in full mode
 - [ ] Skipped gates noted by name and mode in lean/solo output
 - [ ] Ends with next-step handoff: `/design-system [next-system]`

@@ -1,11 +1,11 @@
-# Skill Test Spec: /changelog
+﻿# Skill Test Spec: /changelog
 
 ## Skill Summary
 
-`/changelog` is a Haiku-tier skill that auto-generates a developer-facing
+`/changelog` is a gpt-5.5 low reasoning tier skill that auto-generates a developer-facing
 changelog by reading git commit history and closed sprint stories since the
 last release tag. It organizes entries into features, fixes, and known issues.
-No director gates are used. The skill asks "May I write to `docs/CHANGELOG.md`?"
+No director gates are used. The skill states "I will write to `docs/CHANGELOG.md`?"
 before persisting. Verdict is always COMPLETE.
 
 ---
@@ -17,7 +17,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" language (skill writes changelog)
+- [ ] Contains "I will write" language (skill writes changelog)
 - [ ] Has a next-step handoff (e.g., run /patch-notes for player-facing version)
 
 ---
@@ -45,14 +45,14 @@ None. Changelog generation is a fast compilation task; no gates are invoked.
 2. Skill reads sprint stories to cross-reference task IDs
 3. Skill compiles entries into Features, Fixes, and Known Issues sections
 4. Skill presents draft to user
-5. Skill asks "May I write to `docs/CHANGELOG.md`?"
+5. Skill states "I will write to `docs/CHANGELOG.md`?"
 6. User approves; file written; verdict COMPLETE
 
 **Assertions:**
 - [ ] Changelog covers commits since the most recent git tag
 - [ ] Entries are organized into Features / Fixes / Known Issues sections
 - [ ] Sprint story references are used to enrich commit descriptions
-- [ ] "May I write" prompt appears before file write
+- [ ] "I will write" prompt appears before file write
 - [ ] Verdict is COMPLETE after write
 
 ---
@@ -70,7 +70,7 @@ None. Changelog generation is a fast compilation task; no gates are invoked.
 2. Skill uses all commits in history as the baseline
 3. Skill notes in the output: "No version tag found — using full commit history; version baseline is unset"
 4. Skill still compiles organized changelog from available commits
-5. Skill asks "May I write" and writes on approval
+5. Skill states "I will write" and writes after verification
 
 **Assertions:**
 - [ ] Skill does not error when no git tags exist
@@ -94,7 +94,7 @@ None. Changelog generation is a fast compilation task; no gates are invoked.
 2. 3 commits are matched to sprint stories and placed in appropriate sections
 3. 5 untagged commits are grouped by date under a "Misc" or "Other Changes" section
 4. Output notes: "5 commits without task IDs — grouped by date"
-5. Skill writes changelog on approval
+5. Skill writes changelog after verification
 
 **Assertions:**
 - [ ] Commits with task IDs are placed in appropriate sections (Features or Fixes)
@@ -116,18 +116,18 @@ None. Changelog generation is a fast compilation task; no gates are invoked.
 1. Skill detects that `docs/CHANGELOG.md` already exists
 2. Skill compiles new entries for the period since `v0.3.0`
 3. Skill presents draft with new section prepended above existing content
-4. Skill asks "May I write to `docs/CHANGELOG.md`?" (confirming prepend strategy)
+4. Skill states "I will write to `docs/CHANGELOG.md`?" (confirming prepend strategy)
 5. User approves; new content is prepended, old entries intact; verdict COMPLETE
 
 **Assertions:**
 - [ ] Skill reads existing changelog before writing to detect prior content
 - [ ] New section is prepended (not appended or overwriting) existing entries
 - [ ] Old changelog entries for v0.2.0 and v0.3.0 are preserved in the written file
-- [ ] "May I write" prompt reflects the prepend operation
+- [ ] "I will write" prompt reflects the prepend operation
 
 ---
 
-### Case 5: Gate Compliance — No gate; read-then-write with approval
+### Case 5: Gate Compliance — No gate; read-then-write with Verification
 
 **Fixture:**
 - Git history has commits since last tag
@@ -138,13 +138,13 @@ None. Changelog generation is a fast compilation task; no gates are invoked.
 **Expected behavior:**
 1. Skill compiles changelog in full mode
 2. No director gate is invoked (changelog generation is compilation, not a delivery gate)
-3. Skill runs on Haiku model — fast compilation
-4. Skill asks user for approval and writes file on confirmation
+3. Skill runs on gpt-5.5 low reasoning model — fast compilation
+4. Skill asks user for verification and writes file on confirmation
 
 **Assertions:**
 - [ ] No director gate is invoked regardless of review mode
 - [ ] Output does not reference any gate result
-- [ ] Skill proceeds directly from compilation to "May I write" prompt
+- [ ] Skill proceeds directly from compilation to "I will write" prompt
 - [ ] Verdict is COMPLETE
 
 ---
@@ -152,10 +152,10 @@ None. Changelog generation is a fast compilation task; no gates are invoked.
 ## Protocol Compliance
 
 - [ ] Reads git log and sprint story files before compiling
-- [ ] Always asks "May I write" before writing changelog
+- [ ] Always states "I will write" before writing changelog
 - [ ] No director gates are invoked
 - [ ] Verdict is always COMPLETE
-- [ ] Runs on Haiku model tier (fast, low-cost)
+- [ ] Runs on gpt-5.5 low reasoning tier (fast, low-cost)
 
 ---
 

@@ -1,4 +1,4 @@
-# Skill Test Spec: /prototype
+﻿# Skill Test Spec: /prototype
 
 ## Skill Summary
 
@@ -9,7 +9,7 @@ are relaxed (no ADR required, AC can be minimal, hardcoded values acceptable).
 After implementation, the skill produces a findings document summarizing what
 was learned and recommending next steps.
 
-The skill asks "May I write to `prototypes/[name]/`?" before creating files. If a
+The skill states "I will write to `prototypes/[name]/`?" before creating files. If a
 prototype already exists, the skill offers to extend, replace, or archive. No
 director gates apply. Verdicts: PROTOTYPE COMPLETE (prototype built and findings
 documented) or PROTOTYPE ABANDONED (mechanic found to be unworkable).
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: PROTOTYPE COMPLETE, PROTOTYPE ABANDONED
-- [ ] Contains "May I write" language before creating prototype files
+- [ ] Contains "I will write" language before creating prototype files
 - [ ] Has a next-step handoff (e.g., `/design-system` to formalize, or archive)
 
 ---
@@ -45,8 +45,8 @@ None. Prototypes are throwaway validation artifacts. No director gates apply.
 **Input:** `/prototype grapple-hook`
 
 **Expected behavior:**
-1. Skill asks "May I write to `prototypes/grapple-hook/`?"
-2. After approval: creates `prototypes/grapple-hook/` directory and basic
+1. Skill states "I will write to `prototypes/grapple-hook/`?"
+2. after verification: creates `prototypes/grapple-hook/` directory and basic
    implementation skeleton (main scene, player controller extension)
 3. Skill implements a minimal grapple hook mechanic (intentionally rough — no
    polish, hardcoded values acceptable)
@@ -58,7 +58,7 @@ None. Prototypes are throwaway validation artifacts. No director gates apply.
 5. Verdict is PROTOTYPE COMPLETE
 
 **Assertions:**
-- [ ] "May I write to `prototypes/grapple-hook/`?" is asked before any files are created
+- [ ] "I will write to `prototypes/grapple-hook/`?" is asked before any files are created
 - [ ] Implementation is isolated to `prototypes/` (not `src/`)
 - [ ] `findings.md` is created with at minimum: tested/worked/didn't-work/recommendation
 - [ ] Verdict is PROTOTYPE COMPLETE
@@ -159,7 +159,7 @@ None. Prototypes are throwaway validation artifacts. No director gates apply.
 
 ## Protocol Compliance
 
-- [ ] Asks "May I write to `prototypes/[name]/`?" before creating any files
+- [ ] states "I will write to `prototypes/[name]/`?" before creating any files
 - [ ] Creates all files under `prototypes/` (not `src/`)
 - [ ] Produces `findings.md` with tested/worked/didn't-work/recommendation
 - [ ] Notes that production coding standards are intentionally relaxed

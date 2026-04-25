@@ -1,4 +1,4 @@
-# Skill Test Spec: /test-helpers
+﻿# Skill Test Spec: /test-helpers
 
 ## Skill Summary
 
@@ -8,7 +8,7 @@ known state), fixture loaders, assertion helpers, and mock stubs for external
 dependencies. Generated helpers follow the naming and structure conventions in
 `coding-standards.md` and are written to `tests/helpers/`.
 
-Each helper file is gated behind a "May I write" ask. If a helper file already
+Each helper file is gated behind a "I will write" ask. If a helper file already
 exists, the skill offers to extend it rather than replace. No director gates
 apply. The verdict is COMPLETE when helper files are written.
 
@@ -21,7 +21,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" collaborative protocol language before writing helpers
+- [ ] Contains "I will write" collaborative protocol language before writing helpers
 - [ ] Has a next-step handoff (e.g., write a test using the generated helper)
 
 ---
@@ -50,8 +50,8 @@ None. `/test-helpers` is a scaffolding utility. No director gates apply.
    - `create_player(health: int = 100, speed: float = 200.0)` function
    - Returns a player node pre-configured to a known state
    - Uses dependency injection (no singletons)
-3. Skill asks "May I write to `tests/helpers/player_factory.gd`?"
-4. File is written on approval; verdict is COMPLETE
+3. Skill states "I will write to `tests/helpers/player_factory.gd`?"
+4. File is written after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] Generated helper is in GDScript (not C# or Blueprint)
@@ -97,13 +97,13 @@ None. `/test-helpers` is a scaffolding utility. No director gates apply.
 2. Skill presents options: add `create_enemy()` to existing factory or create
    `tests/helpers/enemy_factory.gd`
 3. User selects extend; skill drafts the `create_enemy()` function
-4. Skill asks "May I extend `tests/helpers/player_factory.gd`?"
-5. Function is added on approval; verdict is COMPLETE
+4. Skill asks "I will extend `tests/helpers/player_factory.gd`?"
+5. Function is added after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] Existing helper is detected and surfaced
 - [ ] User is given extend vs. new file choice
-- [ ] "May I extend" language is used (not "May I write" for replacement)
+- [ ] "I will extend" language is used (not "I will write" for replacement)
 - [ ] Existing `create_player()` is preserved in the extended file
 - [ ] Verdict is COMPLETE
 
@@ -124,7 +124,7 @@ None. `/test-helpers` is a scaffolding utility. No director gates apply.
 3. Skill generates an `inventory_factory.gd` with generic placeholder values
    (item_count = 0, max_capacity = 20) and a comment: "# TODO: align defaults
    with inventory GDD when written"
-4. Skill asks "May I write to `tests/helpers/inventory_factory.gd`?"
+4. Skill states "I will write to `tests/helpers/inventory_factory.gd`?"
 5. File is written; verdict is COMPLETE with advisory note
 
 **Assertions:**
@@ -160,7 +160,7 @@ None. `/test-helpers` is a scaffolding utility. No director gates apply.
 - [ ] Reads GDD for default values when available
 - [ ] Notes missing GDD context rather than blocking
 - [ ] Detects existing helper files and offers extend rather than replace
-- [ ] Asks "May I write" (or "May I extend") before any file operation
+- [ ] states "I will write" (or "I will extend") before any file operation
 - [ ] Verdict is COMPLETE when helper is written
 
 ---

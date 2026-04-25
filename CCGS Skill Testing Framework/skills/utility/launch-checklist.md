@@ -1,4 +1,4 @@
-# Skill Test Spec: /launch-checklist
+﻿# Skill Test Spec: /launch-checklist
 
 ## Skill Summary
 
@@ -9,7 +9,7 @@ build validation (version tag, reproducible build), analytics and crash reportin
 configuration, and first-run experience verification.
 
 The skill produces a checklist report written to `production/launch/launch-checklist-[date].md`
-after a "May I write" ask. If a previous launch checklist exists, it compares the
+after a "I will write" ask. If a previous launch checklist exists, it compares the
 new results against the old to highlight newly resolved and newly blocked items. No
 director gates apply — `/team-release` orchestrates the full release pipeline. Verdicts:
 LAUNCH READY, LAUNCH BLOCKED, or CONCERNS.
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: LAUNCH READY, LAUNCH BLOCKED, CONCERNS
-- [ ] Contains "May I write" collaborative protocol language before writing the checklist
+- [ ] Contains "I will write" collaborative protocol language before writing the checklist
 - [ ] Has a next-step handoff (e.g., `/team-release` or `/day-one-patch`)
 
 ---
@@ -52,14 +52,14 @@ is managed by `/team-release`.
 1. Skill checks all checklist categories
 2. All items pass their verification checks
 3. Skill produces checklist report with all items marked PASS
-4. Skill asks "May I write to `production/launch/launch-checklist-2026-04-06.md`?"
-5. Report written on approval; verdict is LAUNCH READY
+4. Skill states "I will write to `production/launch/launch-checklist-2026-04-06.md`?"
+5. Report written after verification; verdict is LAUNCH READY
 
 **Assertions:**
 - [ ] All checklist categories are checked (legal, platform, store, build, analytics, UX)
 - [ ] All items appear in the report with PASS markers
 - [ ] Verdict is LAUNCH READY
-- [ ] "May I write" is asked with the correct dated filename
+- [ ] "I will write" is asked with the correct dated filename
 
 ---
 
@@ -165,7 +165,7 @@ is managed by `/team-release`.
 - [ ] LAUNCH BLOCKED for hard failures (uncompleted certifications, missing legal docs)
 - [ ] CONCERNS for advisory items requiring manual verification
 - [ ] Compares against previous checklist when one exists
-- [ ] Asks "May I write" before creating the checklist report
+- [ ] states "I will write" before creating the checklist report
 - [ ] Verdict is LAUNCH READY, LAUNCH BLOCKED, or CONCERNS
 
 ---

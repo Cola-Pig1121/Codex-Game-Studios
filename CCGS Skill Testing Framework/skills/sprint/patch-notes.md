@@ -1,12 +1,12 @@
-# Skill Test Spec: /patch-notes
+﻿# Skill Test Spec: /patch-notes
 
 ## Skill Summary
 
-`/patch-notes` is a Haiku-tier skill that generates player-facing patch notes
+`/patch-notes` is a gpt-5.5 low reasoning tier skill that generates player-facing patch notes
 from existing changelog content, stripping internal task IDs and technical
 jargon in favor of plain language. It filters entries to only those relevant
 to players (visible features and bug fixes; internal refactors are excluded).
-No director gates are used. The skill asks "May I write to
+No director gates are used. The skill states "I will write to
 `docs/patch-notes-vX.X.md`?" before persisting. Verdict is always COMPLETE.
 
 ---
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" language (skill writes patch notes file)
+- [ ] Contains "I will write" language (skill writes patch notes file)
 - [ ] Has a next-step handoff (e.g., share with community manager)
 
 ---
@@ -49,14 +49,14 @@ None. Patch notes generation is a fast compilation task; no gates are invoked.
 2. Skill filters to 3 player-facing entries; excludes 2 internal entries
 3. Skill rewrites entries in plain language (no task IDs, no tech jargon)
 4. Skill presents draft to user
-5. Skill asks "May I write to `docs/patch-notes-v0.4.0.md`?"
+5. Skill states "I will write to `docs/patch-notes-v0.4.0.md`?"
 6. User approves; file written; verdict COMPLETE
 
 **Assertions:**
 - [ ] Only 3 entries appear in the patch notes (2 internal entries excluded)
 - [ ] Entries are written in plain language without internal task IDs
 - [ ] File path matches `docs/patch-notes-v0.4.0.md`
-- [ ] "May I write" prompt appears before file write
+- [ ] "I will write" prompt appears before file write
 - [ ] Verdict is COMPLETE after write
 
 ---
@@ -76,7 +76,7 @@ None. Patch notes generation is a fast compilation task; no gates are invoked.
 **Assertions:**
 - [ ] Skill does not crash when changelog is absent
 - [ ] Output explicitly directs user to run `/changelog`
-- [ ] No "May I write" prompt appears (nothing to write)
+- [ ] No "I will write" prompt appears (nothing to write)
 - [ ] Verdict is BLOCKED (dependency not met)
 
 ---
@@ -94,7 +94,7 @@ None. Patch notes generation is a fast compilation task; no gates are invoked.
 2. Skill detects tone guide at `design/community/tone-guide.md`
 3. Skill applies tone guidance when rewriting entries in plain language
 4. Patch notes use upbeat, active-voice phrasing
-5. Skill presents draft, asks to write, writes on approval
+5. Skill presents draft, writes after verification, writes after verification
 
 **Assertions:**
 - [ ] Skill checks `design/` for a community or tone guidance file
@@ -107,7 +107,7 @@ None. Patch notes generation is a fast compilation task; no gates are invoked.
 ### Case 4: Patch Note Template Exists — Used instead of generated structure
 
 **Fixture:**
-- `.claude/docs/templates/patch-notes-template.md` exists with a structured header format
+- `.codex/docs/templates/patch-notes-template.md` exists with a structured header format
 - `docs/CHANGELOG.md` exists with player-facing entries
 
 **Input:** `/patch-notes v0.4.0`
@@ -116,7 +116,7 @@ None. Patch notes generation is a fast compilation task; no gates are invoked.
 1. Skill reads changelog and detects template exists
 2. Skill populates the template with player-facing entries
 3. Template header/footer structure is preserved in the output
-4. Skill asks "May I write" and writes on approval
+4. Skill states "I will write" and writes after verification
 
 **Assertions:**
 - [ ] Skill checks for a patch notes template before generating from scratch
@@ -137,14 +137,14 @@ None. Patch notes generation is a fast compilation task; no gates are invoked.
 **Expected behavior:**
 1. Skill compiles patch notes in full mode
 2. No director gate is invoked (community review is a separate, manual step)
-3. Skill runs on Haiku model — fast compilation
+3. Skill runs on gpt-5.5 low reasoning model — fast compilation
 4. Skill notes in output: "Consider sharing draft with community manager before publishing"
-5. Skill asks user for approval and writes on confirmation
+5. Skill asks user for verification and writes on confirmation
 
 **Assertions:**
 - [ ] No director gate is invoked regardless of review mode
 - [ ] Output suggests (but does not require) community manager review
-- [ ] Skill proceeds directly from compilation to "May I write" prompt
+- [ ] Skill proceeds directly from compilation to "I will write" prompt
 - [ ] Verdict is COMPLETE
 
 ---
@@ -154,9 +154,9 @@ None. Patch notes generation is a fast compilation task; no gates are invoked.
 - [ ] Reads `docs/CHANGELOG.md` before generating patch notes
 - [ ] Filters entries to player-facing items only
 - [ ] Rewrites entries in plain language without internal IDs
-- [ ] Always asks "May I write" before writing patch notes file
+- [ ] Always states "I will write" before writing patch notes file
 - [ ] No director gates are invoked
-- [ ] Runs on Haiku model tier (fast, low-cost)
+- [ ] Runs on gpt-5.5 low reasoning tier (fast, low-cost)
 
 ---
 

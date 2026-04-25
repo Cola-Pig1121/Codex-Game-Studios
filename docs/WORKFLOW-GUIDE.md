@@ -1,14 +1,14 @@
-# Claude Code Game Studios -- Complete Workflow Guide
+﻿# Codex Game Studios -- Complete Workflow Guide
 
 > **How to go from zero to a shipped game using the Agent Architecture.**
 >
 > This guide walks you through every phase of game development using the
 > 48-agent system, 68 slash commands, and 12 automated hooks. It assumes you
-> have Claude Code installed and are working from the project root.
+> have Codex installed and are working from the project root.
 >
 > The pipeline has 7 phases. Each phase has a formal gate (`/gate-check`)
 > that must pass before you advance. The authoritative phase sequence is
-> defined in `.claude/docs/workflow-catalog.yaml` and read by `/help`.
+> defined in `.codex/docs/workflow-catalog.yaml` and read by `/help`.
 
 ---
 
@@ -35,7 +35,7 @@
 
 Before you start, make sure you have:
 
-- **Claude Code** installed and working
+- **Codex** installed and working
 - **Git** with Git Bash (Windows) or standard terminal (Mac/Linux)
 - **jq** (optional but recommended -- hooks fall back to `grep` if missing)
 - **Python 3** (optional -- some hooks use it for JSON validation)
@@ -66,18 +66,18 @@ This guided onboarding asks where you are and routes you to the right phase:
 
 ### Step 3: Verify Hooks Are Working
 
-Start a new Claude Code session. You should see output from the
+Start a new Codex session. You should see output from the
 `session-start.sh` hook:
 
 ```
-=== Claude Code Game Studios -- Session Context ===
+=== Codex Game Studios -- Session Context ===
 Branch: main
 Recent commits:
   abc1234 Initial commit
 ===================================
 ```
 
-If you see this, hooks are working. If not, check `.claude/settings.json` to
+If you see this, hooks are working. If not, check `.codex/settings.json` to
 make sure the hook paths are correct for your OS.
 
 ### Step 4: Ask for Help Anytime
@@ -225,7 +225,7 @@ Or with a specific engine:
 
 **What /setup-engine does:**
 
-- Populates `.claude/docs/technical-preferences.md` with naming conventions,
+- Populates `.codex/docs/technical-preferences.md` with naming conventions,
   performance budgets, and engine-specific defaults
 - Detects knowledge gaps (engine version newer than LLM training data) and
   advises cross-referencing `docs/engine-reference/`
@@ -322,8 +322,8 @@ You can also design a specific system directly:
 1. Reads your game concept, systems index, and any upstream/downstream GDDs
 2. Runs a Technical Feasibility Pre-Check (domain mapping + feasibility brief)
 3. Walks you through each of the 8 required GDD sections one at a time
-4. Each section follows: Context > Questions > Options > Decision > Draft > Approval > Write
-5. Each section is written to file immediately after approval (survives crashes)
+4. Each section follows: Context > Questions > Options > Decision > Draft > Verification > Write
+5. Each section is written to file immediately after verification (survives crashes)
 6. Flags conflicts with existing approved GDDs
 7. Routes to specialist agents per category (systems-designer for math,
    economy-designer for economy, narrative-director for story systems)
@@ -779,7 +779,7 @@ scope clarity. Verdict: READY / NEEDS WORK / BLOCKED.
 - `tools-programmer` for dev tools
 
 All agents follow the collaborative protocol: they read the design doc, ask
-clarifying questions, present architectural options, get your approval, then
+clarifying questions, present architectural options, verify the plan with you when needed, then
 implement.
 
 **3. Story Completion:** When a story is done:
@@ -989,7 +989,7 @@ Coordinates 4 specialists in parallel:
 3. Audio polish (sound-designer)
 4. Feel/juice (gameplay-programmer + technical-artist)
 
-You set priorities; the team executes with your approval at each step.
+You set priorities; the team executes with verification at each step.
 
 ### Step 6.7: Localization and Accessibility
 
@@ -1132,8 +1132,8 @@ Bypasses normal sprint processes with a full audit trail:
 **Post-mortem** after launch stabilizes:
 
 ```
-Ask Claude to create a post-mortem using the template at
-.claude/docs/templates/post-mortem.md
+Ask Codex to create a post-mortem using the template at
+.codex/docs/templates/post-mortem.md
 ```
 
 ---
@@ -1165,7 +1165,7 @@ By default they run at every checkpoint. You can control how much review you get
 The `--review` flag works on all gate-using skills. Change the global mode at any
 time by editing `production/review-mode.txt` directly or re-running `/start`.
 
-Full gate definitions and check pattern: `.claude/docs/director-gates.md`
+Full gate definitions and check pattern: `.codex/docs/director-gates.md`
 
 ---
 
@@ -1173,7 +1173,7 @@ Full gate definitions and check pattern: `.claude/docs/director-gates.md`
 
 This system is **user-driven collaborative**, not autonomous.
 
-**Pattern:** Question > Options > Decision > Draft > Approval
+**Pattern:** Question > Options > Decision > Draft > Verification
 
 Every agent interaction follows this pattern:
 1. Agent asks clarifying questions
@@ -1181,7 +1181,7 @@ Every agent interaction follows this pattern:
 3. You decide
 4. Agent drafts based on your decision
 5. You review and refine
-6. Agent asks "May I write this to [filepath]?" before writing
+6. Agent states "I will write this to [filepath]?" before writing
 
 See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for the full protocol with
 examples.
@@ -1236,12 +1236,12 @@ The system has 12 hooks that run automatically:
 | `session-start.sh` | Session start | Shows branch, recent commits, detects active.md for recovery |
 | `detect-gaps.sh` | Session start | Detects fresh projects (no engine, no concept) and suggests `/start` |
 | `pre-compact.sh` | Before compaction | Dumps session state into conversation for auto-recovery |
-| `post-compact.sh` | After compaction | Reminds Claude to restore session state from `active.md` |
+| `post-compact.sh` | After compaction | Reminds Codex to restore session state from `active.md` |
 | `notify.sh` | Notification event | Shows Windows toast notification via PowerShell |
 | `validate-commit.sh` | Before commit | Checks for design doc references, valid JSON, no hardcoded values |
 | `validate-push.sh` | Before push | Warns on pushes to main/develop |
 | `validate-assets.sh` | Before commit | Checks asset naming and size |
-| `validate-skill-change.sh` | Skill file written | Advises running `/skill-test` after `.claude/skills/` changes |
+| `validate-skill-change.sh` | Skill file written | Advises running `/skill-test` after `.codex/skills/` changes |
 | `log-agent.sh` | Agent start | Logs agent invocations for audit trail |
 | `log-agent-stop.sh` | Agent stop | Completes agent audit trail (start + stop) |
 | `session-stop.sh` | Session end | Final session logging |
@@ -1253,7 +1253,7 @@ checkpoint. Update it after each significant milestone. After any disruption
 (compaction, crash, `/clear`), read this file first.
 
 **Incremental writing:** When creating multi-section documents, write each
-section to file immediately after approval. This means completed sections
+section to file immediately after verification. This means completed sections
 survive crashes and context compactions. Previous discussion about written
 sections can be safely compacted.
 

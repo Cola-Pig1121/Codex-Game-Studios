@@ -1,4 +1,4 @@
-# Skill Test Spec: /story-readiness
+﻿# Skill Test Spec: /story-readiness
 
 ## Skill Summary
 
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings or numbered check sections
 - [ ] Contains verdict keywords: READY, NEEDS WORK, BLOCKED
-- [ ] Does NOT require "May I write" language (read-only skill)
+- [ ] Does NOT require "I will write" language (read-only skill)
 - [ ] Has a next-step handoff (what to do after verdict)
 
 ---
@@ -178,7 +178,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 
 - [ ] Does NOT use Write or Edit tools (read-only skill)
 - [ ] Presents complete check results before verdict
-- [ ] Does not ask for approval (no file writes)
+- [ ] Does not ask for verification (no file writes)
 - [ ] Ends with recommended next step (fix issues or proceed to implementation)
 - [ ] Distinguishes three verdict levels clearly (READY vs NEEDS WORK vs BLOCKED)
 

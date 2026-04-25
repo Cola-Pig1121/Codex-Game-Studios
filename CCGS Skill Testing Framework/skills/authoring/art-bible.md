@@ -1,4 +1,4 @@
-# Skill Test Spec: /art-bible
+﻿# Skill Test Spec: /art-bible
 
 ## Skill Summary
 
@@ -7,11 +7,11 @@ produces a comprehensive visual direction document covering: Visual Style overvi
 Color Palette, Typography, Character Design Rules, Environment Style, and UI
 Visual Language. The skill follows the skeleton-first pattern: creates the file
 with all section headers immediately, then fills each section through discussion
-and writes each to disk after user approval.
+and writes each to disk after user Verification.
 
 In `full` review mode, the AD-ART-BIBLE director gate (art director) runs after
 the draft is complete and before any section is written. In `lean` and `solo`
-modes, AD-ART-BIBLE is skipped and only user approval is required. The verdict
+modes, AD-ART-BIBLE is skipped and only user Verification is required. The verdict
 is COMPLETE when all sections are written.
 
 ---
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" language per section
+- [ ] Contains "I will write" language per section
 - [ ] Documents the AD-ART-BIBLE director gate and its mode behavior
 - [ ] Has a next-step handoff (e.g., `/asset-spec` or `/design-system`)
 
@@ -53,13 +53,13 @@ Verified automatically by `/skill-test static` — no fixture needed.
 2. Skill discusses and drafts each section with user collaboration
 3. After all sections are drafted, AD-ART-BIBLE gate is invoked (art director review)
 4. AD-ART-BIBLE returns APPROVED
-5. Skill asks "May I write section [N] to `design/art-bible.md`?" per section
-6. All sections written after approval; verdict is COMPLETE
+5. Skill states "I will write section [N] to `design/art-bible.md`?" per section
+6. All sections written after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] Skeleton file is created first (before any section content is written)
 - [ ] AD-ART-BIBLE gate is invoked in full mode after draft is complete
-- [ ] Gate approval precedes the "May I write" section asks
+- [ ] Gate Verification precedes the "I will write" section asks
 - [ ] All sections are present in the final file
 - [ ] Verdict is COMPLETE
 
@@ -81,17 +81,17 @@ Verified automatically by `/skill-test static` — no fixture needed.
 3. Skill returns to the Color Palette section for revision
 4. User and skill revise the palette to align with game concept tone
 5. AD-ART-BIBLE is not re-invoked (user decides to proceed after revision)
-6. Revised section is written after "May I write" approval; verdict is COMPLETE
+6. Revised section is written after "I will write" Verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] CONCERNS are shown to user before any section is written
 - [ ] Skill returns to the affected section for revision (not all sections)
 - [ ] Revised content (not original) is written to file
-- [ ] Verdict is COMPLETE after revision and approval
+- [ ] Verdict is COMPLETE after revision and Verification
 
 ---
 
-### Case 3: Lean Mode — AD-ART-BIBLE Skipped, Written With User Approval Only
+### Case 3: Lean Mode — AD-ART-BIBLE Skipped, Written With User Verification Only
 
 **Fixture:**
 - No existing art bible
@@ -103,13 +103,13 @@ Verified automatically by `/skill-test static` — no fixture needed.
 1. Skill reads review mode — determines `lean`
 2. Skill drafts all sections with user collaboration
 3. AD-ART-BIBLE gate is skipped: output notes "[AD-ART-BIBLE] skipped — lean mode"
-4. Skill asks user for direct approval of each section
+4. Skill asks user for direct Verification of each section
 5. Sections are written after user confirmation; verdict is COMPLETE
 
 **Assertions:**
 - [ ] AD-ART-BIBLE gate is NOT invoked in lean mode
 - [ ] Skip is explicitly noted: "[AD-ART-BIBLE] skipped — lean mode"
-- [ ] User approval is still required per section (gate skip ≠ approval skip)
+- [ ] User Verification is still required per section (gate skip ≠ Verification skip)
 - [ ] Verdict is COMPLETE
 
 ---
@@ -128,7 +128,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 3. User selects Character Design Rules
 4. Skill drafts updated content; in full mode, AD-ART-BIBLE is invoked for the
    revised section before writing
-5. Skill asks "May I write Character Design Rules to `design/art-bible.md`?"
+5. Skill states "I will write Character Design Rules to `design/art-bible.md`?"
 6. Only that section is updated; other sections preserved; verdict is COMPLETE
 
 **Assertions:**
@@ -150,7 +150,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 
 **Expected behavior:**
 1. Skill reads review mode — determines `solo`
-2. Art bible is drafted and written with only user approval
+2. Art bible is drafted and written with only user Verification
 3. AD-ART-BIBLE gate is skipped: output notes "[AD-ART-BIBLE] skipped — solo mode"
 4. No director agents are spawned
 5. Verdict is COMPLETE
@@ -169,7 +169,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Discusses and drafts one section at a time
 - [ ] AD-ART-BIBLE gate runs in full mode after all sections are drafted
 - [ ] AD-ART-BIBLE is skipped in lean and solo modes — noted by name
-- [ ] Asks "May I write section [N]" per section
+- [ ] states "I will write section [N]" per section
 - [ ] Verdict is COMPLETE when all sections are written
 
 ---

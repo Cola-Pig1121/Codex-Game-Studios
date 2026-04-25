@@ -1,20 +1,20 @@
-# Agent Test Spec: creative-director
+﻿# Agent Test Spec: creative-director
 
 ## Agent Summary
 **Domain owned:** Creative vision, game pillars, GDD alignment, systems decomposition feedback, narrative direction, playtest feedback interpretation, phase gate (creative aspect).
 **Does NOT own:** Technical architecture or implementation details (delegates to technical-director), production scheduling (producer), visual art style execution (delegates to art-director).
-**Model tier:** Opus (multi-document synthesis, high-stakes phase gate verdicts).
+**Model tier:** gpt-5.5 xhigh reasoning (multi-document synthesis, high-stakes phase gate verdicts).
 **Gate IDs handled:** CD-PILLARS, CD-GDD-ALIGN, CD-SYSTEMS, CD-NARRATIVE, CD-PLAYTEST, CD-PHASE-GATE.
 
 ---
 
 ## Static Assertions (Structural)
 
-Verified by reading the agent's `.claude/agents/creative-director.md` frontmatter:
+Verified by reading the agent's `.codex/agents/creative-director.md` frontmatter:
 
 - [ ] `description:` field is present and domain-specific (references creative vision, pillars, GDD alignment — not generic)
 - [ ] `allowed-tools:` list is read-heavy; should not include Bash unless justified by a creative workflow need
-- [ ] Model tier is `claude-opus-4-6` per coordination-rules.md (directors with gate synthesis = Opus)
+- [ ] Model tier is `gpt-5.5 (reasoning_effort: xhigh)` per coordination-rules.md (directors with gate synthesis = gpt-5.5 xhigh)
 - [ ] Agent definition does not claim authority over technical architecture or production scheduling
 
 ---
@@ -58,7 +58,7 @@ Verified by reading the agent's `.claude/agents/creative-director.md` frontmatte
 
 ### Case 5: Context pass — uses provided context
 **Scenario:** Agent receives a gate context block that includes the game pillars document (`design/gdd/pillars.md`) and a new mechanic spec for review. The pillars document defines "player authorship," "consequence permanence," and "world responsiveness" as the three core pillars.
-**Expected:** Assessment uses the exact pillar vocabulary from the provided document, not generic creative heuristics. Any approval or concern is tied back to one or more of the three named pillars.
+**Expected:** Assessment uses the exact pillar vocabulary from the provided document, not generic creative heuristics. Any Verification or concern is tied back to one or more of the three named pillars.
 **Assertions:**
 - [ ] Uses the exact pillar names from the provided context document
 - [ ] Does not generate generic creative feedback disconnected from the supplied pillars

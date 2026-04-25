@@ -1,4 +1,4 @@
-# Reverse Documentation Workflow Example
+﻿# Reverse Documentation Workflow Example
 
 ## Scenario
 Developer built a working skill tree system but never wrote a design doc.
@@ -85,7 +85,7 @@ SECTIONS:
    - Should respec cost scale with level or stay flat?
    - Tier 5 damage bonus: tune to +30% or keep +50%?
 
-**May I write this to design/gdd/skill-system.md?**
+**I will write this to design/gdd/skill-system.md?**
 ```
 
 **User:**

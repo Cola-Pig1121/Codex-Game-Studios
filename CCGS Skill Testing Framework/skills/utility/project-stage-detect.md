@@ -1,9 +1,9 @@
-# Skill Test Spec: /project-stage-detect
+﻿# Skill Test Spec: /project-stage-detect
 
 ## Skill Summary
 
 `/project-stage-detect` automatically analyzes project artifacts to determine
-the current development stage. It runs on the Haiku model (read-only) and
+the current development stage. It runs on the gpt-5.5 low reasoning model (read-only) and
 examines `production/stage.txt` (if present), design documents in `design/`,
 source code in `src/`, sprint and milestone files in `production/`, and the
 presence of engine configuration to classify the project into one of seven
@@ -24,7 +24,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains all seven stage names: Concept, Systems Design, Technical Setup, Pre-Production, Production, Polish, Release
-- [ ] Does NOT contain "May I write" language (skill is detection-only)
+- [ ] Does NOT contain "I will write" language (skill is detection-only)
 - [ ] Has a next-step handoff (e.g., `/gate-check` to formally advance stage)
 
 ---

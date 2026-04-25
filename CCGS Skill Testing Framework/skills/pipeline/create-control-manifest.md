@@ -1,4 +1,4 @@
-# Skill Test Spec: /create-control-manifest
+﻿# Skill Test Spec: /create-control-manifest
 
 ## Skill Summary
 
@@ -10,7 +10,7 @@ stories inherit the correct architectural rules without having to read all ADRs
 individually.
 
 The skill only includes Accepted ADRs; Proposed ADRs are excluded and noted. It
-has no director gates. The skill asks "May I write" before writing
+has no director gates. The skill states "I will write" before writing
 `docs/architecture/control-manifest.md`.
 
 ---
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: CREATED, BLOCKED
-- [ ] Contains "May I write" collaborative protocol language (for control-manifest.md)
+- [ ] Contains "I will write" collaborative protocol language (for control-manifest.md)
 - [ ] Has a next-step handoff at the end (`/create-epics` or `/create-stories`)
 - [ ] Documents that only Accepted ADRs are included (not Proposed)
 
@@ -52,15 +52,15 @@ review gate is needed.
 2. Extracts Required Patterns, Forbidden Patterns, and key constraints from each
 3. Drafts the manifest with correct section structure
 4. Shows the draft manifest to the user
-5. Asks "May I write `docs/architecture/control-manifest.md`?"
-6. Writes the manifest after approval
+5. states "I will write `docs/architecture/control-manifest.md`?"
+6. Writes the manifest after verification
 
 **Assertions:**
 - [ ] All 4 Accepted ADRs are represented in the manifest
 - [ ] Manifest includes distinct sections for Required Patterns and Forbidden Patterns
 - [ ] Manifest includes the source ADR number for each constraint
-- [ ] "May I write" is asked before writing
-- [ ] Skill does NOT write without approval
+- [ ] "I will write" is asked before writing
+- [ ] Skill does NOT write without verification
 - [ ] Verdict is CREATED after writing
 
 ---
@@ -98,7 +98,7 @@ review gate is needed.
 2. Manifest is drafted from the 3 Accepted ADRs only
 3. Output notes: "2 Proposed ADRs were excluded: [adr-NNN-name, adr-NNN-name]"
 4. User sees which ADRs were excluded before approving the write
-5. Asks "May I write `docs/architecture/control-manifest.md`?"
+5. states "I will write `docs/architecture/control-manifest.md`?"
 
 **Assertions:**
 - [ ] Only the 3 Accepted ADRs appear in the manifest content
@@ -120,14 +120,14 @@ review gate is needed.
 1. Skill detects existing manifest and reads its version number / date
 2. Skill offers to regenerate: "control-manifest.md already exists (v1, [date]). Regenerate with current ADRs?"
 3. If user confirms: skill drafts updated manifest, increments version number
-4. Asks "May I write `docs/architecture/control-manifest.md`?" (overwrite)
-5. Writes updated manifest after approval
+4. states "I will write `docs/architecture/control-manifest.md`?" (overwrite)
+5. Writes updated manifest after verification
 
 **Assertions:**
 - [ ] Skill reads and reports the existing manifest version before offering to regenerate
 - [ ] User is offered a regenerate/skip choice — not auto-overwritten
 - [ ] Updated manifest has an incremented version number
-- [ ] "May I write" is asked before overwriting the existing file
+- [ ] "I will write" is asked before overwriting the existing file
 
 ---
 
@@ -143,7 +143,7 @@ review gate is needed.
 1. Skill reads ADRs and drafts manifest
 2. Skill does NOT read `production/session-state/review-mode.txt`
 3. No director gate agents are spawned at any point
-4. Skill proceeds directly to "May I write" after drafting
+4. Skill proceeds directly to "I will write" after drafting
 5. Review mode setting has no effect on this skill's behavior
 
 **Assertions:**
@@ -158,8 +158,8 @@ review gate is needed.
 
 - [ ] Reads all ADR files before drafting manifest
 - [ ] Only Accepted ADRs included — Proposed ones noted as excluded
-- [ ] Manifest draft shown to user before "May I write" ask
-- [ ] "May I write `docs/architecture/control-manifest.md`?" asked before writing
+- [ ] Manifest draft shown to user before "I will write" ask
+- [ ] "I will write `docs/architecture/control-manifest.md`?" asked before writing
 - [ ] No director gates — no review-mode.txt read
 - [ ] Ends with next-step handoff: `/create-epics` or `/create-stories`
 

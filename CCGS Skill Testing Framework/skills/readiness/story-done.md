@@ -1,4 +1,4 @@
-# Skill Test Spec: /story-done
+﻿# Skill Test Spec: /story-done
 
 ## Skill Summary
 
@@ -19,7 +19,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥5 phase headings (complex skill warranting `context: fork` if applicable)
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
-- [ ] Contains "May I write" collaborative protocol language (writes to story file and tech-debt register)
+- [ ] Contains "I will write" collaborative protocol language (writes to story file and tech-debt register)
 - [ ] Has a next-step handoff (surfaces next story from sprint)
 
 ---
@@ -49,7 +49,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 6. Skill checks for ADR guideline deviations
 7. Skill prompts user: "Please provide the code review outcome for this story"
 8. Skill presents COMPLETE verdict
-9. Skill asks "May I update story Status to Complete and add Completion Notes?"
+9. Skill asks "I will update story Status to Complete and add Completion Notes?"
 10. If yes: skill updates the story file
 11. Skill surfaces the next `Ready for Dev` story from the sprint
 
@@ -59,7 +59,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Each acceptance criterion is listed with VERIFIED / DEFERRED / FAILED status
 - [ ] Skill prompts the user for code review outcome (does not skip this step)
 - [ ] Verdict is COMPLETE when all criteria are verified and no deviations exist
-- [ ] Skill asks "May I write" before updating the story file
+- [ ] Skill states "I will write" before updating the story file
 - [ ] Skill does NOT auto-update story status without user confirmation
 - [ ] After completion, skill surfaces the next ready story from `production/sprints/`
 
@@ -82,13 +82,13 @@ Verified automatically by `/skill-test static` — no fixture needed.
    pickup' cannot be auto-verified. Has this been manually tested?"
 4. If user says No: criterion is marked DEFERRED, verdict becomes COMPLETE WITH NOTES
 5. Skill records the deferred criterion in completion notes
-6. Asks "May I write updated story with deferred criterion noted?"
+6. states "I will write updated story with deferred criterion noted?"
 
 **Assertions:**
 - [ ] Skill asks the user about unverifiable criteria rather than assuming PASS
 - [ ] Deferred criteria result in COMPLETE WITH NOTES (not COMPLETE or BLOCKED)
 - [ ] The deferred criterion is explicitly named in the completion notes
-- [ ] Skill still asks "May I write" before updating the story file
+- [ ] Skill still states "I will write" before updating the story file
 
 ---
 
@@ -168,7 +168,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] LP-CODE-REVIEW gate is invoked in full mode after implementation check
 - [ ] An LP NEEDS CHANGES verdict prevents story from being marked Complete
 - [ ] Gate result is noted in output: "Gate: LP-CODE-REVIEW — [result]"
-- [ ] Skill still asks "May I write" before updating story status even if LP approved
+- [ ] Skill still states "I will write" before updating story status even if LP approved
 
 **Case 5b — lean or solo mode:**
 - `review-mode.txt` contains `lean` or `solo`
@@ -182,15 +182,15 @@ Verified automatically by `/skill-test static` — no fixture needed.
 **Assertions (5b):**
 - [ ] LP-CODE-REVIEW gate does NOT spawn in lean or solo mode
 - [ ] Skip is explicitly noted in output
-- [ ] Skill still requires "May I write" approval before marking story Complete
+- [ ] Skill still requires "I will write" Verification before marking story Complete
 
 ---
 
 ## Protocol Compliance
 
-- [ ] Uses "May I write" before updating the story file
-- [ ] Uses "May I write" before adding entries to `docs/tech-debt-register.md`
-- [ ] Presents complete findings (criteria check, deviation check) before asking approval
+- [ ] Uses "I will write" before updating the story file
+- [ ] Uses "I will write" before adding entries to `docs/tech-debt-register.md`
+- [ ] Presents complete findings (criteria check, deviation check) before asking Verification
 - [ ] Ends by surfacing the next ready story from the sprint plan
 - [ ] Does not mark a story Complete if any criteria are in ERROR state
 - [ ] Does not skip the code review prompt
@@ -205,5 +205,5 @@ Verified automatically by `/skill-test static` — no fixture needed.
   is mentioned in Case 2 but not the primary assertion focus; dedicated
   coverage deferred.
 - The `sprint-status.yaml` update (Phase 7 in the skill) is implied by Case 1
-  but not the primary assertion; assumed to follow the same "May I write" pattern.
+  but not the primary assertion; assumed to follow the same "I will write" pattern.
 - Stories with multiple TR-IDs or multiple ADRs are not explicitly tested.

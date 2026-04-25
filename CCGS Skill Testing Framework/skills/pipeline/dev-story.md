@@ -1,4 +1,4 @@
-# Skill Test Spec: /dev-story
+﻿# Skill Test Spec: /dev-story
 
 ## Skill Summary
 
@@ -11,7 +11,7 @@ on the engine and file type — it does not write source code directly.
 In `full` review mode, an LP-CODE-REVIEW gate runs before marking the story
 Complete. In `lean` or `solo` mode, LP-CODE-REVIEW is skipped and the story is
 marked Complete after the user confirms all criteria are met. The skill asks
-"May I write" before updating story status and before writing code files.
+"I will write" before updating story status and before writing code files.
 
 ---
 
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED, IN PROGRESS, NEEDS CHANGES
-- [ ] Contains "May I write" collaborative protocol language (story status + code files)
+- [ ] Contains "I will write" collaborative protocol language (story status + code files)
 - [ ] Has a next-step handoff at the end (`/story-done`)
 - [ ] Documents LP-CODE-REVIEW gate: active in full mode, skipped in lean/solo
 - [ ] Notes that implementation is delegated to specialist agents (not done directly)
@@ -53,7 +53,7 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
   - A test evidence path
 - Referenced ADR has `Status: Accepted`
 - `docs/architecture/control-manifest.md` exists
-- `.claude/docs/technical-preferences.md` has engine and language configured
+- `.codex/docs/technical-preferences.md` has engine and language configured
 - `production/session-state/review-mode.txt` contains `full`
 
 **Input:** `/dev-story production/epics/[layer]/story-[name].md`
@@ -64,7 +64,7 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 3. Skill routes implementation to the correct specialist agent
 4. All acceptance criteria are verified as met
 5. LP-CODE-REVIEW gate spawns and returns APPROVED
-6. Skill asks "May I update story status to Complete?"
+6. Skill asks "I will update story status to Complete?"
 7. Story status is updated to Complete
 
 **Assertions:**
@@ -73,7 +73,7 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 - [ ] Implementation is delegated to a specialist agent (not done inline)
 - [ ] All acceptance criteria are confirmed before LP-CODE-REVIEW
 - [ ] LP-CODE-REVIEW appears in output as a completed gate
-- [ ] Story status is updated to Complete only after gate approval and user consent
+- [ ] Story status is updated to Complete only after gate Verification and user consent
 - [ ] Test file is written as part of implementation (not deferred)
 
 ---
@@ -188,7 +188,7 @@ In `solo` mode: LP-CODE-REVIEW is skipped with equivalent notes.
 
 - [ ] Does NOT write source code directly — delegates to specialist agents
 - [ ] Reads all context (story, TR-ID, ADR, manifest, engine prefs) before implementation
-- [ ] "May I write" asked before updating story status and before writing code files
+- [ ] "I will write" asked before updating story status and before writing code files
 - [ ] Skipped gates noted by name and mode in output
 - [ ] Updates `production/session-state/active.md` after story completion
 - [ ] Ends with next-step handoff: `/story-done`

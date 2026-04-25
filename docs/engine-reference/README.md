@@ -1,4 +1,4 @@
-# Engine Reference Documentation
+﻿# Engine Reference Documentation
 
 This directory contains curated, version-pinned documentation snapshots for the
 game engine(s) used in this project. These files exist because **LLM knowledge
@@ -6,7 +6,7 @@ has a cutoff date** and game engines update frequently.
 
 ## Why This Exists
 
-Claude's training data has a knowledge cutoff (currently May 2025). Game engines
+Codex's training data has a knowledge cutoff (currently May 2025). Game engines
 like Godot, Unity, and Unreal ship updates that introduce breaking API changes,
 new features, and deprecated patterns. Without these reference files, agents will
 suggest outdated code.

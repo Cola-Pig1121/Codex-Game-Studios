@@ -1,4 +1,4 @@
-# Skill Test Spec: /architecture-decision
+﻿# Skill Test Spec: /architecture-decision
 
 ## Skill Summary
 
@@ -11,7 +11,7 @@ In `full` review mode, TD-ADR (technical-director) and LP-FEASIBILITY
 (lead-programmer) gate agents spawn after the draft is complete. If both gates
 return APPROVED, the ADR status is set to Accepted. In `lean` or `solo` mode,
 both gates are skipped and the ADR is written with Status: Proposed. The skill
-asks "May I write" per section during authoring. ADRs are written to
+states "I will write" per section during authoring. ADRs are written to
 `docs/architecture/adr-NNN-[name].md`.
 
 ---
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: ACCEPTED, PROPOSED, CONCERNS
-- [ ] Contains "May I write" collaborative protocol language (per-section approval)
+- [ ] Contains "I will write" collaborative protocol language (per-sectiafter verification)
 - [ ] Has a next-step handoff at the end
 - [ ] Documents gate behavior: TD-ADR + LP-FEASIBILITY in full mode; skipped in lean/solo
 - [ ] Documents that ADR status is Accepted (full, gates approve) or Proposed (otherwise)
@@ -58,7 +58,7 @@ In `solo` mode: both gates are skipped. ADR is written with Status: Proposed.
 **Expected behavior:**
 1. Skill guides user through each required section (Status, Context, Decision, Consequences, Alternatives, Related ADRs)
 2. Engine version is stamped into the ADR from `docs/engine-reference/`
-3. For each section: draft shown, "May I write this section?" asked, approved
+3. For each section: draft shown, "I will write this section?" asked, approved
 4. After all sections: TD-ADR and LP-FEASIBILITY gates spawn in parallel
 5. Both gates return APPROVED
 6. ADR Status is set to Accepted
@@ -70,7 +70,7 @@ In `solo` mode: both gates are skipped. ADR is written with Status: Proposed.
 - [ ] Engine version reference is stamped in the ADR
 - [ ] TD-ADR and LP-FEASIBILITY spawn in parallel (not sequentially)
 - [ ] ADR Status is Accepted when both gates return APPROVED in full mode
-- [ ] "May I write" is asked per section during authoring
+- [ ] "I will write" is asked per section during authoring
 - [ ] File is written to `docs/architecture/adr-NNN-[name].md`
 
 ---
@@ -112,13 +112,13 @@ In `solo` mode: both gates are skipped. ADR is written with Status: Proposed.
 2. After draft is complete: both TD-ADR and LP-FEASIBILITY are skipped
 3. Output notes: "TD-ADR skipped — lean mode" and "LP-FEASIBILITY skipped — lean mode"
 4. ADR is written with Status: Proposed (not Accepted, since gates did not approve)
-5. "May I write" is still asked before the final file write
+5. "I will write" is still asked before the final file write
 
 **Assertions:**
 - [ ] Both gate skip notes appear in output
 - [ ] ADR Status is Proposed (not Accepted) in lean mode
-- [ ] "May I write" is still asked before writing the file
-- [ ] Skill writes the ADR after user approval
+- [ ] "I will write" is still asked before writing the file
+- [ ] Skill writes the ADR after user Verification
 
 ---
 
@@ -179,7 +179,7 @@ In `solo` mode: both gates are skipped. ADR is written with Status: Proposed.
 
 - [ ] All 6 required sections authored before gate review
 - [ ] Engine version stamped in ADR from `docs/engine-reference/`
-- [ ] "May I write" asked per section during authoring
+- [ ] "I will write" asked per section during authoring
 - [ ] TD-ADR and LP-FEASIBILITY spawn in parallel in full mode
 - [ ] Skipped gates noted by name and mode in lean/solo output
 - [ ] ADR Status: Accepted only when full mode AND both gates APPROVED

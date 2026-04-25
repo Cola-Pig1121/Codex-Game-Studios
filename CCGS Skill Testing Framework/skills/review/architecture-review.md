@@ -1,8 +1,8 @@
-# Skill Test Spec: /architecture-review
+﻿# Skill Test Spec: /architecture-review
 
 ## Skill Summary
 
-`/architecture-review` is an Opus-tier skill that validates a technical architecture
+`/architecture-review` is an gpt-5.5 xhigh reasoning tier skill that validates a technical architecture
 document against the project's 8 required architecture sections and checks that it
 is internally consistent, non-contradictory with existing ADRs, and correctly
 targeting the pinned engine version. It produces a verdict of APPROVED /
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: APPROVED, NEEDS REVISION, MAJOR REVISION NEEDED
-- [ ] Does NOT require "May I write" language (read-only skill)
+- [ ] Does NOT require "I will write" language (read-only skill)
 - [ ] Has a next-step handoff at the end
 - [ ] Documents gate behavior: TD-ARCHITECTURE + LP-FEASIBILITY in full mode; skipped in lean/solo
 

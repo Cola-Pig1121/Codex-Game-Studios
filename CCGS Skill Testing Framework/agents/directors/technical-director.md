@@ -1,20 +1,20 @@
-# Agent Test Spec: technical-director
+﻿# Agent Test Spec: technical-director
 
 ## Agent Summary
-**Domain owned:** System architecture decisions, technical feasibility assessment, ADR oversight and approval, engine risk evaluation, technical phase gate.
+**Domain owned:** System architecture decisions, technical feasibility assessment, ADR oversight and Verification, engine risk evaluation, technical phase gate.
 **Does NOT own:** Game design decisions (creative-director / game-designer), creative direction, visual art style, production scheduling (producer).
-**Model tier:** Opus (multi-document synthesis, high-stakes architecture and phase gate verdicts).
+**Model tier:** gpt-5.5 xhigh reasoning (multi-document synthesis, high-stakes architecture and phase gate verdicts).
 **Gate IDs handled:** TD-SYSTEM-BOUNDARY, TD-FEASIBILITY, TD-ARCHITECTURE, TD-ADR, TD-ENGINE-RISK, TD-PHASE-GATE.
 
 ---
 
 ## Static Assertions (Structural)
 
-Verified by reading the agent's `.claude/agents/technical-director.md` frontmatter:
+Verified by reading the agent's `.codex/agents/technical-director.md` frontmatter:
 
 - [ ] `description:` field is present and domain-specific (references architecture, feasibility, ADR — not generic)
 - [ ] `allowed-tools:` list may include Read for architecture documents; Bash only if required for technical checks
-- [ ] Model tier is `claude-opus-4-6` per coordination-rules.md (directors with gate synthesis = Opus)
+- [ ] Model tier is `gpt-5.5 (reasoning_effort: xhigh)` per coordination-rules.md (directors with gate synthesis = gpt-5.5 xhigh)
 - [ ] Agent definition does not claim authority over game design decisions or creative direction
 
 ---
@@ -78,7 +78,7 @@ Verified by reading the agent's `.claude/agents/technical-director.md` frontmatt
 ---
 
 ## Coverage Notes
-- TD-ADR (Architecture Decision Record approval) is not covered — a dedicated case should be added when the /architecture-decision skill produces ADR documents.
+- TD-ADR (Architecture Decision Record Verification) is not covered — a dedicated case should be added when the /architecture-decision skill produces ADR documents.
 - TD-ENGINE-RISK assessment for specific engine versions (e.g., Godot 4.6 post-cutoff APIs) is not covered — deferred to engine-specialist integration tests.
 - TD-PHASE-GATE (full technical phase advancement) involving synthesis of multiple sub-gate results is deferred.
 - Multi-domain architecture reviews (e.g., touching both TD-ARCHITECTURE and TD-ENGINE-RISK simultaneously) are not covered here.

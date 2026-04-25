@@ -1,4 +1,4 @@
-# Skill Test Spec: /team-audio
+﻿# Skill Test Spec: /team-audio
 
 ## Skill Summary
 
@@ -22,7 +22,7 @@ engine is configured.
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
 - [ ] Contains "File Write Protocol" section
 - [ ] File writes are delegated to sub-agents — orchestrator does not write files directly
-- [ ] Sub-agents enforce "May I write to [path]?" before any write
+- [ ] Sub-agents enforce "I will write to [path]?" before any write
 - [ ] Has a next-step handoff at the end (references `/dev-story`, `/asset-audit`)
 - [ ] Error Recovery Protocol section is present
 - [ ] `AskUserQuestion` is used at step transitions before proceeding
@@ -41,7 +41,7 @@ engine is configured.
 - GDD for the target feature exists at `design/gdd/combat.md`
 - Sound bible exists at `design/gdd/sound-bible.md`
 - Existing audio assets are listed in `assets/audio/`
-- Engine is configured in `.claude/docs/technical-preferences.md`
+- Engine is configured in `.codex/docs/technical-preferences.md`
 - No accessibility gaps exist in the planned audio event list
 
 **Input:** `/team-audio combat`
@@ -56,7 +56,7 @@ engine is configured.
 7. `AskUserQuestion` presents technical plan; user approves before Step 4 begins
 8. Step 4: gameplay-programmer is spawned; wires up audio events to gameplay triggers, implements adaptive music, sets up occlusion zones, writes unit tests for audio event triggers
 9. Orchestrator compiles all outputs into a single audio design document
-10. Subagent asks "May I write the audio design document to `design/gdd/audio-combat.md`?" before writing
+10. Subagent states "I will write the audio design document to `design/gdd/audio-combat.md`?" before writing
 11. Summary output lists: audio event count, estimated asset count, implementation tasks, and any open questions
 12. Verdict: COMPLETE
 
@@ -154,14 +154,14 @@ engine is configured.
 ### Case 5: Engine Not Configured — Engine specialist step skipped gracefully
 
 **Fixture:**
-- Engine is NOT configured in `.claude/docs/technical-preferences.md` (shows `[TO BE CONFIGURED]`)
+- Engine is NOT configured in `.codex/docs/technical-preferences.md` (shows `[TO BE CONFIGURED]`)
 - GDD for the target feature exists
 - Sound bible may or may not exist
 
 **Input:** `/team-audio boss encounter`
 
 **Expected behavior:**
-1. Context gathering: orchestrator reads `.claude/docs/technical-preferences.md` and detects no engine is configured
+1. Context gathering: orchestrator reads `.codex/docs/technical-preferences.md` and detects no engine is configured
 2. Steps 1–2 proceed normally (audio-director, sound-designer, accessibility-specialist)
 3. Step 3: technical-artist is spawned normally; engine specialist spawn is SKIPPED
 4. Orchestrator notes in conversation: "Engine specialist not spawned — no engine configured in technical-preferences.md. Engine integration validation will be deferred until an engine is selected."
@@ -186,7 +186,7 @@ engine is configured.
 - [ ] `AskUserQuestion` is used after every step output before the next step launches
 - [ ] Parallel spawning: Step 2 (sound-designer + accessibility-specialist) and Step 3 (technical-artist + engine specialist) issue all Task calls before waiting for results
 - [ ] No files are written by the orchestrator directly — all writes are delegated to sub-agents
-- [ ] Each sub-agent enforces the "May I write to [path]?" protocol before any write
+- [ ] Each sub-agent enforces the "I will write to [path]?" protocol before any write
 - [ ] BLOCKED status from any agent is surfaced immediately — not silently skipped
 - [ ] A partial report is always produced when some agents complete and others block
 - [ ] Audio design document path follows the pattern `design/gdd/audio-[feature].md`

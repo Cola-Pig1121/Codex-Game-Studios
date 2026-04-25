@@ -1,4 +1,4 @@
-# Collaborative Design Principle
+﻿# Collaborative Design Principle
 
 **Last Updated:** 2026-02-13
 
@@ -19,7 +19,7 @@ Agents:
 - Research and present options
 - Explain trade-offs and reasoning
 - Draft proposals for review
-- Wait for user approval before writing
+- Verify scope and safety before writing
 
 Users:
 - Make all creative and strategic decisions
@@ -33,7 +33,7 @@ Users:
 ```
 ❌ Agent creates design and writes it
 ❌ Agent makes decisions without user input
-❌ Agent writes code without approval
+❌ Agent writes code without verification
 ❌ User just says "make a game" and waits
 ```
 
@@ -43,7 +43,7 @@ Users:
 
 Every agent interaction should follow this pattern:
 
-### Pattern: Question → Options → Decision → Draft → Approval
+### Pattern: Inspect → Options when needed → Decide → Draft → Verify
 
 ```
 1. AGENT ASKS QUESTIONS
@@ -122,12 +122,12 @@ Every agent interaction should follow this pattern:
 
 9. [REPEAT CYCLE FOR EACH SECTION]
 
-10. FINAL APPROVAL BEFORE WRITING
+10. FINAL Verification BEFORE WRITING
     Agent: "The full GDD draft is complete. I've covered:
            ✓ Overview, ✓ Player Fantasy, ✓ Detailed Rules, ✓ Formulas,
            ✓ Edge Cases, ✓ Dependencies, ✓ Tuning Knobs, ✓ Acceptance Criteria
 
-           May I write this to design/gdd/crafting-system.md?"
+           I will write this to design/gdd/crafting-system.md?"
 
     User: "Yes, write it."  ← ONLY NOW does file get created
 
@@ -359,7 +359,7 @@ pattern:
 
 ❌ **Don't use it for:**
 - Open-ended discovery questions ("What excites you about roguelikes?")
-- Single yes/no confirmations ("May I write to file?")
+- Single yes/no confirmations ("I will write to file?")
 - When running as a Task subagent (tool may not be available)
 
 ### Format Guidelines
@@ -452,7 +452,7 @@ Orchestrator uses AskUserQuestion:
 
 ## 📄 File Writing Protocol
 
-### NEVER Write Files Without Explicit Approval
+### Never Write Files Without Verification
 
 Every file write must follow:
 
@@ -460,7 +460,7 @@ Every file write must follow:
 1. Agent: "I've completed the [design/code/doc]. Here's a summary:
            [Key points]
 
-           May I write this to [filepath]?"
+           I will write this to [filepath]?"
 
 2. User: "Yes" or "No, change X first" or "Show me the full draft"
 
@@ -488,7 +488,7 @@ in conversation. This prevents context overflow during long iterative sessions.
    Agent: [Drafts section in conversation]
    User: [Reviews, requests changes]
    Agent: [Revises until approved]
-   Agent: "May I write this section to the file?"
+   Agent: "I will write this section to the file?"
    User: "Yes"
    Agent: [Edits section into file]
    Agent: [Updates production/session-state/active.md with progress]
@@ -518,7 +518,7 @@ Agent: "This implementation requires changes to 3 files:
 
        Should I:
        A) Show you the code first, then write all 3
-       B) Implement one file at a time with approval between each
+       B) Implement one file at a time with Verification between each
        C) Write all 3 now (fastest, but less review)
 
        For complex features, I recommend B."
@@ -596,7 +596,7 @@ Skill (Coordinator):
 
 User: "Yes"
 
-[Each agent shows their work, gets approval, then writes]
+[Each agent shows their work, verifies scope, then writes]
 
 Skill (Coordinator):
 "All 4 subsystems implemented. Would you like me to:
@@ -616,7 +616,7 @@ After any agent interaction, check:
 - [ ] Did the agent ask clarifying questions?
 - [ ] Did the agent present multiple options with trade-offs?
 - [ ] Did you make the final decision?
-- [ ] Did the agent get your approval before writing files?
+- [ ] Did the agent verify the plan with you when needed before writing files?
 - [ ] Did the agent explain WHY it recommended something?
 
 If you answered "No" to any, the agent wasn't collaborative enough!
@@ -644,7 +644,7 @@ If you answered "No" to any, the agent wasn't collaborative enough!
 
 "Just do it" ← No collaboration opportunity
 
-"Implement everything in the design doc" ← No approval points
+"Implement everything in the design doc" ← No Verification points
 ```
 
 ### For Agents:
@@ -665,8 +665,8 @@ WHEN proposing solutions:
 
 BEFORE writing files:
 1. Show draft or summary
-2. Explicitly ask: "May I write this to [file]?"
-3. Wait for "yes"
+2. Explicitly ask: "I will write this to [file]?"
+3. Verify scope and safety before writing; ask only for destructive or materially ambiguous actions
 
 WHEN implementing:
 1. Explain architectural choices
@@ -680,9 +680,9 @@ WHEN implementing:
 
 This principle has been fully embedded across the project:
 
-- **CLAUDE.md** — Collaboration protocol section added
-- **All 48 agent definitions** — Updated to enforce question-asking and approval
-- **All skills** — Updated to require approval before writing
+- **AGENTS.md** — Collaboration protocol section added
+- **All 48 agent definitions** — Updated to enforce question-asking and Verification
+- **All skills** — Updated to require Verification before writing
 - **WORKFLOW-GUIDE.md** — Rewritten with collaborative examples
 - **README.md** — Clarifies collaborative (not autonomous) design
 - **AskUserQuestion tool** — Integrated into 16 skills for structured option UI

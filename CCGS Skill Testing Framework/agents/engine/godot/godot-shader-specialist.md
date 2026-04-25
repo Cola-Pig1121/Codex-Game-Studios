@@ -1,9 +1,9 @@
-# Agent Test Spec: godot-shader-specialist
+﻿# Agent Test Spec: godot-shader-specialist
 
 ## Agent Summary
 Domain: Godot shading language (GLSL-derivative), visual shaders (VisualShader graph), material setup, particle shaders, and post-processing effects.
 Does NOT own: gameplay code, art style direction.
-Model tier: Sonnet (default).
+Model tier: gpt-5.5 medium reasoning (default).
 No gate IDs assigned.
 
 ---
@@ -12,7 +12,7 @@ No gate IDs assigned.
 
 - [ ] `description:` field is present and domain-specific (references Godot shading language / materials / post-processing)
 - [ ] `allowed-tools:` list includes Read, Write, Edit, Glob, Grep
-- [ ] Model tier is Sonnet (default for specialists)
+- [ ] Model tier is gpt-5.5 medium (default for specialists)
 - [ ] Agent definition references `docs/engine-reference/godot/VERSION.md` as the authoritative source for Godot shader API changes
 
 ---

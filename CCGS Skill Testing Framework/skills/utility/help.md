@@ -1,9 +1,9 @@
-# Skill Test Spec: /help
+﻿# Skill Test Spec: /help
 
 ## Skill Summary
 
 `/help` analyzes what has been done and what comes next in the project workflow.
-It runs on the Haiku model (read-only, formatting task) and reads `production/stage.txt`,
+It runs on the gpt-5.5 low reasoning model (read-only, formatting task) and reads `production/stage.txt`,
 the active sprint file, and recent session state to produce a concise situational
 guidance summary. The skill optionally accepts a context query (e.g., `/help testing`)
 to surface relevant skills for a specific topic.
@@ -21,7 +21,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: HELP COMPLETE
-- [ ] Does NOT contain "May I write" language (skill is read-only)
+- [ ] Does NOT contain "I will write" language (skill is read-only)
 - [ ] Has a next-step handoff (suggests 2-3 relevant skills based on state)
 
 ---

@@ -1,4 +1,4 @@
-# Skill Test Spec: /estimate
+﻿# Skill Test Spec: /estimate
 
 ## Skill Summary
 
@@ -17,7 +17,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains size labels: S, M, L, XL (the "verdict" equivalents for this skill)
-- [ ] Does NOT require "May I write" language (advisory output only)
+- [ ] Does NOT require "I will write" language (advisory output only)
 - [ ] Has a next-step handoff (how to use the estimate in sprint planning)
 
 ---
@@ -142,7 +142,7 @@ None. Estimation is an advisory informational skill; no gates are invoked.
 
 **Assertions:**
 - [ ] No director gate is invoked regardless of review mode
-- [ ] Output is purely informational — no approval or write prompt
+- [ ] Output is purely informational — no Verification or write prompt
 - [ ] Next-step recommendation references `/sprint-plan`
 - [ ] Estimate does not change based on review mode
 

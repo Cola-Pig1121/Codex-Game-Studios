@@ -1,4 +1,4 @@
-# Skill Test Spec: /team-release
+﻿# Skill Test Spec: /team-release
 
 ## Skill Summary
 
@@ -17,11 +17,11 @@ NO-GO. Closes with a post-release monitoring plan.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
-- [ ] Contains "May I write" language in the File Write Protocol section (delegated to sub-agents)
+- [ ] Contains "I will write" language in the File Write Protocol section (delegated to sub-agents)
 - [ ] Has a File Write Protocol section stating that the orchestrator does not write files directly
 - [ ] Has an Error Recovery Protocol section with four recovery options (surface / assess / offer options / partial report)
 - [ ] Has a next-step handoff referencing post-release monitoring, `/retrospective`, and `production/stage.txt`
-- [ ] Uses `AskUserQuestion` at phase transitions requiring user approval before proceeding
+- [ ] Uses `AskUserQuestion` at phase transitions requiring user Verification before proceeding
 - [ ] Phase 3 agents (qa-lead, devops-engineer, and optionally security-engineer, network-programmer) are explicitly stated to run in parallel
 - [ ] Phase 6 (Deployment) is conditional on a GO decision from Phase 5
 - [ ] security-engineer is described as conditional on online features / player data — not always spawned

@@ -1,4 +1,4 @@
-# Skill Test Spec: /gate-check
+﻿# Skill Test Spec: /gate-check
 
 ## Skill Summary
 
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings (numbered Phase N or ## sections)
 - [ ] Contains verdict keywords: PASS, CONCERNS, FAIL
-- [ ] Contains "May I write" collaborative protocol language
+- [ ] Contains "I will write" collaborative protocol language
 - [ ] Has a next-step handoff at the end (Follow-Up Actions section)
 
 ---
@@ -40,7 +40,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 3. Skill checks quality items (core loop described, target audience identified)
 4. Skill outputs structured checklist with all items marked
 5. Skill presents PASS/CONCERNS/FAIL verdict
-6. If PASS: skill asks "May I update `production/stage.txt` to 'Systems Design'?"
+6. If PASS: skill asks "I will update `production/stage.txt` to 'Systems Design'?"
 
 **Assertions:**
 - [ ] Skill uses Glob or Read to verify `design/gdd/game-concept.md` exists before marking it checked
@@ -48,7 +48,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Output includes a "Quality Checks" section with check status per item
 - [ ] Output includes a "Verdict" line with one of PASS / CONCERNS / FAIL
 - [ ] Skill asks about unverifiable quality items (e.g., "Has this been reviewed?") rather than assuming PASS
-- [ ] Skill asks "May I write" before updating `production/stage.txt`
+- [ ] Skill states "I will write" before updating `production/stage.txt`
 - [ ] Skill does NOT write `production/stage.txt` without explicit user confirmation
 
 ---
@@ -180,8 +180,8 @@ treat this confirmation as a failure.
 
 ## Protocol Compliance
 
-- [ ] Uses "May I write" before updating `production/stage.txt`
-- [ ] Presents the full checklist report before asking for write approval
+- [ ] Uses "I will write" before updating `production/stage.txt`
+- [ ] Presents the full checklist report before asking for write Verification
 - [ ] Ends with a "Follow-Up Actions" section listing next steps per verdict
 - [ ] Never advances the stage without explicit user confirmation
 - [ ] Never auto-creates `production/stage.txt` if it doesn't exist without asking

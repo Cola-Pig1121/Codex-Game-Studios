@@ -1,4 +1,4 @@
-# Skill Test Spec: /quick-design
+﻿# Skill Test Spec: /quick-design
 
 ## Skill Summary
 
@@ -9,7 +9,7 @@ quick-design spec uses a streamlined 3-section format: Overview, Rules, and
 Acceptance Criteria.
 
 The skill has no director gates — adding gate overhead would defeat the purpose
-of a lightweight design tool. The skill asks "May I write" before writing the
+of a lightweight design tool. The skill states "I will write" before writing the
 design note to `design/quick-notes/[name].md`. If the feature scope is too large
 for a quick-design, the skill redirects to `/design-system` instead.
 
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: CREATED, BLOCKED, REDIRECTED
-- [ ] Contains "May I write" collaborative protocol language (for quick-note file)
+- [ ] Contains "I will write" collaborative protocol language (for quick-note file)
 - [ ] Has a next-step handoff at the end
 - [ ] Explicitly notes: no director gates (lightweight skill by design)
 - [ ] Mentions scope check: redirects to `/design-system` if scope exceeds sub-4h threshold
@@ -52,13 +52,13 @@ Full GDD review is not needed for sub-4-hour single-system features.
 2. Skill determines scope is within the sub-4h threshold
 3. Skill drafts a 3-section spec: Overview, Rules, Acceptance Criteria
 4. Draft is shown to user
-5. "May I write `design/quick-notes/[name].md`?" is asked
-6. File is written after approval
+5. "I will write `design/quick-notes/[name].md`?" is asked
+6. File is written after verification
 
 **Assertions:**
 - [ ] Spec contains exactly 3 sections: Overview, Rules, Acceptance Criteria
-- [ ] Draft is shown to user before "May I write" ask
-- [ ] "May I write `design/quick-notes/[name].md`?" is asked before writing
+- [ ] Draft is shown to user before "I will write" ask
+- [ ] "I will write `design/quick-notes/[name].md`?" is asked before writing
 - [ ] File is written to the correct path: `design/quick-notes/[name].md`
 - [ ] Verdict is CREATED after successful write
 
@@ -99,13 +99,13 @@ Full GDD review is not needed for sub-4-hour single-system features.
 2. Skill asks: "[name].md already exists. Update it, or create a new version?"
 3. User selects update
 4. Skill shows the existing spec and asks which section to revise
-5. Updated spec is shown, "May I write?" asked, file updated after approval
+5. Updated spec is shown, "I will write?" asked, file updated after verification
 
 **Assertions:**
 - [ ] Skill detects and reads the existing file before offering to update
 - [ ] User is offered update or create-new options — not auto-overwritten
 - [ ] Only the revised section is updated (or the whole spec if user chooses full rewrite)
-- [ ] "May I write" is asked before overwriting the existing file
+- [ ] "I will write" is asked before overwriting the existing file
 
 ---
 
@@ -142,7 +142,7 @@ Full GDD review is not needed for sub-4-hour single-system features.
 1. Skill asks scoping questions and determines scope is within threshold
 2. Skill does NOT read `production/session-state/review-mode.txt`
 3. Skill does NOT spawn any director gate agent
-4. Spec is drafted, "May I write" asked, file written after approval
+4. Spec is drafted, "I will write" asked, file written after verification
 5. Output explicitly notes: "No director gate review — quick-design is for sub-4h features"
 
 **Assertions:**
@@ -158,8 +158,8 @@ Full GDD review is not needed for sub-4-hour single-system features.
 
 - [ ] Scope check runs before drafting (redirects to `/design-system` if scope too large)
 - [ ] 3-section format used (Overview, Rules, Acceptance Criteria) — NOT the 8-section GDD format
-- [ ] Draft shown to user before "May I write" ask
-- [ ] "May I write `design/quick-notes/[name].md`?" asked before writing
+- [ ] Draft shown to user before "I will write" ask
+- [ ] "I will write `design/quick-notes/[name].md`?" asked before writing
 - [ ] No director gates — no review-mode.txt read
 - [ ] Ends with next-step handoff (e.g., proceed to implementation or `/dev-story`)
 

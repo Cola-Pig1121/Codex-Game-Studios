@@ -1,4 +1,4 @@
-# Skill Test Spec: /day-one-patch
+﻿# Skill Test Spec: /day-one-patch
 
 ## Skill Summary
 
@@ -9,7 +9,7 @@ marked `Status: Done` but with noted deferred ACs), and produces a prioritized
 patch plan with estimated fix timelines per issue.
 
 The patch plan is written to `production/releases/day-one-patch.md` after a
-"May I write" ask. If a P0 (critical post-ship) issue is discovered, the skill
+"I will write" ask. If a P0 (critical post-ship) issue is discovered, the skill
 triggers guidance to run `/hotfix` before the patch. No director gates apply.
 The verdict is always COMPLETE.
 
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" collaborative protocol language before writing the plan
+- [ ] Contains "I will write" collaborative protocol language before writing the plan
 - [ ] Has a next-step handoff (e.g., `/hotfix` for P0 issues, `/release-checklist` for follow-up)
 
 ---
@@ -49,14 +49,14 @@ None. `/day-one-patch` is a release planning utility. No director gates apply.
 2. Skill assigns fix effort estimates: MEDIUM bug = 1-2 days, LOW bugs = 4 hours each
 3. Skill produces a patch plan prioritizing MEDIUM bug first
 4. Plan includes: priority order, estimated timeline, responsible system, fix description
-5. Skill asks "May I write to `production/releases/day-one-patch.md`?"
+5. Skill states "I will write to `production/releases/day-one-patch.md`?"
 6. File written; verdict is COMPLETE
 
 **Assertions:**
 - [ ] All 3 bugs appear in the plan
 - [ ] Bugs are prioritized by severity (MEDIUM before LOW)
 - [ ] Fix estimates are provided per issue
-- [ ] "May I write" is asked before writing
+- [ ] "I will write" is asked before writing
 - [ ] Verdict is COMPLETE
 
 ---
@@ -99,7 +99,7 @@ None. `/day-one-patch` is a release planning utility. No director gates apply.
 1. Skill reads sprint stories and detects the deferred AC note
 2. Deferred AC is automatically included in the patch plan as a work item
 3. Plan entry: "Deferred from sprint-008: Gamepad vibration on damage"
-4. Fix estimate is assigned; patch plan written after "May I write" approval
+4. Fix estimate is assigned; patch plan written after "I will write" Verification
 5. Verdict is COMPLETE
 
 **Assertions:**
@@ -123,7 +123,7 @@ None. `/day-one-patch` is a release planning utility. No director gates apply.
 2. Skill reads story deferred ACs — none found
 3. Skill produces an empty patch plan with a note: "No known issues at launch"
 4. Template structure is preserved (headers intact) for future use
-5. Skill asks "May I write to `production/releases/day-one-patch.md`?"
+5. Skill states "I will write to `production/releases/day-one-patch.md`?"
 6. File written; verdict is COMPLETE
 
 **Assertions:**
@@ -159,7 +159,7 @@ None. `/day-one-patch` is a release planning utility. No director gates apply.
 - [ ] Scans story files for deferred AC notes
 - [ ] Escalates CRITICAL (P0) bugs with explicit `/hotfix` guidance
 - [ ] Produces an empty plan with note when no issues exist (not an error)
-- [ ] Asks "May I write to `production/releases/day-one-patch.md`?" before writing
+- [ ] states "I will write to `production/releases/day-one-patch.md`?" before writing
 - [ ] Verdict is COMPLETE in all paths
 
 ---

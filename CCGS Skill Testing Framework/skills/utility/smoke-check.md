@@ -1,4 +1,4 @@
-# Skill Test Spec: /smoke-check
+﻿# Skill Test Spec: /smoke-check
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 test environment, runs the automated test suite (via Bash), scans test coverage
 against sprint stories, and uses `AskUserQuestion` to batch-verify manual smoke
 checks with the developer. It writes a report to `production/qa/smoke-[date].md`
-after explicit user approval.
+after verification.
 
 Verdicts: PASS (tests pass, all smoke checks pass, no missing test evidence),
 PASS WITH WARNINGS (tests pass or NOT RUN, all critical checks pass, but advisory
@@ -24,7 +24,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: PASS, PASS WITH WARNINGS, FAIL
-- [ ] Contains "May I write" collaborative protocol language before writing the report
+- [ ] Contains "I will write" collaborative protocol language before writing the report
 - [ ] Has a next-step handoff (e.g., `/bug-report` on FAIL, QA hand-off guidance on PASS)
 
 ---
@@ -57,14 +57,14 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 5. Uses `AskUserQuestion` for Batch 1 (core stability) and Batch 2 (sprint mechanics)
 6. Developer selects PASS for all items
 7. Report assembled: automated tests PASS, all smoke checks PASS, no MISSING coverage
-8. Asks "May I write this smoke check report to `production/qa/smoke-[date].md`?"
-9. Writes report after approval
+8. states "I will write this smoke check report to `production/qa/smoke-[date].md`?"
+9. Writes report after verification
 10. Delivers verdict: PASS
 
 **Assertions:**
 - [ ] Automated test runner is invoked via Bash
 - [ ] `AskUserQuestion` is used for manual smoke check batches
-- [ ] "May I write" is asked before writing the report file
+- [ ] "I will write" is asked before writing the report file
 - [ ] Report is written to `production/qa/smoke-[date].md`
 - [ ] Verdict is PASS
 
@@ -86,7 +86,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 3. Records failing test names
 4. Proceeds through manual smoke check batches
 5. Report shows automated tests as FAIL with failing test names listed
-6. Asks to write report; writes after approval
+6. writes after verification report; writes after verification
 7. Delivers FAIL verdict with message: "The smoke check failed. Do not hand off to
    QA until these failures are resolved." Lists failing tests and suggests fixing
    then re-running `/smoke-check`
@@ -116,7 +116,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 4. Report shows: automated tests PASS, manual checks all PASS, 1 MISSING coverage entry
 5. Verdict is PASS WITH WARNINGS — build ready for QA, but MISSING entry must be
    resolved before `/story-done` closes the affected story
-6. Asks to write report; writes after approval
+6. writes after verification report; writes after verification
 
 **Assertions:**
 - [ ] `AskUserQuestion` is used for manual smoke check batches (not inline text prompts)
@@ -174,7 +174,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 - [ ] Uses `AskUserQuestion` for all manual smoke check batches (Batch 1, Batch 2, Batch 3)
 - [ ] Runs automated tests via Bash before asking any manual questions
-- [ ] Asks "May I write" before creating the report file — never writes without approval
+- [ ] states "I will write" before creating the report file — writes only after scope and safety verification
 - [ ] Verdict vocabulary is strictly PASS / PASS WITH WARNINGS / FAIL — no other verdicts
 - [ ] FAIL is triggered by automated test failures or Batch 1/Batch 2 FAIL responses
 - [ ] PASS WITH WARNINGS is triggered when MISSING test coverage exists but no critical failures

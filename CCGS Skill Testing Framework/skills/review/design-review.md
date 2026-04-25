@@ -1,4 +1,4 @@
-# Skill Test Spec: /design-review
+﻿# Skill Test Spec: /design-review
 
 ## Skill Summary
 
@@ -19,7 +19,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings or numbered steps
 - [ ] Contains verdict keywords: APPROVED, NEEDS REVISION, MAJOR REVISION NEEDED
-- [ ] Does NOT require "May I write" language (read-only skill — `allowed-tools` excludes Write/Edit)
+- [ ] Does NOT require "I will write" language (read-only skill — `allowed-tools` excludes Write/Edit)
 - [ ] Output format is documented (review template shown in skill body)
 
 ---
@@ -39,7 +39,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 
 **Expected behavior:**
 1. Skill reads the target document in full
-2. Skill reads CLAUDE.md for project context and standards
+2. Skill reads AGENTS.md for project context and standards
 3. Skill evaluates all 8 required sections (present/absent check)
 4. Skill checks internal consistency (formulas match described behavior)
 5. Skill checks implementability (rules are precise enough to code)
@@ -155,7 +155,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 
 - [ ] Does NOT use Write or Edit tools (read-only skill)
 - [ ] Presents complete findings before any verdict
-- [ ] Does not ask for approval before producing output (no writes to approve)
+- [ ] Does not ask for verification before producing output (no writes to approve)
 - [ ] Ends with recommended next step (e.g., fix issues and re-run, or proceed to `/map-systems`)
 
 ---

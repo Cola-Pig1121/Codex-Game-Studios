@@ -1,4 +1,4 @@
-# Example Session: Using /design-system to Author a GDD
+﻿# Example Session: Using /design-system to Author a GDD
 
 **Context:** Solo indie dev, week 3 of project. `/map-systems` already ran and produced `design/gdd/systems-index.md`. The movement system is listed as MVP tier, Foundation priority.
 
@@ -41,7 +41,7 @@
 >
 > I'll show you a draft of each section, you approve or revise, then I write it to the file before we move on.
 >
-> Creating the file skeleton now with empty section headers — may I write `design/gdd/movement-system.md` with placeholders?
+> Creating the file skeleton now with empty section headers — I will write `design/gdd/movement-system.md` with placeholders?
 
 **User:**
 > Yes
@@ -67,7 +67,7 @@
 >
 > > The movement system is the player's primary interface with the world. It governs how the lone survivor walks, runs, rolls, and traverses alien terrain. Movement is physically grounded — the planet has heavier-than-Earth gravity, and the survivor is physically exhausted — but remains responsive enough to stay out of the player's way. Terrain surfaces apply friction and speed modifiers (slick rock, sand, shallow water) that make navigation a meaningful skill. The system feeds directly into exploration pacing, combat positioning, and the stamina system.
 >
-> May I write this to Section 1 in the file?
+> I will write this to Section 1 in the file?
 
 **User:**
 > Yes
@@ -261,7 +261,7 @@
 
 ## What This Example Demonstrates
 
-- **Incremental file writing**: each section written to disk immediately after approval — a session crash loses at most one in-progress section
+- **Incremental file writing**: each section written to disk immediately after verification — a session crash loses at most one in-progress section
 - **Template population**: the GDD template's 8 sections become concrete content through dialogue, not bulk generation
 - **Dependency signaling**: agent proactively surfaces downstream signal contracts (stamina, inventory) during the Dependencies section
 - **Technical feasibility pre-check**: agent notes Jolt physics change before design starts, not after implementation breaks

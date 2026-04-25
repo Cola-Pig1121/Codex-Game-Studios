@@ -1,4 +1,4 @@
-# Skill Test Spec: /test-evidence-review
+﻿# Skill Test Spec: /test-evidence-review
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 checking test naming conventions, determinism, isolation, and absence of
 hardcoded magic numbers — all against the project's test standards defined in
 `coding-standards.md`. Findings may be flagged for qa-lead review. No director
-gates are invoked. The skill does not write without user approval. Verdicts:
+gates are invoked. The skill does not write without user Verification. Verdicts:
 PASS, WARNINGS, or FAIL.
 
 ---
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: PASS, WARNINGS, FAIL
-- [ ] Does NOT require "May I write" language (read-only; write is optional flagging report)
+- [ ] Does NOT require "I will write" language (read-only; write is optional flagging report)
 - [ ] Has a next-step handoff (what to do after findings are reviewed)
 
 ---
@@ -147,12 +147,12 @@ is a separate skill invocation and is NOT triggered here.
 2. No director gate is invoked (QL-TEST-COVERAGE is invoked separately, not here)
 3. Verdict is WARNINGS
 4. Output notes: "For full test coverage gate, run `/gate-check` which invokes QL-TEST-COVERAGE"
-5. Skill offers optional report write; asks "May I write" if user opts in
+5. Skill offers optional report write; states "I will write" if user opts in
 
 **Assertions:**
 - [ ] No director gate is invoked in any review mode
 - [ ] Output distinguishes this skill from the QL-TEST-COVERAGE gate invocation
-- [ ] Optional report requires "May I write" before writing
+- [ ] Optional report requires "I will write" before writing
 - [ ] Verdict is WARNINGS for advisory-level test quality issues
 
 ---

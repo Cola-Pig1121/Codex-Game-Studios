@@ -1,4 +1,4 @@
-# Skill Test Spec: /ux-design
+﻿# Skill Test Spec: /ux-design
 
 ## Skill Summary
 
@@ -7,10 +7,10 @@ user flow diagrams (described textually), interaction state definitions, wirefra
 descriptions, and accessibility notes for a specified screen or HUD element. The
 skill follows the skeleton-first pattern: it creates the file with all section
 headers immediately, then fills each section through discussion and writes each
-section to disk after user approval.
+section to disk after user Verification.
 
 The skill has no inline director gates — `/ux-review` is the separate review step.
-Each section requires a "May I write section [N] to [filepath]?" ask. If a UX spec
+Each section requires a "I will write section [N] to [filepath]?" ask. If a UX spec
 already exists for the named screen, the skill offers to retrofit individual sections
 rather than replace. Verdict is COMPLETE when all sections are written.
 
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" language per section
+- [ ] Contains "I will write" language per section
 - [ ] Has a next-step handoff (e.g., `/ux-review` to validate the completed spec)
 
 ---
@@ -49,15 +49,15 @@ review skill invoked after this skill completes.
 1. Skill creates a skeleton file `design/ux/hud.md` with all section headers
 2. Skill discusses and drafts each section: User Flows, Interaction States
    (normal/hover/focus/disabled), Wireframe Description, Accessibility Notes
-3. After each section is drafted and user confirms, skill asks "May I write
+3. After each section is drafted and user confirms, skill states "I will write
    section [N] to `design/ux/hud.md`?"
-4. Each section is written in sequence after approval
+4. Each section is written in sequence after verification
 5. After all sections are written, verdict is COMPLETE
 6. Skill suggests running `/ux-review` as the next step
 
 **Assertions:**
 - [ ] Skeleton file is created first (with empty section bodies)
-- [ ] "May I write section [N]" is asked per section (not once at the end)
+- [ ] "I will write section [N]" is asked per section (not once at the end)
 - [ ] All required sections are present: User Flows, Interaction States,
      Wireframe Description, Accessibility Notes
 - [ ] Handoff to `/ux-review` is at the end
@@ -78,7 +78,7 @@ review skill invoked after this skill completes.
 2. Skill reports: "UX spec already exists for HUD — offering to retrofit"
 3. Skill lists all sections and asks which to update
 4. User selects Accessibility Notes
-5. Skill drafts updated accessibility content and asks "May I write section
+5. Skill drafts updated accessibility content and states "I will write section
    Accessibility Notes to `design/ux/hud.md`?"
 6. Only that section is updated; other sections are preserved; verdict is COMPLETE
 
@@ -86,7 +86,7 @@ review skill invoked after this skill completes.
 - [ ] Existing spec is detected and retrofit is offered
 - [ ] User selects which section(s) to update
 - [ ] Only the selected section is updated — other sections unchanged
-- [ ] "May I write" is asked for the updated section
+- [ ] "I will write" is asked for the updated section
 - [ ] Verdict is COMPLETE
 
 ---
@@ -126,7 +126,7 @@ review skill invoked after this skill completes.
 1. Skill detects no screen name or argument provided
 2. Skill outputs a usage error: "Screen name required. Usage: `/ux-design [screen-name]`"
 3. Skill provides examples: `/ux-design hud`, `/ux-design main-menu`, `/ux-design inventory`
-4. No file is created; no "May I write" is asked
+4. No file is created; no "I will write" is asked
 
 **Assertions:**
 - [ ] Usage error is clearly stated
@@ -159,7 +159,7 @@ review skill invoked after this skill completes.
 
 - [ ] Creates skeleton file with all section headers before discussing content
 - [ ] Discusses and drafts one section at a time
-- [ ] Asks "May I write section [N]" after each section is approved
+- [ ] states "I will write section [N]" after each section is approved
 - [ ] Detects existing spec and offers retrofit path
 - [ ] Ends with handoff to `/ux-review`
 - [ ] Verdict is COMPLETE when all sections are written

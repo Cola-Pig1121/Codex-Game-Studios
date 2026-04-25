@@ -1,15 +1,15 @@
-# Skill Test Spec: /review-all-gdds
+﻿# Skill Test Spec: /review-all-gdds
 
 ## Skill Summary
 
-`/review-all-gdds` is an Opus-tier skill that performs a holistic cross-GDD review
+`/review-all-gdds` is an gpt-5.5 xhigh reasoning tier skill that performs a holistic cross-GDD review
 across all files in `design/gdd/`. It runs two complementary review phases in
 parallel: Phase 1 checks for consistency (contradictions, formula mismatches,
 stale references, competing ownership), and Phase 2 checks design theory (dominant
 strategies, pillar drift, cognitive overload, economic imbalance). Because the two
 phases are independent, they are spawned simultaneously to save time. The skill
 produces a CONSISTENT / MINOR ISSUES / MAJOR ISSUES verdict and is read-only — no
-files are written without explicit user approval.
+files are written without verification.
 
 The skill is itself the holistic review gate in the pipeline. It is invoked after
 individual GDDs are complete and before architecture work begins. It does NOT spawn
@@ -24,7 +24,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥5 phase headings (complex multi-phase skill)
 - [ ] Contains verdict keywords: CONSISTENT, MINOR ISSUES, MAJOR ISSUES
-- [ ] Does NOT require "May I write" language (read-only skill)
+- [ ] Does NOT require "I will write" language (read-only skill)
 - [ ] Has a next-step handoff at the end
 - [ ] Documents parallel phase spawning (Phase 1 and Phase 2 are independent)
 
@@ -60,7 +60,7 @@ review; delegating to a director gate would create a circular dependency.
 - [ ] Both review phases are spawned in parallel (not sequentially)
 - [ ] Output includes a findings table (even if empty — shows "No issues found")
 - [ ] Verdict is CONSISTENT when no conflicts are found
-- [ ] Skill does NOT write any files without user approval
+- [ ] Skill does NOT write any files without user Verification
 - [ ] Next-step handoff to `/architecture-review` or `/create-architecture` is present
 
 ---
@@ -161,7 +161,7 @@ review; delegating to a director gate would create a circular dependency.
 ## Protocol Compliance
 
 - [ ] Phase 1 (consistency) and Phase 2 (design theory) spawned in parallel — not sequentially
-- [ ] Does NOT write any files without "May I write" approval
+- [ ] Does NOT write any files without "I will write" Verification
 - [ ] Findings table shown before any write ask
 - [ ] Verdict is one of exactly: CONSISTENT, MINOR ISSUES, MAJOR ISSUES
 - [ ] Ends with appropriate handoff: MAJOR ISSUES → fix and re-run; MINOR ISSUES → may proceed with awareness; CONSISTENT → `/create-architecture`

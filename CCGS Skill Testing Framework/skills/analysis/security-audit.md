@@ -1,4 +1,4 @@
-# Skill Test Spec: /security-audit
+﻿# Skill Test Spec: /security-audit
 
 ## Skill Summary
 
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: SECURE, CONCERNS, VULNERABILITIES FOUND
-- [ ] Does NOT require "May I write" language (read-only; findings report only)
+- [ ] Does NOT require "I will write" language (read-only; findings report only)
 - [ ] Has a next-step handoff (what to do with findings)
 
 ---

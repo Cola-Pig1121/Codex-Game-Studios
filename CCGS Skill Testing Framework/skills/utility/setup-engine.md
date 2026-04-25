@@ -1,4 +1,4 @@
-# Skill Test Spec: /setup-engine
+﻿# Skill Test Spec: /setup-engine
 
 ## Skill Summary
 
@@ -7,7 +7,7 @@ physics engine, specialist agent assignments, and naming conventions by
 populating `technical-preferences.md`. It accepts an optional engine argument
 (e.g., `/setup-engine godot`) to skip the engine-selection step. For each
 section of `technical-preferences.md`, the skill presents a draft and asks
-"May I write to `technical-preferences.md`?" before updating.
+"I will write to `technical-preferences.md`?" before updating.
 
 The skill also populates the specialist routing table (file extension → agent
 mappings) based on the chosen engine. It has no director gates — configuration
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" collaborative protocol language before updating technical-preferences.md
+- [ ] Contains "I will write" collaborative protocol language before updating technical-preferences.md
 - [ ] Has a next-step handoff (e.g., `/brainstorm` or `/start` depending on flow)
 
 ---
@@ -53,8 +53,8 @@ None. `/setup-engine` is a technical configuration skill. No director gates appl
    (godot-specialist, gdscript-specialist, godot-shader-specialist, etc.)
 5. Skill populates the routing table: `.gd` → gdscript-specialist, `.gdshader` →
    godot-shader-specialist, `.tscn` → godot-specialist
-6. Skill asks "May I write to `technical-preferences.md`?"
-7. File is written after approval; verdict is COMPLETE
+6. Skill states "I will write to `technical-preferences.md`?"
+7. File is written after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] Engine field is set to Godot 4 (not a placeholder)
@@ -62,7 +62,7 @@ None. `/setup-engine` is a technical configuration skill. No director gates appl
 - [ ] Naming conventions are GDScript-appropriate (snake_case)
 - [ ] Routing table includes `.gd`, `.gdshader`, and `.tscn` entries
 - [ ] Specialists are assigned (not placeholders)
-- [ ] "May I write" is asked before writing
+- [ ] "I will write" is asked before writing
 - [ ] Verdict is COMPLETE
 
 ---
@@ -81,7 +81,7 @@ None. `/setup-engine` is a technical configuration skill. No director gates appl
 3. Specialist assignments reference unity-specialist, csharp-specialist
 4. Routing table: `.cs` → csharp-specialist, `.asmdef` → unity-specialist,
    `.unity` (scene) → unity-specialist
-5. Skill asks "May I write to `technical-preferences.md`?" and writes on approval
+5. Skill states "I will write to `technical-preferences.md`?" and writes after verification
 
 **Assertions:**
 - [ ] Engine field is set to Unity (not Godot or Unreal)
@@ -106,7 +106,7 @@ None. `/setup-engine` is a technical configuration skill. No director gates appl
 3. Routing table: `.uasset` → blueprint-specialist or unreal-specialist,
    `.umap` → unreal-specialist
 4. Performance budgets are pre-set with Unreal defaults (e.g., higher draw call budget)
-5. Skill asks "May I write" and writes on approval; verdict is COMPLETE
+5. Skill states "I will write" and writes after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] Engine field is set to Unreal Engine 5
@@ -131,7 +131,7 @@ None. `/setup-engine` is a technical configuration skill. No director gates appl
    (Engine/Language, Naming Conventions, Specialists, Performance Budgets)
 4. User selects "Reconfigure Performance Budgets only"
 5. Only the performance budget section is updated; all other fields unchanged
-6. Skill asks "May I write to `technical-preferences.md`?" and writes on approval
+6. Skill states "I will write to `technical-preferences.md`?" and writes after verification
 
 **Assertions:**
 - [ ] Skill does NOT overwrite all fields when only a section update was requested
@@ -163,7 +163,7 @@ None. `/setup-engine` is a technical configuration skill. No director gates appl
 ## Protocol Compliance
 
 - [ ] Presents draft configuration before asking to write
-- [ ] Asks "May I write to `technical-preferences.md`?" before writing
+- [ ] states "I will write to `technical-preferences.md`?" before writing
 - [ ] Respects engine argument when provided (skips selection step)
 - [ ] Detects existing config and offers partial reconfigure
 - [ ] Routing table is populated for all key file types for the chosen engine

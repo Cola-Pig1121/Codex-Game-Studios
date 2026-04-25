@@ -1,8 +1,8 @@
-# Skill Test Spec: /sprint-status
+﻿# Skill Test Spec: /sprint-status
 
 ## Skill Summary
 
-`/sprint-status` is a Haiku-tier read-only skill that reads the current active
+`/sprint-status` is a gpt-5.5 low reasoning tier read-only skill that reads the current active
 sprint file and the session state to produce a concise sprint health summary.
 It reports story counts by status (Complete / In Progress / Blocked / Not Started)
 and emits one of three sprint-health verdicts: ON TRACK, AT RISK, or BLOCKED.
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings or numbered check sections
 - [ ] Contains verdict keywords: ON TRACK, AT RISK, BLOCKED
-- [ ] Does NOT require "May I write" language (read-only skill)
+- [ ] Does NOT require "I will write" language (read-only skill)
 - [ ] Has a next-step handoff (what to do based on the verdict)
 
 ---
@@ -137,11 +137,11 @@ None. `/sprint-status` is a read-only reporting skill; no gates are invoked.
 1. Skill reads sprint and produces status summary
 2. Skill does NOT invoke any director gate regardless of review mode
 3. Output is a plain status report with ON TRACK, AT RISK, or BLOCKED verdict
-4. Skill does not prompt for user approval or ask to write any file
+4. Skill does not prompt for user Verification or ask to write any file
 
 **Assertions:**
 - [ ] No director gate is invoked in any review mode
-- [ ] Output does not contain any "May I write" prompt
+- [ ] Output does not contain any "I will write" prompt
 - [ ] Skill completes and returns a verdict without user interaction
 - [ ] Review mode file is ignored (or confirmed irrelevant) by this skill
 
@@ -151,9 +151,9 @@ None. `/sprint-status` is a read-only reporting skill; no gates are invoked.
 
 - [ ] Does NOT use Write or Edit tools (read-only skill)
 - [ ] Presents story count breakdown before emitting verdict
-- [ ] Does not ask for approval
+- [ ] Does not ask for verification
 - [ ] Ends with a recommended next step based on verdict
-- [ ] Runs on Haiku model tier (fast, low-cost)
+- [ ] Runs on gpt-5.5 low reasoning tier (fast, low-cost)
 
 ---
 

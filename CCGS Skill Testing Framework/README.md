@@ -1,11 +1,11 @@
-# CCGS Skill Testing Framework
+﻿# CCGS Skill Testing Framework
 
-Quality assurance infrastructure for the **Claude Code Game Studios** framework.
+Quality assurance infrastructure for the **Codex Game Studios** framework.
 Tests the skills and agents themselves — not any game built with them.
 
 > **This folder is self-contained and optional.**
 > Game developers using CCGS don't need it. To remove it entirely:
-> `rm -rf "CCGS Skill Testing Framework"` — nothing in `.claude/` depends on it.
+> `rm -rf "CCGS Skill Testing Framework"` — nothing in `.codex/` depends on it.
 
 ---
 
@@ -14,7 +14,7 @@ Tests the skills and agents themselves — not any game built with them.
 ```
 CCGS Skill Testing Framework/
 ├── README.md              ← you are here
-├── CLAUDE.md              ← tells Claude how to use this framework
+├── AGENTS.md              ← tells Codex how to use this framework
 ├── catalog.yaml           ← master registry: all 72 skills + 49 agents, coverage tracking
 ├── quality-rubric.md      ← category-specific pass/fail metrics for /skill-test category
 │

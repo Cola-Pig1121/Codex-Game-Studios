@@ -1,11 +1,11 @@
-# Skill Test Spec: /skill-improve
+﻿# Skill Test Spec: /skill-improve
 
 ## Skill Summary
 
 `/skill-improve` runs an automated test-fix-retest improvement loop on a skill
 file. It invokes `/skill-test static` (and optionally `/skill-test category`) to
 establish a baseline score, diagnoses the failing checks, proposes targeted fixes
-to the SKILL.md file, asks "May I write the improvements to [skill path]?", applies
+to the SKILL.md file, states "I will write the improvements to [skill path]?", applies
 the fixes, and re-runs the tests to confirm improvement.
 
 If the proposed fix makes the skill worse (regression), the fix is reverted (with
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: IMPROVED, NO CHANGE, REVERTED
-- [ ] Contains "May I write" collaborative protocol language before applying fixes
+- [ ] Contains "I will write" collaborative protocol language before applying fixes
 - [ ] Has a next-step handoff (e.g., run `/skill-test spec` to validate behavioral compliance)
 
 ---
@@ -39,8 +39,8 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ### Case 1: Happy Path — Skill With 2 Static Failures, Both Fixed, IMPROVED
 
 **Fixture:**
-- `.claude/skills/some-skill/SKILL.md` has 2 static failures:
-  - Check 4: no "May I write" language despite having Write in allowed-tools
+- `.codex/skills/some-skill/SKILL.md` has 2 static failures:
+  - Check 4: no "I will write" language despite having Write in allowed-tools
   - Check 5: no next-step handoff at the end
 
 **Input:** `/skill-improve some-skill`
@@ -49,16 +49,16 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 1. Skill runs `/skill-test static some-skill` — baseline: 5/7 checks pass
 2. Skill diagnoses the 2 failing checks (4 and 5)
 3. Skill proposes fixes:
-   - Add "May I write" language to the appropriate phase
+   - Add "I will write" language to the appropriate phase
    - Add a next-step handoff section at the end
-4. Skill asks "May I write improvements to `.claude/skills/some-skill/SKILL.md`?"
+4. Skill states "I will write improvements to `.codex/skills/some-skill/SKILL.md`?"
 5. Fixes applied; `/skill-test static some-skill` re-run — now 7/7 checks pass
 6. Verdict is IMPROVED (5→7)
 
 **Assertions:**
 - [ ] Baseline score is established before any changes (5/7)
 - [ ] Both failing checks are diagnosed and addressed in the proposed fix
-- [ ] "May I write" is asked before applying the fix
+- [ ] "I will write" is asked before applying the fix
 - [ ] Re-test confirms improvement (7/7)
 - [ ] Verdict is IMPROVED with before/after score shown
 
@@ -67,7 +67,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ### Case 2: Fix Causes Regression — Score Comparison Shows Regression, REVERTED
 
 **Fixture:**
-- `.claude/skills/some-skill/SKILL.md` has 1 static failure (missing handoff)
+- `.codex/skills/some-skill/SKILL.md` has 1 static failure (missing handoff)
 - Proposed fix inadvertently removes the verdict keywords section
   (introducing a new failure)
 
@@ -75,7 +75,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 
 **Expected behavior:**
 1. Baseline: 6/7 checks pass (1 failure: missing handoff)
-2. Skill proposes fix and asks "May I write improvements?"
+2. Skill proposes fix and states "I will write improvements?"
 3. Fix is applied; re-test runs
 4. Re-test result: 5/7 (fixed the handoff but broke verdict keywords)
 5. Skill detects regression: score went DOWN
@@ -94,7 +94,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ### Case 3: Skill With Category Assignment — Baseline Captures Both Scores
 
 **Fixture:**
-- `.claude/skills/gate-check/SKILL.md` is a gate skill with 1 static failure
+- `.codex/skills/gate-check/SKILL.md` is a gate skill with 1 static failure
   and 2 category (G-criteria) failures
 - `tests/skills/quality-rubric.md` has Gate Skills section
 
@@ -106,7 +106,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
    - Category: 3/5 G-criteria pass
 2. Combined baseline: 9/12
 3. Skill diagnoses all 3 failures and proposes fixes
-4. "May I write improvements to `.claude/skills/gate-check/SKILL.md`?"
+4. "I will write improvements to `.codex/skills/gate-check/SKILL.md`?"
 5. Fixes applied; both test types re-run
 6. Re-test: static 7/7, category 5/5 = 12/12
 7. Verdict is IMPROVED (9→12)
@@ -123,7 +123,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 ### Case 4: Skill Already Perfect — No Improvements Needed
 
 **Fixture:**
-- `.claude/skills/brainstorm/SKILL.md` has no static failures
+- `.codex/skills/brainstorm/SKILL.md` has no static failures
 - Category score is also 5/5 (if applicable)
 
 **Input:** `/skill-improve brainstorm`
@@ -133,14 +133,14 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 2. If category applies: 5/5 criteria pass
 3. Skill outputs: "No improvements needed — brainstorm is fully compliant"
 4. Skill exits without proposing any changes
-5. No "May I write" is asked; no files are modified
+5. No "I will write" is asked; no files are modified
 6. Verdict is NO CHANGE
 
 **Assertions:**
 - [ ] Skill exits immediately after confirming 0 failures
 - [ ] "No improvements needed" message is shown
 - [ ] No changes are proposed
-- [ ] No "May I write" is asked
+- [ ] No "I will write" is asked
 - [ ] Verdict is NO CHANGE
 
 ---
@@ -168,7 +168,7 @@ None. `/skill-improve` is a meta-utility skill. No director gates apply.
 
 - [ ] Always establishes a baseline score before proposing any changes
 - [ ] Shows before/after score comparison in the output
-- [ ] Asks "May I write" before applying any fix
+- [ ] states "I will write" before applying any fix
 - [ ] Detects regressions by comparing re-test score to baseline
 - [ ] Asks for user confirmation before reverting (not automatic)
 - [ ] Ends with IMPROVED, NO CHANGE, or REVERTED verdict

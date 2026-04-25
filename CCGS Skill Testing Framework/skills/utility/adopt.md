@@ -1,4 +1,4 @@
-# Skill Test Spec: /adopt
+﻿# Skill Test Spec: /adopt
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 files, and `technical-preferences.md` — for format compliance with the template's
 skill pipeline. It classifies every gap by severity (BLOCKING / HIGH / MEDIUM / LOW),
 composes a numbered, ordered migration plan, and writes it to `docs/adoption-plan-[date].md`
-after explicit user approval via `AskUserQuestion`.
+after verification via `AskUserQuestion`.
 
 This skill is distinct from `/project-stage-detect` (which checks what exists).
 `/adopt` checks whether what exists will actually work with the template's skills.
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains severity tier keywords: BLOCKING, HIGH, MEDIUM, LOW
-- [ ] Contains "May I write" or `AskUserQuestion` language before writing the adoption plan
+- [ ] Contains "I will write" or `AskUserQuestion` language before writing the adoption plan
 - [ ] Has a next-step handoff at the end (e.g., offering to fix the highest-priority gap immediately)
 
 ---
@@ -96,7 +96,7 @@ None. `/adopt` is a brownfield audit utility. No director gates apply.
    - Step 3 (HIGH): Add Acceptance Criteria to `combat.md` — command: `/design-system retrofit`
    - Step 4 (MEDIUM): Add Formulas to `combat.md`
 5. Gap Preview shows BLOCKING items as bullets (actual file names), HIGH/MEDIUM as counts
-6. `AskUserQuestion` asks to write the plan; writes after approval
+6. `AskUserQuestion` writes after verification the plan; writes after verification
 7. Phase 7 offers to fix the highest-priority gap (ADR Status) immediately
 
 **Assertions:**
@@ -131,7 +131,7 @@ None. `/adopt` is a brownfield audit utility. No director gates apply.
 4. Migration plan lists HIGH gap first, then MEDIUM gaps in order
 5. Note included: "Existing stories continue to work — do not regenerate stories
    that are in progress or done"
-6. `AskUserQuestion` to write plan; writes after approval
+6. `AskUserQuestion` to write plan; writes after verification
 
 **Assertions:**
 - [ ] Per-artifact compliance tallies are shown (N compliant, M with gaps)

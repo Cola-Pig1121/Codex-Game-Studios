@@ -1,4 +1,4 @@
-# Skill Test Spec: /team-live-ops
+﻿# Skill Test Spec: /team-live-ops
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@ Orchestrates the live-ops team through a 7-phase planning pipeline to produce a
 season or event plan. Coordinates live-ops-designer, economy-designer,
 analytics-engineer, community-manager, narrative-director, and writer. Phases 3
 and 4 (economy design and analytics) run simultaneously. Ends with a consolidated
-season plan requiring user approval before handoff to production.
+season plan requiring user Verification before handoff to production.
 
 ---
 
@@ -15,10 +15,10 @@ season plan requiring user approval before handoff to production.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
-- [ ] Contains "May I write" language in the File Write Protocol section (delegated to sub-agents)
+- [ ] Contains "I will write" language in the File Write Protocol section (delegated to sub-agents)
 - [ ] Has a File Write Protocol section stating that the orchestrator does not write files directly
 - [ ] Has a next-step handoff at the end referencing `/design-review`, `/sprint-plan`, and `/team-release`
-- [ ] Uses `AskUserQuestion` at phase transitions to capture user approval before proceeding
+- [ ] Uses `AskUserQuestion` at phase transitions to capture user Verification before proceeding
 - [ ] States explicitly that Phases 3 and 4 can run simultaneously (parallel spawning)
 - [ ] Error recovery section present (or implied through BLOCKED handling)
 - [ ] Output documents section specifies paths under `design/live-ops/seasons/`
@@ -46,7 +46,7 @@ season plan requiring user approval before handoff to production.
 6. Phase 6: Spawns `community-manager` via Task; reads season brief, economy design, and narrative framing; produces communication calendar with draft copy
 7. Phase 7: Collects all phase outputs; presents consolidated season plan summary including economy health check, analytics readiness, ethics review, and open questions
 8. AskUserQuestion: user approves the full season plan
-9. Sub-agents ask "May I write to `design/live-ops/seasons/S2_The_Frozen_Wastes.md`?", `...analytics.md`, and `...comms.md` before writing
+9. Sub-agents state "I will write to `design/live-ops/seasons/S2_The_Frozen_Wastes.md`?", `...analytics.md`, and `...comms.md` before writing
 10. Verdict: COMPLETE — season plan produced and handed off for production
 
 **Assertions:**
@@ -72,8 +72,8 @@ season plan requiring user approval before handoff to production.
 **Expected behavior:**
 1. Phases 1–4 proceed normally; economy-designer proposes Mystery Chest mechanic
 2. Phase 7: Orchestrator reviews Phase 3 output against ethics policy; identifies Mystery Chest as a violation of the "no untransparent random premium rewards" rule in the ethics policy
-3. Ethics review section of the Phase 7 summary flags the violation explicitly: "ETHICS FLAG: Mystery Chest mechanic in Phase 3 economy design violates [policy rule]. Approval is blocked until this is resolved."
-4. AskUserQuestion presented with resolution options before season plan approval is offered
+3. Ethics review section of the Phase 7 summary flags the violation explicitly: "ETHICS FLAG: Mystery Chest mechanic in Phase 3 economy design violates [policy rule]. Verification is blocked until this is resolved."
+4. AskUserQuestion presented with resolution options before season plan Verification is offered
 5. Skill does NOT issue a COMPLETE verdict or write output documents until the ethics violation is resolved or explicitly waived by the user
 
 **Assertions:**
@@ -161,7 +161,7 @@ season plan requiring user approval before handoff to production.
 - [ ] `AskUserQuestion` used at every phase transition — user approves before the next phase begins
 - [ ] Phases 3 and 4 are always spawned in parallel, not sequentially
 - [ ] File Write Protocol: orchestrator never calls Write/Edit directly — all writes are delegated to sub-agents
-- [ ] Each output document gets its own "May I write to [path]?" ask from the relevant sub-agent
+- [ ] Each output document gets its own "I will write to [path]?" ask from the relevant sub-agent
 - [ ] Ethics review in Phase 7 always references the ethics policy file path explicitly
 - [ ] Error recovery: any BLOCKED agent is surfaced immediately with AskUserQuestion options (skip / retry / stop)
 - [ ] Partial reports are produced if any phase blocks — work is never discarded

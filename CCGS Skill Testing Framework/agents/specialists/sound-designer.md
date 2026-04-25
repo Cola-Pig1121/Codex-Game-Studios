@@ -1,9 +1,9 @@
-# Agent Test Spec: sound-designer
+﻿# Agent Test Spec: sound-designer
 
 ## Agent Summary
 Domain: SFX specs, audio events, mixing parameters, and sound category definitions.
 Does NOT own: music composition direction (audio-director), code implementation of audio systems.
-Model tier: Sonnet (default).
+Model tier: gpt-5.5 medium reasoning (default).
 No gate IDs assigned.
 
 ---
@@ -12,7 +12,7 @@ No gate IDs assigned.
 
 - [ ] `description:` field is present and domain-specific (references SFX / audio events / mixing)
 - [ ] `allowed-tools:` list includes Read, Write, Edit, Glob, Grep — does NOT include engine code execution tools
-- [ ] Model tier is Sonnet (default for specialists)
+- [ ] Model tier is gpt-5.5 medium (default for specialists)
 - [ ] Agent definition does not claim authority over music direction or audio code implementation
 
 ---

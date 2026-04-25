@@ -1,4 +1,4 @@
-# Skill Test Spec: /sprint-plan
+﻿# Skill Test Spec: /sprint-plan
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 generates a new numbered sprint with stories prioritized by implementation layer
 and priority score. In full mode the PR-SPRINT director gate runs after the
 sprint draft is compiled (producer reviews the plan). In lean and solo modes
-the gate is skipped. The skill asks "May I write to `production/sprints/sprint-NNN.md`?"
+the gate is skipped. The skill states "I will write to `production/sprints/sprint-NNN.md`?"
 before persisting. Verdicts: COMPLETE (sprint generated and written) or
 BLOCKED (cannot proceed due to missing data or gate failure).
 
@@ -19,7 +19,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
-- [ ] Contains "May I write" language (skill writes sprint file)
+- [ ] Contains "I will write" language (skill writes sprint file)
 - [ ] Has a next-step handoff (what to do after sprint is written)
 
 ---
@@ -50,14 +50,14 @@ Verified automatically by `/skill-test static` — no fixture needed.
 3. Skill drafts sprint-003 with stories fitting within capacity
 4. Skill presents draft to user before invoking gate
 5. Skill invokes PR-SPRINT gate (full mode); producer approves
-6. Skill asks "May I write to `production/sprints/sprint-003.md`?"
+6. Skill states "I will write to `production/sprints/sprint-003.md`?"
 7. User approves; file is written
 
 **Assertions:**
 - [ ] Stories are sorted by implementation layer before priority
 - [ ] Sprint draft is shown before any write or gate invocation
 - [ ] PR-SPRINT gate is invoked in full mode after draft is ready
-- [ ] Skill asks "May I write" before writing the sprint file
+- [ ] Skill states "I will write" before writing the sprint file
 - [ ] Written file path matches `production/sprints/sprint-003.md`
 - [ ] Verdict is COMPLETE after successful write
 
@@ -99,7 +99,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 2. PR-SPRINT gate runs; producer returns CONCERNS: sprint is overloaded
 3. Skill presents concern to user and asks which stories to defer
 4. User selects 3 stories to defer; sprint is revised to 5 stories / 10 points
-5. Skill asks "May I write" with revised sprint; writes on approval
+5. Skill states "I will write" with revised sprint; writes after verification
 
 **Assertions:**
 - [ ] CONCERNS from PR-SPRINT gate surfaces to user before any write
@@ -121,13 +121,13 @@ Verified automatically by `/skill-test static` — no fixture needed.
 1. Skill reads review mode — determines `lean`
 2. Skill drafts sprint and presents it to user
 3. PR-SPRINT gate is skipped; output notes "[PR-SPRINT] skipped — Lean mode"
-4. Skill asks user for direct approval of the sprint
+4. Skill asks user for direct Verification of the sprint
 5. User approves; sprint file is written
 
 **Assertions:**
 - [ ] PR-SPRINT gate is NOT invoked in lean mode
 - [ ] Skip is explicitly noted in output
-- [ ] User approval is still required before write (gate skip ≠ approval skip)
+- [ ] User Verification is still required before write (gate skip ≠ Verification skip)
 - [ ] Verdict is COMPLETE after write
 
 ---
@@ -146,7 +146,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 2. Skill flags: "Sprint 002 has 2 open stories — confirm carry-over before planning sprint 003"
 3. Skill presents user with choice: carry stories over, defer them, or cancel
 4. User confirms carry-over; carried stories are prepended to new sprint with `[CARRY]` tag
-5. Sprint draft is built; PR-SPRINT gate runs; sprint is written on approval
+5. Sprint draft is built; PR-SPRINT gate runs; sprint is written after verification
 
 **Assertions:**
 - [ ] Skill checks the most recent sprint file for open stories
@@ -159,7 +159,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 ## Protocol Compliance
 
 - [ ] Shows draft sprint before invoking PR-SPRINT gate or asking to write
-- [ ] Always asks "May I write" before writing sprint file
+- [ ] Always states "I will write" before writing sprint file
 - [ ] PR-SPRINT gate only runs in full mode
 - [ ] Skip message appears in lean and solo mode output
 - [ ] Verdict is clearly stated at the end of the skill output
@@ -171,7 +171,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - The case where no milestone file exists is not explicitly tested; behavior
   follows the BLOCKED pattern with a suggestion to run `/gate-check` for
   milestone progression.
-- Solo mode behavior is equivalent to lean (gate skipped, user approval
+- Solo mode behavior is equivalent to lean (gate skipped, user Verification
   required) and is not separately tested.
 - Parallel story selection algorithms are not tested here; those are unit
   concerns for the sprint-plan subagent.

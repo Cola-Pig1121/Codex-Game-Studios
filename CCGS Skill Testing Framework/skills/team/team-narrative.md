@@ -1,4 +1,4 @@
-# Skill Test Spec: /team-narrative
+﻿# Skill Test Spec: /team-narrative
 
 ## Skill Summary
 
@@ -8,7 +8,7 @@ in parallel) → level narrative integration (level-designer) → consistency re
 (narrative-director) → polish + localization compliance (writer, localization-lead,
 and world-builder in parallel). Uses `AskUserQuestion` at each phase transition to
 present proposals as selectable options. Produces a narrative summary report and
-delivers narrative documents via subagents that each enforce the "May I write?"
+delivers narrative documents via subagents that each enforce the "I will write?"
 protocol. Verdict is COMPLETE when all phases succeed, or BLOCKED when a dependency
 is unresolved.
 
@@ -21,7 +21,7 @@ is unresolved.
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
 - [ ] Contains "File Write Protocol" section
 - [ ] File writes are delegated to sub-agents — orchestrator does not write files directly
-- [ ] Sub-agents enforce "May I write to [path]?" before any write
+- [ ] Sub-agents enforce "I will write to [path]?" before any write
 - [ ] Has a next-step handoff at the end (references `/design-review`, `/localize extract`, `/dev-story`)
 - [ ] Error Recovery Protocol section is present
 - [ ] `AskUserQuestion` is used at phase transitions before proceeding
@@ -52,7 +52,7 @@ is unresolved.
 7. Phase 4: narrative-director reviews all dialogue against voice profiles, verifies lore consistency, confirms pacing; approves or flags issues
 8. `AskUserQuestion` presents review results; user approves before Phase 5 begins
 9. Phase 5: writer, localization-lead, and world-builder are spawned in parallel; writer performs final self-review; localization-lead validates i18n compliance; world-builder finalizes canon levels
-10. Final summary report is presented; subagent asks "May I write the narrative document to [path]?" before writing
+10. Final summary report is presented; subagent states "I will write the narrative document to [path]?" before writing
 11. Verdict: COMPLETE
 
 **Assertions:**
@@ -146,7 +146,7 @@ is unresolved.
 - [ ] The specific string key and reason are included in the issue report
 - [ ] `AskUserQuestion` offers the option to fix now vs. flag and proceed
 - [ ] Verdict notes the localization debt if the user proceeds without fixing
-- [ ] Skill does NOT automatically rewrite the offending line without user approval
+- [ ] Skill does NOT automatically rewrite the offending line without user Verification
 
 ---
 
@@ -186,7 +186,7 @@ is unresolved.
 - [ ] `AskUserQuestion` is used after every phase output before the next phase launches
 - [ ] Parallel spawning: Phase 2 (world-builder + writer) and Phase 5 (writer + localization-lead + world-builder) issue all Task calls before waiting for results
 - [ ] No files are written by the orchestrator directly — all writes are delegated to sub-agents
-- [ ] Each sub-agent enforces the "May I write to [path]?" protocol before any write
+- [ ] Each sub-agent enforces the "I will write to [path]?" protocol before any write
 - [ ] BLOCKED status from any agent is surfaced immediately — not silently skipped
 - [ ] A partial report is always produced when some agents complete and others block
 - [ ] Verdict is exactly COMPLETE or BLOCKED — no other verdict values used

@@ -1,4 +1,4 @@
-# Skill Test Spec: /milestone-review
+﻿# Skill Test Spec: /milestone-review
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 what shipped, velocity metrics, deferred items, risks surfaced, and retrospective
 seeds. In full mode the PR-MILESTONE director gate runs after the review is
 compiled (producer reviews scope delivery). In lean and solo modes the gate is
-skipped. The skill asks "May I write to `production/milestones/review-milestone-N.md`?"
+skipped. The skill states "I will write to `production/milestones/review-milestone-N.md`?"
 before persisting. Verdicts: MILESTONE COMPLETE or MILESTONE INCOMPLETE.
 
 ---
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: MILESTONE COMPLETE, MILESTONE INCOMPLETE
-- [ ] Contains "May I write" language (skill writes review document)
+- [ ] Contains "I will write" language (skill writes review document)
 - [ ] Has a next-step handoff (what to do after review is written)
 
 ---
@@ -48,14 +48,14 @@ Verified automatically by `/skill-test static` — no fixture needed.
 2. Skill compiles: 7 shipped, 1 deferred; velocity; no blockers
 3. Skill presents review draft to user
 4. PR-MILESTONE gate invoked; producer approves
-5. Skill asks "May I write to `production/milestones/review-milestone-03.md`?"
+5. Skill states "I will write to `production/milestones/review-milestone-03.md`?"
 6. User approves; file is written; verdict MILESTONE COMPLETE
 
 **Assertions:**
 - [ ] Deferred story is noted in the review with its target milestone
 - [ ] Verdict is MILESTONE COMPLETE despite the one deferred story
 - [ ] PR-MILESTONE gate is invoked after draft compilation in full mode
-- [ ] Skill asks "May I write" before writing review file
+- [ ] Skill states "I will write" before writing review file
 - [ ] Review document path matches `production/milestones/review-milestone-03.md`
 
 ---
@@ -75,13 +75,13 @@ Verified automatically by `/skill-test static` — no fixture needed.
 2. Skill finds 3 blocked stories; compiles blocker details
 3. Verdict is MILESTONE INCOMPLETE
 4. PR-MILESTONE gate runs; producer notes the unresolved blockers
-5. Review is written with blocker list on approval
+5. Review is written with blocker list after verification
 
 **Assertions:**
 - [ ] Verdict is MILESTONE INCOMPLETE when any stories are Blocked
 - [ ] Each blocked story's name and blocker reason is listed in the review
 - [ ] PR-MILESTONE gate is still invoked in full mode even for INCOMPLETE verdict
-- [ ] "May I write" prompt still appears before file write
+- [ ] "I will write" prompt still appears before file write
 
 ---
 
@@ -141,13 +141,13 @@ Verified automatically by `/skill-test static` — no fixture needed.
 1. Skill reads review mode — determines `solo`
 2. Skill compiles review draft
 3. PR-MILESTONE gate is skipped; output notes "[PR-MILESTONE] skipped — Solo mode"
-4. Skill asks user for direct approval of the review
+4. Skill asks user for direct Verification of the review
 5. User approves; review file is written; verdict MILESTONE COMPLETE
 
 **Assertions:**
 - [ ] PR-MILESTONE gate is NOT invoked in solo (or lean) mode
 - [ ] Skip is explicitly noted in skill output
-- [ ] User direct approval is still required before write
+- [ ] User direct Verification is still required before write
 - [ ] Verdict is MILESTONE COMPLETE after successful write
 
 ---
@@ -155,7 +155,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 ## Protocol Compliance
 
 - [ ] Shows compiled review draft before invoking PR-MILESTONE or asking to write
-- [ ] Always asks "May I write" before writing review document
+- [ ] Always states "I will write" before writing review document
 - [ ] PR-MILESTONE gate only runs in full mode
 - [ ] Skip message appears in lean and solo output
 - [ ] Verdict is MILESTONE COMPLETE or MILESTONE INCOMPLETE, stated clearly

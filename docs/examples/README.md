@@ -1,6 +1,6 @@
-# Collaborative Session Examples
+﻿# Collaborative Session Examples
 
-This directory contains realistic, end-to-end session transcripts showing how the Game Studio Agent Architecture works in practice. Each example demonstrates the **collaborative workflow** where agents ask questions, present options, and wait for user approval rather than autonomously generating content.
+This directory contains realistic, end-to-end session transcripts showing how the Game Studio Agent Architecture works in practice. Each example demonstrates the **collaborative workflow** where agents ask questions, present options, and wait for user Verification rather than autonomously generating content.
 
 ---
 
@@ -36,7 +36,7 @@ Dev runs `/design-system movement` after `/map-systems` produced the systems ind
 
 **Key Moments:**
 - Technical feasibility pre-check flags Jolt physics default change (Godot 4.6)
-- Incremental writing: each section on disk immediately after approval
+- Incremental writing: each section on disk immediately after verification
 - Session crash during section 5 → agent resumes from first empty section
 - Dependency signals (stamina, inventory) surfaced during the Dependencies section
 - Ends with explicit handoff: "run `/design-review` before the next system"
@@ -154,15 +154,15 @@ Dev has 3 months of existing code and rough design notes but nothing in the righ
 **Complexity:** Medium
 
 **Scenario:**
-Solo dev needs to design a crafting system that serves Pillar 2 ("Emergent Discovery Through Experimentation"). The agent guides them through question/answer, presents 3 design options with game theory analysis, incorporates user modifications, and iteratively drafts the GDD with approval at each step.
+Solo dev needs to design a crafting system that serves Pillar 2 ("Emergent Discovery Through Experimentation"). The agent guides them through question/answer, presents 3 design options with game theory analysis, incorporates user modifications, and iteratively drafts the GDD with Verification at each step.
 
 **Key Collaborative Moments:**
 - Agent asks 5 clarifying questions upfront
 - Presents 3 distinct options with pros/cons + MDA alignment
 - User modifies recommended option, agent incorporates immediately
 - Edge case flagged proactively ("what if non-recipe combo?")
-- Each GDD section shown for approval before moving to next
-- Explicit "May I write to [file]?" before creating file
+- Each GDD section shown for verification before moving to next
+- Explicit "I will write to [file]?" before creating file
 
 **Learn:**
 - How design agents ask about goals, constraints, references
@@ -179,7 +179,7 @@ Solo dev needs to design a crafting system that serves Pillar 2 ("Emergent Disco
 **Complexity:** Low-Medium
 
 **Scenario:**
-User has a complete design doc and wants the damage calculation implemented. Agent reads the spec, identifies 7 ambiguities/gaps, asks clarifying questions, proposes architecture for approval, implements with rule enforcement, and proactively writes tests.
+User has a complete design doc and wants the damage calculation implemented. Agent reads the spec, identifies 7 ambiguities/gaps, asks clarifying questions, proposes architecture for verification, implements with rule enforcement, and proactively writes tests.
 
 **Key Collaborative Moments:**
 - Agent reads design doc first, identifies 7 spec ambiguities
@@ -191,7 +191,7 @@ User has a complete design doc and wants the damage calculation implemented. Age
 
 **Learn:**
 - How implementation agents clarify specs before coding
-- How to propose architecture with code samples for approval
+- How to propose architecture with code samples for verification
 - How rules enforce standards automatically
 - How to handle spec gaps (ask, don't assume)
 - Verification-driven development (tests prove it works)
@@ -240,7 +240,7 @@ Developer built a skill tree system but never wrote a design doc. Agent reads th
 All examples follow the **collaborative workflow pattern:**
 
 ```
-Question → Options → Decision → Draft → Approval
+Inspect → Options when needed → Decide → Draft → Verify
 ```
 
 > **Note:** These examples show the collaborative pattern as conversational text.
@@ -266,8 +266,8 @@ Question → Options → Decision → Draft → Approval
    - Architecture proposals shown before implementation
    - Strategic analysis presented before decisions
 
-4. **Agents Get Approval Before Writing Files**
-   - Explicit "May I write to [file]?" before using Write/Edit tools
+4. **Agents Verify before writing files**
+   - Verify the target path and intent before using Write/Edit tools
    - Multi-file changes list all affected files first
    - User says "Yes" before any file is created
 
@@ -324,8 +324,8 @@ If you're teaching someone to use this system, walk through one example turn-by-
 - Incorporate feedback immediately
 - Flag edge cases or ambiguities proactively
 
-### Turn 9-10: **Approval and Completion**
-- "May I write to [file]?"
+### Turn 9-10: **Verification and Completion**
+- "I will write to [file]?"
 - User: "Yes"
 - Agent writes files
 - Agent offers next steps (tests, review, integration)
@@ -342,7 +342,7 @@ After reading these examples, try this exercise:
    - ✅ Asks clarifying questions upfront
    - ✅ Presents options with reasoning
    - ✅ Shows drafts before finalizing
-   - ✅ Requests approval before writing files
+   - ✅ Requests Verification before writing files
 
 If the agent skips any of these, remind it:
 > "Please follow the collaborative protocol from docs/COLLABORATIVE-DESIGN-PRINCIPLE.md"
@@ -353,5 +353,5 @@ If the agent skips any of these, remind it:
 
 - **Full Principle Documentation:** [docs/COLLABORATIVE-DESIGN-PRINCIPLE.md](../COLLABORATIVE-DESIGN-PRINCIPLE.md)
 - **Workflow Guide:** [docs/WORKFLOW-GUIDE.md](../WORKFLOW-GUIDE.md)
-- **Agent Roster:** [.claude/docs/agent-roster.md](../../.claude/docs/agent-roster.md)
-- **CLAUDE.md (Collaboration Protocol):** [CLAUDE.md](../../CLAUDE.md#collaboration-protocol)
+- **Agent Roster:** [.codex/docs/agent-roster.md](../../.codex/docs/agent-roster.md)
+- **AGENTS.md (Collaboration Protocol):** [AGENTS.md](../../AGENTS.md#collaboration-protocol)

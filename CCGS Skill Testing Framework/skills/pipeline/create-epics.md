@@ -1,4 +1,4 @@
-# Skill Test Spec: /create-epics
+﻿# Skill Test Spec: /create-epics
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 one per system. Epics are organized by layer (Foundation → Core → Feature →
 Presentation) and processed in priority order within each layer. Each EPIC.md
 includes scope, governing ADRs, GDD requirements, engine risk level, and a
-Definition of Done. The skill asks "May I write" before creating each EPIC file.
+Definition of Done. The skill states "I will write" before creating each EPIC file.
 
 In `full` review mode, a PR-EPIC gate (producer) runs after drafting epics and
 before writing any files. In `lean` or `solo` mode, PR-EPIC is skipped and noted.
@@ -21,7 +21,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: CREATED, BLOCKED
-- [ ] Contains "May I write" collaborative protocol language (per-epic approval)
+- [ ] Contains "I will write" collaborative protocol language (per-epic Verification)
 - [ ] Has a next-step handoff at the end (`/create-stories`)
 - [ ] Documents PR-EPIC gate behavior: runs in full mode; skipped in lean/solo
 
@@ -31,7 +31,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 
 In `full` mode: PR-EPIC (producer) gate runs after epics are drafted and before
 any epic file is written. If PR-EPIC returns CONCERNS, epics are revised before
-the "May I write" ask.
+the "I will write" ask.
 
 In `lean` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — lean mode".
 
@@ -56,17 +56,17 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — solo mode
 1. Skill reads systems index and both GDDs
 2. Drafts 2 EPIC definitions (layer, GDD path, ADRs, requirements, engine risk)
 3. PR-EPIC gate is skipped (lean mode) — noted in output
-4. For each epic: asks "May I write `production/epics/[layer]/EPIC-[name].md`?"
-5. After approval: writes both EPIC files
+4. For each epic: states "I will write `production/epics/[layer]/EPIC-[name].md`?"
+5. after verification: writes both EPIC files
 6. Creates or updates `production/epics/index.md`
 
 **Assertions:**
 - [ ] Epic summary is shown before any write ask
-- [ ] "May I write" is asked per-epic (not once for all epics together)
+- [ ] "I will write" is asked per-epic (not once for all epics together)
 - [ ] Each EPIC.md contains: layer, GDD path, governing ADRs, requirements table, Definition of Done
 - [ ] PR-EPIC skip is noted in output
 - [ ] `production/epics/index.md` is updated after writing
-- [ ] Skill does NOT write EPIC files without per-epic approval
+- [ ] Skill does NOT write EPIC files without per-epic Verification
 
 ---
 
@@ -82,7 +82,7 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — solo mode
 1. Skill reads systems index and attempts to find approved GDDs
 2. No approved GDDs found
 3. Skill outputs: "No approved GDDs to convert. GDDs must be Approved before creating epics."
-4. Skill suggests running `/design-system` and completing GDD approval first
+4. Skill suggests running `/design-system` and completing GDD Verification first
 5. Skill exits without creating any EPIC files
 
 **Assertions:**
@@ -102,12 +102,12 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — solo mode
 **Full mode expected behavior:**
 1. Skill drafts both epics
 2. PR-EPIC gate spawns and reviews the epic drafts
-3. If PR-EPIC returns APPROVED: "May I write" ask proceeds normally
-4. Epic files are written after approval
+3. If PR-EPIC returns APPROVED: "I will write" ask proceeds normally
+4. Epic files are written after verification
 
 **Assertions (full mode):**
 - [ ] PR-EPIC gate appears in output as an active gate
-- [ ] PR-EPIC runs before any "May I write" ask
+- [ ] PR-EPIC runs before any "I will write" ask
 - [ ] Epic files are NOT written before PR-EPIC completes
 
 **Fixture (lean mode):**
@@ -117,11 +117,11 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — solo mode
 **Lean mode expected behavior:**
 1. Epics are drafted
 2. PR-EPIC is skipped — noted in output
-3. "May I write" ask proceeds directly
+3. "I will write" ask proceeds directly
 
 **Assertions (lean mode):**
 - [ ] "PR-EPIC skipped — lean mode" appears in output
-- [ ] Skill proceeds to "May I write" without waiting for PR-EPIC
+- [ ] Skill proceeds to "I will write" without waiting for PR-EPIC
 
 ---
 
@@ -136,7 +136,7 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — solo mode
 **Expected behavior:**
 1. Skill detects the existing EPIC file for the first system
 2. Skill offers to update rather than overwrite: "EPIC-[name].md already exists. Update it, or skip?"
-3. For the second system (no existing file): proceeds normally with "May I write"
+3. For the second system (no existing file): proceeds normally with "I will write"
 
 **Assertions:**
 - [ ] Skill detects existing EPIC files before writing
@@ -158,21 +158,21 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — solo mode
 1. PR-EPIC gate spawns and returns CONCERNS with specific feedback
 2. Skill surfaces the concerns to the user before any write ask
 3. User is given options: revise epics, accept concerns and proceed, or stop
-4. If user revises: updated epic drafts are shown before the "May I write" ask
+4. If user revises: updated epic drafts are shown before the "I will write" ask
 5. Skill does NOT write epics while CONCERNS are unaddressed
 
 **Assertions:**
 - [ ] CONCERNS from PR-EPIC are shown to the user before writing
 - [ ] Skill does NOT auto-write epics when CONCERNS are returned
 - [ ] User is given a clear choice to revise, proceed, or stop
-- [ ] Revised epic drafts are re-shown after revision before final approval
+- [ ] Revised epic drafts are re-shown after revision before final Verification
 
 ---
 
 ## Protocol Compliance
 
-- [ ] Epic drafts shown to user before any "May I write" ask
-- [ ] "May I write" asked per-epic, not once for the entire batch
+- [ ] Epic drafts shown to user before any "I will write" ask
+- [ ] "I will write" asked per-epic, not once for the entire batch
 - [ ] PR-EPIC gate (if active) runs before write asks — not after
 - [ ] Skipped gates noted by name and mode in output
 - [ ] EPIC.md content sourced only from GDDs, ADRs, and architecture docs — nothing invented
@@ -186,5 +186,5 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — solo mode
   pattern as Foundation — layer-specific ordering is not independently tested.
 - Engine risk level assignment (LOW/MEDIUM/HIGH) from governing ADRs is
   validated implicitly via Case 1's fixture structure.
-- The `layer: [name]` and `[system-name]` argument modes follow the same approval
+- The `layer: [name]` and `[system-name]` argument modes follow the same Verification
   pattern as the default (all systems) mode.

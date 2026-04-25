@@ -1,4 +1,4 @@
-# Example Session: UX Pipeline — /ux-design → /ux-review → /team-ui
+﻿# Example Session: UX Pipeline — /ux-design → /ux-review → /team-ui
 
 **Context:** Solo indie dev, Pre-Production phase. The HUD and inventory screen are the first UI to design. The game has a player journey doc and GDDs for inventory and combat.
 
@@ -51,7 +51,7 @@
 > > **Approach: Persistent Minimal**
 > > The HUD is always visible but occupies minimal screen real estate. The player is a resource-managing survivor — denying HP/stamina visibility creates frustration, not tension. All critical stats are readable at a glance without interrupting exploration focus. Elements scale in visual weight when they become urgent (HP below 30% pulses, stamina at 0 flashes), then return to minimal state.
 >
-> May I write this to `design/ux/hud.md` as the Philosophy section?
+> I will write this to `design/ux/hud.md` as the Philosophy section?
 
 **User:**
 > Yes
@@ -168,7 +168,7 @@ design/ux/hud.md
 >
 > > Press F (or South button) to pick up item at cursor. Item enters "held" state with visual indicator. Press F again on target slot to place. Press Escape to cancel and return item.
 >
-> May I write this to `design/ux/screens/inventory.md` and re-run the accessibility check?
+> I will write this to `design/ux/screens/inventory.md` and re-run the accessibility check?
 
 **User:**
 > Yes

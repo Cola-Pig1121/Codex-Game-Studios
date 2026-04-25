@@ -1,4 +1,4 @@
-# Skill Test Spec: /team-polish
+﻿# Skill Test Spec: /team-polish
 
 ## Skill Summary
 
@@ -20,7 +20,7 @@ identifies engine-level root causes. Verdict is READY FOR RELEASE or NEEDS MORE 
 - [ ] Contains verdict keywords: READY FOR RELEASE, NEEDS MORE WORK
 - [ ] Contains "File Write Protocol" section
 - [ ] File writes are delegated to sub-agents — orchestrator does not write files directly
-- [ ] Sub-agents enforce "May I write to [path]?" before any write
+- [ ] Sub-agents enforce "I will write to [path]?" before any write
 - [ ] Has a next-step handoff at the end (references `/release-checklist`, `/sprint-plan update`, `/gate-check`)
 - [ ] Error Recovery Protocol section is present
 - [ ] `AskUserQuestion` is used at phase transitions before proceeding
@@ -54,7 +54,7 @@ identifies engine-level root causes. Verdict is READY FOR RELEASE or NEEDS MORE 
 6. Phase 5: qa-tester runs edge case tests, soak tests, stress tests, and regression tests; all pass
 7. `AskUserQuestion` presents test results; user approves before Phase 6
 8. Phase 6: orchestrator collects all results; compares before/after performance metrics against budgets; all metrics pass
-9. Subagent asks "May I write the polish report to `production/qa/evidence/polish-combat-[date].md`?" before writing
+9. Subagent states "I will write the polish report to `production/qa/evidence/polish-combat-[date].md`?" before writing
 10. Verdict: READY FOR RELEASE
 
 **Assertions:**
@@ -166,8 +166,8 @@ identifies engine-level root causes. Verdict is READY FOR RELEASE or NEEDS MORE 
 2. Phase 5: qa-tester runs regression tests and detects "Item highlight glow on hover no longer renders — regression introduced by shader optimization in Phase 3"
 3. qa-tester returns test results with the regression noted
 4. Orchestrator surfaces the regression immediately: "qa-tester: REGRESSION FOUND — `item-highlight-hover` glow broken by Phase 3 shader optimization"
-5. Subagent files a bug report asking "May I write the bug report to `production/qa/evidence/bug-polish-inventory-ui-[date].md`?" before writing
-6. Bug report is written after approval; it includes: the broken behavior, the polish change that caused it, reproduction steps, and severity
+5. Subagent files a bug report asking "I will write the bug report to `production/qa/evidence/bug-polish-inventory-ui-[date].md`?" before writing
+6. Bug report is written after verification; it includes: the broken behavior, the polish change that caused it, reproduction steps, and severity
 7. `AskUserQuestion` presents the regression with options:
    - Revert the shader optimization and find an alternative approach
    - Fix the shader optimization to preserve the glow effect
@@ -177,7 +177,7 @@ identifies engine-level root causes. Verdict is READY FOR RELEASE or NEEDS MORE 
 **Assertions:**
 - [ ] Regression is surfaced before Phase 6 sign-off
 - [ ] The specific broken behavior and the responsible change are both named in the report
-- [ ] Subagent asks "May I write the bug report to [path]?" before filing
+- [ ] Subagent states "I will write the bug report to [path]?" before filing
 - [ ] Bug report includes: broken behavior, causal change, reproduction steps, severity
 - [ ] `AskUserQuestion` offers options including revert, fix in place, and schedule later
 - [ ] Verdict is NEEDS MORE WORK when a regression is present and unresolved
@@ -192,7 +192,7 @@ identifies engine-level root causes. Verdict is READY FOR RELEASE or NEEDS MORE 
 - [ ] Phases 3 and 4 are always launched in parallel with Phase 2 (not deferred)
 - [ ] engine-programmer is only spawned when Phase 1 explicitly identifies engine-level root causes
 - [ ] No files are written by the orchestrator directly — all writes are delegated to sub-agents
-- [ ] Each sub-agent enforces the "May I write to [path]?" protocol before any write
+- [ ] Each sub-agent enforces the "I will write to [path]?" protocol before any write
 - [ ] BLOCKED status from any agent is surfaced immediately — not silently skipped
 - [ ] A partial report is always produced when some agents complete and others block
 - [ ] Verdict is exactly READY FOR RELEASE or NEEDS MORE WORK — no other verdict values used

@@ -1,4 +1,4 @@
-# === IDE and Editor ===
+﻿# === IDE and Editor ===
 .vs/
 .vscode/settings.json
 .idea/
@@ -9,9 +9,9 @@
 Thumbs.db
 Desktop.ini
 
-# === Claude Code Local ===
-.claude/settings.local.json
-CLAUDE.local.md
+# === Codex Local ===
+.codex/settings.local.json
+Codex.local.md
 production/session-logs/
 
 # === Internal Planning (not for public) ===

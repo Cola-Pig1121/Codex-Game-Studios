@@ -1,13 +1,13 @@
-# Skill Test Spec: /start
+﻿# Skill Test Spec: /start
 
 ## Skill Summary
 
 `/start` is the first-time onboarding skill for new projects. It guides the
 user through naming the project, choosing a game engine, and setting up the
-initial directory structure. It creates stub configuration files (CLAUDE.md,
+initial directory structure. It creates stub configuration files (AGENTS.md,
 technical-preferences.md) and then routes to `/setup-engine` with the chosen
 engine as an argument. Each file or directory created is gated behind a
-"May I write" ask, following the collaborative protocol.
+"I will write" ask, following the collaborative protocol.
 
 The skill detects whether a project is already configured and whether a
 partial setup exists, offering to resume or restart as appropriate. It has
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
-- [ ] Contains "May I write" collaborative protocol language for each config file
+- [ ] Contains "I will write" collaborative protocol language for each config file
 - [ ] Has a next-step handoff at the end (routes to `/setup-engine`)
 
 ---
@@ -40,7 +40,7 @@ point this skill runs.
 ### Case 1: Happy Path — Fresh repo, no engine, full onboarding flow
 
 **Fixture:**
-- Empty repository: no CLAUDE.md overrides, no `production/stage.txt`, no
+- Empty repository: no AGENTS.md overrides, no `production/stage.txt`, no
   `technical-preferences.md` content beyond placeholders
 - No existing design docs or source code
 
@@ -51,16 +51,16 @@ point this skill runs.
 2. Skill asks for project name
 3. Skill presents 3 engine options: Godot 4, Unity, Unreal Engine 5
 4. User selects an engine
-5. Skill asks "May I write the initial directory structure?"
+5. Skill states "I will write the initial directory structure?"
 6. Skill creates all directories defined in `directory-structure.md`
-7. Skill asks "May I write CLAUDE.md stub?" and writes it on approval
+7. Skill states "I will write AGENTS.md stub?" and writes it after verification
 8. Skill routes to `/setup-engine [chosen-engine]` to complete technical config
 
 **Assertions:**
 - [ ] Project name is captured before any file is written
 - [ ] Exactly 3 engine options are presented
-- [ ] "May I write" is asked for each config file individually
-- [ ] No file is written without explicit user approval
+- [ ] "I will write" is asked for each config file individually
+- [ ] No file is written without scope and safety verification
 - [ ] Handoff to `/setup-engine` occurs at the end with the chosen engine argument
 - [ ] Verdict is COMPLETE after all files are written and handoff is issued
 
@@ -98,7 +98,7 @@ point this skill runs.
 
 **Expected behavior:**
 1. Skill presents engine options and user selects Godot 4
-2. Skill writes initial stubs (directory structure, CLAUDE.md) after approval
+2. Skill writes initial stubs (directory structure, AGENTS.md) after verification
 3. Skill explicitly routes to `/setup-engine godot` as the next step
 4. Handoff message clearly names the engine and the next skill invocation
 
@@ -128,7 +128,7 @@ point this skill runs.
 **Assertions:**
 - [ ] Partial state is correctly identified (directories present, engine absent)
 - [ ] User is offered resume vs. restart choice — not forced into one path
-- [ ] Resume path skips re-creating directories (no redundant "May I write" for structure)
+- [ ] Resume path skips re-creating directories (no redundant "I will write" for structure)
 - [ ] Restart path asks for permission to overwrite before touching any files
 
 ---
@@ -156,7 +156,7 @@ point this skill runs.
 
 - [ ] Asks for project name before any file is written
 - [ ] Presents engine options as a structured choice (not free text)
-- [ ] Asks "May I write" separately for directory structure and for CLAUDE.md stub
+- [ ] states "I will write" separately for directory structure and for AGENTS.md stub
 - [ ] Ends with a handoff to `/setup-engine` with the engine name as argument
 - [ ] Verdict is clearly stated (COMPLETE or BLOCKED) at end of output
 

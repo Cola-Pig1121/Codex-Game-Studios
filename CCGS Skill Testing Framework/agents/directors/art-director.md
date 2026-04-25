@@ -1,20 +1,20 @@
-# Agent Test Spec: art-director
+﻿# Agent Test Spec: art-director
 
 ## Agent Summary
 **Domain owned:** Visual identity, art bible authorship and enforcement, asset quality standards, UI/UX visual design, visual phase gate, concept art evaluation.
 **Does NOT own:** UX interaction flows and information architecture (ux-designer's domain), audio direction (audio-director), code implementation.
-**Model tier:** Sonnet (note: despite the "director" title, art-director is assigned Sonnet per coordination-rules.md — it handles individual system analysis, not multi-document phase gate synthesis at the Opus level).
+**Model tier:** gpt-5.5 medium reasoning (note: despite the "director" title, art-director is assigned gpt-5.5 medium per coordination-rules.md — it handles individual system analysis, not multi-document phase gate synthesis at the gpt-5.5 xhigh level).
 **Gate IDs handled:** AD-CONCEPT-VISUAL, AD-ART-BIBLE, AD-PHASE-GATE.
 
 ---
 
 ## Static Assertions (Structural)
 
-Verified by reading the agent's `.claude/agents/art-director.md` frontmatter:
+Verified by reading the agent's `.codex/agents/art-director.md` frontmatter:
 
 - [ ] `description:` field is present and domain-specific (references visual identity, art bible, asset standards — not generic)
 - [ ] `allowed-tools:` list is read-focused; image review capability if supported; no Bash unless asset pipeline checks are justified
-- [ ] Model tier is `claude-sonnet-4-6` (NOT Opus — coordination-rules.md assigns Sonnet to art-director)
+- [ ] Model tier is `gpt-5.5 (reasoning_effort: medium)` (NOT gpt-5.5 xhigh — coordination-rules.md assigns gpt-5.5 medium to art-director)
 - [ ] Agent definition does not claim authority over UX interaction flows or audio direction
 
 ---

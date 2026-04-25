@@ -1,4 +1,4 @@
-# Skill Test Spec: /localize
+﻿# Skill Test Spec: /localize
 
 ## Skill Summary
 
@@ -10,7 +10,7 @@ existing locale files, it produces a diff showing additions, removals, and
 changed keys.
 
 Translation files are written to `assets/localization/[locale-code].csv` (or
-engine-appropriate format) after a "May I write" ask. No director gates apply.
+engine-appropriate format) after a "I will write" ask. No director gates apply.
 Verdicts: LOCALIZATION COMPLETE (all locales are complete) or GAPS FOUND (at
 least one locale is missing string keys).
 
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: LOCALIZATION COMPLETE, GAPS FOUND
-- [ ] Contains "May I write" collaborative protocol language before writing locale files
+- [ ] Contains "I will write" collaborative protocol language before writing locale files
 - [ ] Has a next-step handoff (e.g., send locale skeletons to translators)
 
 ---
@@ -50,14 +50,14 @@ lead agent may review separately but is not invoked within this skill.
 1. Skill extracts all player-facing strings from source files
 2. Skill finds the same strings in `en.csv` as a reference
 3. Skill generates `fr.csv` skeleton with all string keys and empty values
-4. Skill asks "May I write to `assets/localization/fr.csv`?"
-5. File written on approval; verdict is GAPS FOUND (file created but empty values)
+4. Skill states "I will write to `assets/localization/fr.csv`?"
+5. File written after verification; verdict is GAPS FOUND (file created but empty values)
 6. Skill notes: "fr.csv created — send to translator to fill values"
 
 **Assertions:**
 - [ ] All string keys from `en.csv` are present in `fr.csv`
 - [ ] All values in `fr.csv` are empty (not copied from English)
-- [ ] "May I write" is asked before creating the file
+- [ ] "I will write" is asked before creating the file
 - [ ] Verdict is GAPS FOUND (file is created but untranslated)
 
 ---
@@ -78,7 +78,7 @@ lead agent may review separately but is not invoked within this skill.
    - 3 new keys (need translation — listed as empty in fr.csv)
    - 1 removed key (marked as obsolete — suggest removal)
    - 2 changed keys (English source changed — French may need update, flagged)
-4. Skill asks "May I update `assets/localization/fr.csv`?"
+4. Skill asks "I will update `assets/localization/fr.csv`?"
 5. File updated with new empty keys added, obsolete keys marked; verdict is GAPS FOUND
 
 **Assertions:**
@@ -103,7 +103,7 @@ lead agent may review separately but is not invoked within this skill.
 3. Skill produces GAPS FOUND report listing the 4 missing keys by locale:
    "de.csv missing: [key1], [key2], [key3], [key4]"
 4. Skill offers to add the missing keys as empty values to `de.csv`
-5. After approval: file updated; verdict remains GAPS FOUND (values still empty)
+5. after verification: file updated; verdict remains GAPS FOUND (values still empty)
 
 **Assertions:**
 - [ ] Missing keys are listed explicitly (not just a count)
@@ -161,7 +161,7 @@ lead agent may review separately but is not invoked within this skill.
 - [ ] Creates new locale files with all keys as empty values (not auto-translated)
 - [ ] Diffs existing locale files against current source strings
 - [ ] Flags missing keys by locale and by key name
-- [ ] Asks "May I write" before creating or updating any locale file
+- [ ] states "I will write" before creating or updating any locale file
 - [ ] Verdict is LOCALIZATION COMPLETE (all locales fully translated) or GAPS FOUND
 
 ---

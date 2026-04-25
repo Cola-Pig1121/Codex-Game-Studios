@@ -1,4 +1,4 @@
-# Skill Test Spec: /reverse-document
+﻿# Skill Test Spec: /reverse-document
 
 ## Skill Summary
 
@@ -9,7 +9,7 @@ GDD skeleton (for gameplay systems) or an architecture overview (for technical
 systems). The output is a best-effort inference — magic numbers and undocumented
 logic may result in a PARTIAL verdict.
 
-The skill asks "May I write to [inferred path]?" before creating the document.
+The skill states "I will write to [inferred path]?" before creating the document.
 No director gates apply. Verdicts: COMPLETE (clean inference), PARTIAL (some
 fields are ambiguous and need human review).
 
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, PARTIAL
-- [ ] Contains "May I write" collaborative protocol language before writing the doc
+- [ ] Contains "I will write" collaborative protocol language before writing the doc
 - [ ] Has a next-step handoff (e.g., `/design-review` to validate the generated doc)
 
 ---
@@ -54,14 +54,14 @@ None. `/reverse-document` is a documentation utility. No director gates apply.
    Tuning Knobs, Acceptance Criteria
 4. Formulas section includes the inferred clamping formula
 5. Tuning Knobs notes `max_health = 100` as a configurable value
-6. Skill asks "May I write to `design/gdd/health-system.md`?"
+6. Skill states "I will write to `design/gdd/health-system.md`?"
 7. File written; verdict is COMPLETE
 
 **Assertions:**
 - [ ] All 8 required GDD sections are present in the output
 - [ ] `max_health = 100` appears as a Tuning Knob
 - [ ] Clamping formula is captured in the Formulas section
-- [ ] "May I write" is asked with the inferred path
+- [ ] "I will write" is asked with the inferred path
 - [ ] Verdict is COMPLETE
 
 ---
@@ -81,7 +81,7 @@ None. `/reverse-document` is a documentation utility. No director gates apply.
 2. Skill produces a GDD skeleton with notes: "AMBIGUOUS VALUE: 150 (unknown units —
    is this pixels, world units, or tiles?)"
 3. Skill marks the Formulas and Tuning Knobs sections as requiring human review
-4. Skill asks "May I write to `design/gdd/enemy-ai.md`?" with PARTIAL advisory
+4. Skill states "I will write to `design/gdd/enemy-ai.md`?" with PARTIAL advisory
 5. File written with PARTIAL markers; verdict is PARTIAL
 
 **Assertions:**
@@ -105,8 +105,8 @@ None. `/reverse-document` is a documentation utility. No director gates apply.
 2. Skill produces a cross-system architecture overview (not individual GDDs)
 3. Overview describes: Combat System → Damage Resolver interaction, shared
    interfaces, data flow between the two
-4. Skill asks "May I write to `docs/architecture/combat-damage-overview.md`?"
-5. Overview written after approval; verdict is COMPLETE (or PARTIAL if ambiguous)
+4. Skill states "I will write to `docs/architecture/combat-damage-overview.md`?"
+5. Overview written after verification; verdict is COMPLETE (or PARTIAL if ambiguous)
 
 **Assertions:**
 - [ ] Both files are analyzed together (not as two separate docs)
@@ -163,7 +163,7 @@ None. `/reverse-document` is a documentation utility. No director gates apply.
 - [ ] Produces all 8 required GDD sections when target is a gameplay system
 - [ ] Annotates ambiguous values with AMBIGUOUS VALUE markers
 - [ ] Produces cross-system overview (not individual GDDs) for multiple files
-- [ ] Asks "May I write" before creating any output file
+- [ ] states "I will write" before creating any output file
 - [ ] Verdict is COMPLETE (clean inference) or PARTIAL (ambiguous fields)
 
 ---

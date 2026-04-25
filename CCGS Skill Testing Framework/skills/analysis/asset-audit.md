@@ -1,11 +1,11 @@
-# Skill Test Spec: /asset-audit
+﻿# Skill Test Spec: /asset-audit
 
 ## Skill Summary
 
 `/asset-audit` audits the `assets/` directory for naming convention compliance,
 missing metadata, and format/size issues. It reads asset files against the
 conventions and budgets defined in `technical-preferences.md`. No director gates
-are invoked. The skill does not write without user approval. Verdicts: COMPLIANT,
+are invoked. The skill does not write without user Verification. Verdicts: COMPLIANT,
 WARNINGS, or NON-COMPLIANT.
 
 ---
@@ -17,7 +17,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLIANT, WARNINGS, NON-COMPLIANT
-- [ ] Does NOT require "May I write" language (read-only; optional report requires approval)
+- [ ] Does NOT require "I will write" language (read-only; optional report requires Verification)
 - [ ] Has a next-step handoff (what to do after audit results)
 
 ---
@@ -140,13 +140,13 @@ None. Asset auditing is a read-only analysis skill; no gates are invoked.
 3. Verdict is WARNINGS
 4. Output notes: "Consider having a Technical Artist review naming conventions"
 5. Skill presents findings; offers optional audit report write
-6. If user opts in: "May I write to `production/qa/asset-audit-[date].md`?"
+6. If user opts in: "I will write to `production/qa/asset-audit-[date].md`?"
 
 **Assertions:**
 - [ ] No director gate is invoked in any review mode
 - [ ] Technical artist consultation is suggested (not mandated)
 - [ ] Findings table is presented before any write prompt
-- [ ] Optional audit report write asks "May I write" before writing
+- [ ] Optional audit report write states "I will write" before writing
 
 ---
 

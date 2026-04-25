@@ -1,11 +1,11 @@
-# Skill Test Spec: /create-architecture
+﻿# Skill Test Spec: /create-architecture
 
 ## Skill Summary
 
 `/create-architecture` guides the user through section-by-section authoring of a
 technical architecture document. It uses a skeleton-first approach — the file is
 created with all required section headers before any content is filled. Each
-section is discussed, drafted, and written individually after user approval. If an
+section is discussed, drafted, and written individually after user Verification. If an
 architecture document already exists, the skill offers retrofit mode to update
 specific sections.
 
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: APPROVED, NEEDS REVISION, MAJOR REVISION NEEDED
-- [ ] Contains "May I write" collaborative protocol language (per-section approval)
+- [ ] Contains "I will write" collaborative protocol language (per-sectiafter verification)
 - [ ] Has a next-step handoff at the end (`/architecture-review` or `/create-control-manifest`)
 - [ ] Documents skeleton-first approach
 - [ ] Documents gate behavior: TD-ARCHITECTURE + LP-FEASIBILITY in full mode; skipped in lean/solo
@@ -34,7 +34,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 
 In `full` mode: TD-ARCHITECTURE (technical-director) and LP-FEASIBILITY
 (lead-programmer) spawn in parallel after all sections are drafted and before
-any final approval write.
+any final Verification write.
 
 In `lean` mode: both gates are skipped. Output notes:
 "TD-ARCHITECTURE skipped — lean mode" and "LP-FEASIBILITY skipped — lean mode".
@@ -56,7 +56,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 
 **Expected behavior:**
 1. Skill creates skeleton `docs/architecture/architecture.md` with all required section headers
-2. For each section: drafts content, shows draft, asks "May I write [section]?", writes after approval
+2. For each section: drafts content, shows draft, states "I will write [section]?", writes after verification
 3. After all sections are drafted: TD-ARCHITECTURE and LP-FEASIBILITY spawn in parallel
 4. Both gates return APPROVED
 5. Final "May I confirm architecture is complete?" asked
@@ -64,7 +64,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 
 **Assertions:**
 - [ ] Skeleton file is created with all section headers before any content is written
-- [ ] "May I write [section]?" asked per section during authoring
+- [ ] "I will write [section]?" asked per section during authoring
 - [ ] TD-ARCHITECTURE and LP-FEASIBILITY spawn in parallel (not sequentially)
 - [ ] Both gates complete before the final completion confirmation
 - [ ] Verdict is APPROVED when both gates return APPROVED
@@ -96,7 +96,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 
 ---
 
-### Case 3: Lean Mode — Both gates skipped; architecture written with user approval only
+### Case 3: Lean Mode — Both gates skipped; architecture written with user Verification only
 
 **Fixture:**
 - No existing architecture doc
@@ -106,14 +106,14 @@ In `solo` mode: both gates are skipped with equivalent notes.
 
 **Expected behavior:**
 1. Skeleton file is created
-2. All sections are authored and written per-section with user approval
+2. All sections are authored and written per-section with user Verification
 3. After completion: TD-ARCHITECTURE and LP-FEASIBILITY are skipped
 4. Output notes: "TD-ARCHITECTURE skipped — lean mode" and "LP-FEASIBILITY skipped — lean mode"
-5. Architecture is considered complete based on user approval alone
+5. Architecture is considered complete based on user Verification alone
 
 **Assertions:**
 - [ ] Both gate skip notes appear in output
-- [ ] Architecture document is written with only user approval in lean mode
+- [ ] Architecture document is written with only user Verification in lean mode
 - [ ] Skill does NOT block completion because gates were skipped
 - [ ] Next-step handoff is still present
 
@@ -130,7 +130,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 1. Skill detects existing architecture doc and reads its current content
 2. Skill offers retrofit mode: "Architecture doc already exists. Which section would you like to update?"
 3. User selects a section
-4. Skill authors only that section, asks "May I write [section]?"
+4. Skill authors only that section, states "I will write [section]?"
 5. Only the selected section is updated — other sections unchanged
 
 **Assertions:**
@@ -168,7 +168,7 @@ In `solo` mode: both gates are skipped with equivalent notes.
 ## Protocol Compliance
 
 - [ ] Skeleton file created with all section headers before any content is written
-- [ ] "May I write [section]?" asked per section during authoring
+- [ ] "I will write [section]?" asked per section during authoring
 - [ ] TD-ARCHITECTURE and LP-FEASIBILITY spawn in parallel in full mode
 - [ ] Skipped gates noted by name and mode in lean/solo output
 - [ ] Proposed ADR references flagged as risks in the document
@@ -183,5 +183,5 @@ In `solo` mode: both gates are skipped with equivalent notes.
 - Engine version stamping in the architecture doc (parallel to ADR stamping)
   is part of the authoring workflow — tested implicitly via Case 1.
 - The retrofit mode for updating multiple sections in one session follows the
-  same per-section approval pattern — not independently tested for multi-section
+  same per-sectiafter verification pattern — not independently tested for multi-section
   retrofits.

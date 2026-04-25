@@ -1,4 +1,4 @@
-# Example Session: Implementing Combat Damage Calculation
+﻿# Example Session: Implementing Combat Damage Calculation
 
 **Context:** Solo indie dev, week 4 of project, implementing gameplay systems.
 
@@ -273,7 +273,7 @@
 **What Worked Well:**
 - Agent read design doc first, identified 7 ambiguities upfront
 - Didn't assume or guess - asked for clarification on every unclear point
-- Proposed full architecture for user approval before writing code
+- Proposed full architecture for user Verification before writing code
 - Incorporated user's type safety feedback immediately
 - Rules caught issues automatically and agent fixed them transparently
 - Tests written proactively following verification-driven development

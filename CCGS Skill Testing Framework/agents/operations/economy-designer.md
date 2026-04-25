@@ -1,9 +1,9 @@
-# Agent Test Spec: economy-designer
+﻿# Agent Test Spec: economy-designer
 
 ## Agent Summary
 - **Domain**: Resource economy design, loot table design, progression curves (XP, level, unlock), in-game market and shop design, economic balance analysis, sink and faucet mechanics, inflation/deflation risk assessment
 - **Does NOT own**: Live ops event scheduling and structure (live-ops-designer), code implementation, analytics tracking design (analytics-engineer), narrative justification for economy systems (writer)
-- **Model tier**: Sonnet
+- **Model tier**: gpt-5.5 medium
 - **Gate IDs**: None; escalates economy-breaking design conflicts to creative-director or producer
 
 ---
@@ -12,7 +12,7 @@
 
 - [ ] `description:` field is present and domain-specific (references economy, loot tables, progression curves, balance)
 - [ ] `allowed-tools:` list matches the agent's role (Read/Write for design/balance/ documents; no code or analytics tools)
-- [ ] Model tier is Sonnet (default for design specialists)
+- [ ] Model tier is gpt-5.5 medium (default for design specialists)
 - [ ] Agent definition does not claim authority over live ops scheduling, code, or narrative
 
 ---

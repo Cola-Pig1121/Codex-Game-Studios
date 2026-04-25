@@ -1,4 +1,4 @@
-# Example Session: /adopt — Brownfield Project Onboarding
+﻿# Example Session: /adopt — Brownfield Project Onboarding
 
 **Context:** Developer has been building a game for 3 months before discovering this agent system. They have code, some design docs, and rough notes — but nothing in the right format for the skills to use.
 
@@ -9,7 +9,7 @@
 - No `docs/architecture/` directory
 - No `production/` directory
 - No `design/gdd/systems-index.md`
-- CLAUDE.md exists (engine configured: Godot 4.6)
+- AGENTS.md exists (engine configured: Godot 4.6)
 
 **Session Duration:** ~30 minutes
 **Turns:** 8
@@ -31,7 +31,7 @@
 >
 > | Artifact Category | Found | Notes |
 > |------------------|-------|-------|
-> | Engine configuration | ✅ | Godot 4.6 in CLAUDE.md |
+> | Engine configuration | ✅ | Godot 4.6 in AGENTS.md |
 > | Source code | ✅ | ~4000 lines in `src/gameplay/` |
 > | Design docs | ⚠️ | 3 files in `design/`, not in GDD format |
 > | Architecture docs | ❌ | `docs/architecture/` missing |
@@ -86,7 +86,7 @@
 >
 > **Important:** Step 1 must happen before any other step. Everything else can be done in parallel or reordered based on your priorities.
 >
-> May I write this plan to `docs/adoption-plan-2026-03-12.md`?
+> I will write this plan to `docs/adoption-plan-2026-03-12.md`?
 
 **User:**
 > Yes. Write it.
@@ -142,7 +142,7 @@
 >
 > Updated dependency: Movement depends on Stamina (movement drains it).
 >
-> May I write this to `design/gdd/systems-index.md`?
+> I will write this to `design/gdd/systems-index.md`?
 
 ## Turn 6: User Approves
 

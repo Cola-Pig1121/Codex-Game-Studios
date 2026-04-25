@@ -1,4 +1,4 @@
-# Skill Test Spec: /balance-check
+﻿# Skill Test Spec: /balance-check
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 checks each value against the design formulas defined in GDDs under `design/gdd/`.
 It produces a findings table with columns: Value → Formula → Deviation → Severity.
 No director gates are invoked (read-only analysis). The skill may optionally write
-a balance report but asks "May I write" before doing so. Verdicts: BALANCED,
+a balance report but states "I will write" before doing so. Verdicts: BALANCED,
 CONCERNS, or OUT OF BALANCE.
 
 ---
@@ -18,7 +18,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: BALANCED, CONCERNS, OUT OF BALANCE
-- [ ] Contains "May I write" language (optional report write)
+- [ ] Contains "I will write" language (optional report write)
 - [ ] Has a next-step handoff (what to do after findings are reviewed)
 
 ---
@@ -53,7 +53,7 @@ None. Balance check is a read-only analysis skill; no gates are invoked.
 - [ ] Each row shows: stat name, formula target, actual value, deviation percentage
 - [ ] All rows show PASS or equivalent when within tolerance
 - [ ] Verdict is BALANCED
-- [ ] No files are written without user approval
+- [ ] No files are written without user Verification
 
 ---
 
@@ -128,7 +128,7 @@ None. Balance check is a read-only analysis skill; no gates are invoked.
 
 ---
 
-### Case 5: Gate Compliance — Read-only; no gate; optional report requires approval
+### Case 5: Gate Compliance — Read-only; no gate; optional report requires Verification
 
 **Fixture:**
 - Balance data and GDD formulas exist; 1 stat has CONCERNS-level deviation (15% above target)
@@ -142,14 +142,14 @@ None. Balance check is a read-only analysis skill; no gates are invoked.
 3. No director gate is invoked
 4. Skill presents findings table to user
 5. Skill offers to write an optional balance report
-6. If user says yes: skill asks "May I write to `production/qa/balance-report-[date].md`?"
+6. If user says yes: skill states "I will write to `production/qa/balance-report-[date].md`?"
 7. If user says no: skill ends without writing
 
 **Assertions:**
 - [ ] No director gate is invoked in any review mode
 - [ ] Findings table is presented without writing anything automatically
 - [ ] Optional report write is offered but not forced
-- [ ] "May I write" prompt appears only if user opts in to the report
+- [ ] "I will write" prompt appears only if user opts in to the report
 
 ---
 
@@ -157,7 +157,7 @@ None. Balance check is a read-only analysis skill; no gates are invoked.
 
 - [ ] Reads both balance data files and GDD formulas before analysis
 - [ ] Findings table shows Value, Formula, Deviation, and Severity columns
-- [ ] Does not write any files without explicit user approval
+- [ ] Does not write any files without verification
 - [ ] No director gates are invoked
 - [ ] Verdict is one of: BALANCED, CONCERNS, OUT OF BALANCE
 

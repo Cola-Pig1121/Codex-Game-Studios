@@ -1,11 +1,11 @@
-# Skill Test Spec: /test-flakiness
+﻿# Skill Test Spec: /test-flakiness
 
 ## Skill Summary
 
 `/test-flakiness` detects non-deterministic tests by analyzing test history logs
 (if available) or scanning test source code for common flakiness patterns (random
 numbers without seeds, real-time waits, external I/O). No director gates are
-invoked. The skill does not write without user approval. Verdicts: NO FLAKINESS,
+invoked. The skill does not write without user Verification. Verdicts: NO FLAKINESS,
 SUSPECT TESTS FOUND, or CONFIRMED FLAKY.
 
 ---
@@ -17,7 +17,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: NO FLAKINESS, SUSPECT TESTS FOUND, CONFIRMED FLAKY
-- [ ] Does NOT require "May I write" language (read-only; optional report requires approval)
+- [ ] Does NOT require "I will write" language (read-only; optional report requires Verification)
 - [ ] Has a next-step handoff (what to do after flakiness findings)
 
 ---
@@ -145,12 +145,12 @@ are invoked.
 2. No director gate is invoked regardless of review mode
 3. Verdict is CONFIRMED FLAKY
 4. Skill presents findings and offers optional written report
-5. If user opts in: "May I write to `production/qa/flakiness-report-[date].md`?"
+5. If user opts in: "I will write to `production/qa/flakiness-report-[date].md`?"
 
 **Assertions:**
 - [ ] No director gate is invoked in any review mode
 - [ ] CONFIRMED FLAKY verdict requires history-based evidence (not just source patterns)
-- [ ] Optional report requires "May I write" before writing
+- [ ] Optional report requires "I will write" before writing
 - [ ] Flakiness report is advisory for qa-lead; skill does not auto-disable tests
 
 ---

@@ -1,10 +1,10 @@
-# Skill Test Spec: /bug-triage
+﻿# Skill Test Spec: /bug-triage
 
 ## Skill Summary
 
 `/bug-triage` reads all open bug reports in `production/bugs/` and produces a
 prioritized triage table sorted by severity (CRITICAL → HIGH → MEDIUM → LOW).
-It runs on the Haiku model (read-only, formatting/sorting task) and produces no
+It runs on the gpt-5.5 low reasoning model (read-only, formatting/sorting task) and produces no
 file writes — the triage output is conversational. The skill flags bugs missing
 reproduction steps and identifies possible duplicates by comparing titles and
 affected systems.
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: TRIAGED
-- [ ] Does NOT contain "May I write" language (skill is read-only)
+- [ ] Does NOT contain "I will write" language (skill is read-only)
 - [ ] Has a next-step handoff (e.g., `/bug-report` to create new reports, `/hotfix` for critical bugs)
 
 ---

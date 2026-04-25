@@ -1,4 +1,4 @@
-# Skill Test Spec: /asset-spec
+﻿# Skill Test Spec: /asset-spec
 
 ## Skill Summary
 
@@ -8,9 +8,9 @@ a structured asset spec sheet that defines: dimensions, animation states (if
 applicable), color palette reference, style notes, technical constraints
 (format, file size budget), and deliverable checklist.
 
-Spec sheets are written to `assets/specs/[asset-name]-spec.md` after a "May I write"
+Spec sheets are written to `assets/specs/[asset-name]-spec.md` after a "I will write"
 ask. If a spec already exists, the skill offers to update it. When multiple assets
-are requested in a single invocation, a "May I write" ask is made per asset. No
+are requested in a single invocation, a "I will write" ask is made per asset. No
 director gates apply. The verdict is COMPLETE when all requested specs are written.
 
 ---
@@ -22,7 +22,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" collaborative protocol language (per asset)
+- [ ] Contains "I will write" collaborative protocol language (per asset)
 - [ ] Has a next-step handoff (e.g., assign to an artist, or `/asset-audit` later)
 
 ---
@@ -54,14 +54,14 @@ review specs separately but this is not a gate within this skill.
    - Style notes: from art bible character design rules
    - Technical constraints: format (PNG), size budget
    - Deliverable checklist
-3. Skill asks "May I write to `assets/specs/goblin-enemy-spec.md`?"
-4. File written on approval; verdict is COMPLETE
+3. Skill states "I will write to `assets/specs/goblin-enemy-spec.md`?"
+4. File written after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] All 6 spec components are present (dimensions, animations, palette, style, tech, checklist)
 - [ ] Color palette reference links to art bible (not duplicated)
 - [ ] Animation states are drawn from GDD (not invented)
-- [ ] "May I write" is asked with the correct path
+- [ ] "I will write" is asked with the correct path
 - [ ] Verdict is COMPLETE
 
 ---
@@ -79,7 +79,7 @@ review specs separately but this is not a gate within this skill.
 2. Skill generates spec with placeholder style notes: "DEPENDENCY GAP: art bible
    not found — style notes are placeholders"
 3. Color palette section uses: "TBD — see art bible when created"
-4. Skill asks "May I write to `assets/specs/player-sprite-spec.md`?"
+4. Skill states "I will write to `assets/specs/player-sprite-spec.md`?"
 5. File written with placeholders and dependency flag; verdict is COMPLETE with advisory
 
 **Assertions:**
@@ -104,13 +104,13 @@ review specs separately but this is not a gate within this skill.
 3. Skill diffs GDD against existing spec and identifies: new "charge-attack" animation
    state added in GDD but not in spec
 4. Skill presents the diff: "1 new animation state found — offering to update spec"
-5. Skill asks "May I update `assets/specs/goblin-enemy-spec.md`?" (not overwrite)
+5. Skill asks "I will update `assets/specs/goblin-enemy-spec.md`?" (not overwrite)
 6. Spec is updated; verdict is COMPLETE
 
 **Assertions:**
 - [ ] Existing spec is detected and "update" path is offered
 - [ ] Diff between GDD and existing spec is shown
-- [ ] "May I update" language is used (not "May I write")
+- [ ] "I will update" language is used (not "I will write")
 - [ ] Existing spec content is preserved; only the diff is applied
 - [ ] Verdict is COMPLETE
 
@@ -126,13 +126,13 @@ review specs separately but this is not a gate within this skill.
 
 **Expected behavior:**
 1. Skill generates all 3 specs in sequence
-2. For each asset, skill shows the draft and asks "May I write to
+2. For each asset, skill shows the draft and states "I will write to
    `assets/specs/[name]-spec.md`?" individually
 3. User can approve all 3 or skip individual assets
 4. All approved specs are written; verdict is COMPLETE
 
 **Assertions:**
-- [ ] "May I write" is asked 3 times (once per asset), not once for all
+- [ ] "I will write" is asked 3 times (once per asset), not once for all
 - [ ] User can decline one asset without blocking the others
 - [ ] All 3 spec files are written for approved assets
 - [ ] Verdict is COMPLETE when all approved specs are written
@@ -163,7 +163,7 @@ review specs separately but this is not a gate within this skill.
 - [ ] Reads GDD, art bible, and design system before generating spec
 - [ ] Includes all 6 spec components (dimensions, animations, palette, style, tech, checklist)
 - [ ] Flags missing dependencies (art bible, GDD) with DEPENDENCY GAP notes
-- [ ] Asks "May I write" (or "May I update") per asset
+- [ ] states "I will write" (or "I will update") per asset
 - [ ] Handles multiple assets with individual write confirmations
 - [ ] Verdict is COMPLETE when all approved specs are written
 

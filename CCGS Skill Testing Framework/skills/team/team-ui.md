@@ -1,4 +1,4 @@
-# Skill Test Spec: /team-ui
+﻿# Skill Test Spec: /team-ui
 
 ## Skill Summary
 
@@ -19,10 +19,10 @@ with verdict COMPLETE / BLOCKED and handoffs to `/ux-review`, `/code-review`,
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings (Phase 1a through Phase 5 are all present)
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
-- [ ] Contains "May I write" or "File Write Protocol" — writes delegated to sub-agents and sub-skills, orchestrator does not write files directly
+- [ ] Contains "I will write" or "File Write Protocol" — writes delegated to sub-agents and sub-skills, orchestrator does not write files directly
 - [ ] Has a next-step handoff at the end (references `/ux-review`, `/code-review`, `/team-polish`)
 - [ ] Error Recovery Protocol section is present with all four recovery steps
-- [ ] Uses `AskUserQuestion` at phase transitions for user approval before proceeding
+- [ ] Uses `AskUserQuestion` at phase transitions for user Verification before proceeding
 - [ ] Phase 4 is explicitly marked as parallel (ux-designer, art-director, accessibility-specialist)
 - [ ] UX Review Gate (Phase 1c) is defined as a blocking gate — skill must not proceed to Phase 2 without APPROVED verdict
 - [ ] Team Composition lists all five roles (ux-designer, ui-programmer, art-director, engine UI specialist, accessibility-specialist)
@@ -40,7 +40,7 @@ with verdict COMPLETE / BLOCKED and handoffs to `/ux-review`, `/code-review`,
 - `design/player-journey.md` exists
 - `design/ux/interaction-patterns.md` exists with relevant patterns
 - `design/accessibility-requirements.md` exists with committed tier (e.g., Enhanced)
-- Engine UI specialist configured in `.claude/docs/technical-preferences.md`
+- Engine UI specialist configured in `.codex/docs/technical-preferences.md`
 
 **Input:** `/team-ui inventory screen`
 
@@ -142,7 +142,7 @@ with verdict COMPLETE / BLOCKED and handoffs to `/ux-review`, `/code-review`,
 - [ ] Phase 5 does NOT begin until all three Phase 4 agents have returned
 - [ ] Accessibility-specialist explicitly reads `design/accessibility-requirements.md` for the committed tier
 - [ ] Accessibility violations flagged as BLOCKING (not merely advisory)
-- [ ] `AskUserQuestion` shows all three review streams' results together before Phase 5 approval
+- [ ] `AskUserQuestion` shows all three review streams' results together before Phase 5 Verification
 - [ ] No Phase 4 agent's output is used as input for another Phase 4 agent
 
 ---

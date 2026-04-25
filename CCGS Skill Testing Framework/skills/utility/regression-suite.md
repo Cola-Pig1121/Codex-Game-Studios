@@ -1,4 +1,4 @@
-# Skill Test Spec: /regression-suite
+﻿# Skill Test Spec: /regression-suite
 
 ## Skill Summary
 
@@ -9,7 +9,7 @@ a matching assertion. It produces a coverage report identifying which ACs are
 fully covered, partially covered, or untested, and which test files have no
 matching AC (orphan tests).
 
-The skill may write a coverage report to `production/qa/` after a "May I write"
+The skill may write a coverage report to `production/qa/` after a "I will write"
 ask. No director gates apply. Verdicts: FULL COVERAGE (all ACs have tests),
 GAPS FOUND (some ACs are untested), or CRITICAL GAPS (a critical-priority AC
 has no test).
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: FULL COVERAGE, GAPS FOUND, CRITICAL GAPS
-- [ ] Contains "May I write" language (skill may write coverage report)
+- [ ] Contains "I will write" language (skill may write coverage report)
 - [ ] Has a next-step handoff (e.g., `/test-setup` if framework missing, `/qa-plan` if plan missing)
 
 ---
@@ -50,14 +50,14 @@ None. `/regression-suite` is a QA analysis utility. No director gates apply.
 2. Skill scans test files and matches each AC to at least one test assertion
 3. All 6 ACs have coverage
 4. Skill produces coverage report: "6/6 ACs covered"
-5. Skill asks "May I write to `production/qa/regression-sprint-004.md`?"
-6. File is written on approval; verdict is FULL COVERAGE
+5. Skill states "I will write to `production/qa/regression-sprint-004.md`?"
+6. File is written after verification; verdict is FULL COVERAGE
 
 **Assertions:**
 - [ ] All 6 ACs appear in the coverage report
 - [ ] Each AC is marked as covered with the matching test file referenced
 - [ ] Verdict is FULL COVERAGE
-- [ ] "May I write" is asked before writing the report
+- [ ] "I will write" is asked before writing the report
 
 ---
 
@@ -73,14 +73,14 @@ None. `/regression-suite` is a QA analysis utility. No director gates apply.
 1. Skill reads all 8 ACs
 2. Skill scans tests — 5 matched, 3 unmatched
 3. Coverage report lists the 3 untested ACs by story and AC text
-4. Skill asks "May I write to `production/qa/regression-[sprint]-[date].md`?"
+4. Skill states "I will write to `production/qa/regression-[sprint]-[date].md`?"
 5. Report is written; verdict is GAPS FOUND
 
 **Assertions:**
 - [ ] The 3 untested ACs are listed by name in the report
 - [ ] Matched ACs are also shown (not only the gaps)
 - [ ] Verdict is GAPS FOUND (not FULL COVERAGE)
-- [ ] Report is written after "May I write" approval
+- [ ] Report is written after "I will write" Verification
 
 ---
 
@@ -157,7 +157,7 @@ None. `/regression-suite` is a QA analysis utility. No director gates apply.
 - [ ] Matches ACs to tests by system name and scenario (not file name alone)
 - [ ] Flags critical-priority untested ACs as CRITICAL GAPS
 - [ ] Flags orphan tests (exist in tests/ but no AC matches)
-- [ ] Asks "May I write" before persisting the coverage report
+- [ ] states "I will write" before persisting the coverage report
 - [ ] Verdict is FULL COVERAGE, GAPS FOUND, or CRITICAL GAPS
 
 ---

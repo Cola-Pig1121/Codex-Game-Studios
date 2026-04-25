@@ -1,4 +1,4 @@
-# Skill Test Spec: /qa-plan
+﻿# Skill Test Spec: /qa-plan
 
 ## Skill Summary
 
@@ -8,7 +8,7 @@ each story, cross-references test standards from `coding-standards.md` to assign
 the appropriate test type (unit, integration, visual, UI, or config/data), and
 produces a prioritized QA plan document.
 
-The skill asks "May I write to `production/qa/qa-plan-sprint-NNN.md`?" before
+The skill states "I will write to `production/qa/qa-plan-sprint-NNN.md`?" before
 persisting the output. If an existing test plan for the same sprint is found, the
 skill offers to update rather than replace. The verdict is COMPLETE when the plan
 is written. No director gates are used — gate-level story readiness is handled by
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" collaborative protocol language before writing the plan
+- [ ] Contains "I will write" collaborative protocol language before writing the plan
 - [ ] Has a next-step handoff (e.g., `/smoke-check` or `/story-readiness`)
 
 ---
@@ -54,14 +54,14 @@ None. `/qa-plan` is a planning utility. Story readiness gates are separate.
    - Visual story → Screenshot + lead sign-off (ADVISORY)
    - UI story → Manual walkthrough doc (ADVISORY)
 4. Skill drafts QA plan with story-by-story test type breakdown
-5. Skill asks "May I write to `production/qa/qa-plan-sprint-003.md`?"
-6. File is written on approval; verdict is COMPLETE
+5. Skill states "I will write to `production/qa/qa-plan-sprint-003.md`?"
+6. File is written after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] All 4 stories are included in the plan
 - [ ] Test type is assigned per coding-standards.md (not guessed)
 - [ ] Gate level (BLOCKING vs ADVISORY) is noted for each story
-- [ ] "May I write" is asked with the correct file path
+- [ ] "I will write" is asked with the correct file path
 - [ ] Verdict is COMPLETE
 
 ---
@@ -101,8 +101,8 @@ None. `/qa-plan` is a planning utility. Story readiness gates are separate.
 1. Skill reads sprint-003.md and detects 2 stories not in the existing plan
 2. Skill reports: "Existing QA plan found for sprint-003 — offering to update"
 3. Skill presents the 2 new stories and their proposed test assignments
-4. Skill asks "May I update `production/qa/qa-plan-sprint-003.md`?" (not overwrite)
-5. Updated plan is written on approval
+4. Skill asks "I will update `production/qa/qa-plan-sprint-003.md`?" (not overwrite)
+5. Updated plan is written after verification
 
 **Assertions:**
 - [ ] Skill detects the existing plan file
@@ -124,7 +124,7 @@ None. `/qa-plan` is a planning utility. Story readiness gates are separate.
 1. Skill attempts to read sprint-007.md — file not found
 2. Skill outputs: "No sprint file found for sprint-007"
 3. Skill suggests running `/sprint-plan` to create the sprint first
-4. No plan is written; no "May I write" is asked
+4. No plan is written; no "I will write" is asked
 
 **Assertions:**
 - [ ] Error message names the missing sprint file
@@ -159,7 +159,7 @@ None. `/qa-plan` is a planning utility. Story readiness gates are separate.
 - [ ] Assigns BLOCKING or ADVISORY gate level per story type
 - [ ] Flags stories with no AC as UNTESTABLE (does not silently skip them)
 - [ ] Detects existing plan and offers update path
-- [ ] Asks "May I write" before creating or updating the plan file
+- [ ] states "I will write" before creating or updating the plan file
 - [ ] Verdict is COMPLETE when plan is written
 
 ---

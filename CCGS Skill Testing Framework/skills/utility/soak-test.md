@@ -1,4 +1,4 @@
-# Skill Test Spec: /soak-test
+﻿# Skill Test Spec: /soak-test
 
 ## Skill Summary
 
@@ -9,7 +9,7 @@ specifying the test duration, system under test, monitoring checkpoints (e.g.,
 memory sample every 30 minutes), pass/fail thresholds, and conditions for early
 termination.
 
-The skill asks "May I write to `production/qa/soak-[slug]-[date].md`?" before
+The skill states "I will write to `production/qa/soak-[slug]-[date].md`?" before
 persisting. If a previous soak test for the same system exists, the skill offers
 to extend the duration or add new conditions. No director gates apply. The verdict
 is COMPLETE when the soak test protocol is written.
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
-- [ ] Contains "May I write" collaborative protocol language before writing the protocol
+- [ ] Contains "I will write" collaborative protocol language before writing the protocol
 - [ ] Has a next-step handoff (e.g., `/regression-suite` or `/release-checklist`)
 
 ---
@@ -50,14 +50,14 @@ None. `/soak-test` is a QA planning utility. No director gates apply.
    (memory usage, connection count, packet loss), pass thresholds, early termination
    conditions (crash or >20% memory growth)
 3. Networking-specific checks are included (session drop rate, reconnect handling)
-4. Skill asks "May I write to `production/qa/soak-online-lobby-2026-04-06.md`?"
-5. File is written on approval; verdict is COMPLETE
+4. Skill states "I will write to `production/qa/soak-online-lobby-2026-04-06.md`?"
+5. File is written after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] Protocol duration matches the requested 2 hours
 - [ ] Monitoring checkpoints are at reasonable intervals (e.g., every 30 minutes)
 - [ ] Network-specific checks are included (not just generic memory checks)
-- [ ] "May I write" is asked with the correct file path
+- [ ] "I will write" is asked with the correct file path
 - [ ] Verdict is COMPLETE
 
 ---
@@ -76,7 +76,7 @@ None. `/soak-test` is a QA planning utility. No director gates apply.
 3. After user responds with system: Skill asks: "What duration? (e.g., 1h, 4h, 8h)"
 4. After user responds with duration: Skill asks for specific conditions or
    uses defaults (normal gameplay loop, default player count)
-5. Skill generates protocol from collected inputs and asks "May I write"
+5. Skill generates protocol from collected inputs and states "I will write"
 
 **Assertions:**
 - [ ] At minimum 2 follow-up questions are asked (system + duration)
@@ -100,7 +100,7 @@ None. `/soak-test` is a QA planning utility. No director gates apply.
 3. Skill presents options: create new protocol (4h standalone), or extend the
    existing protocol to 4h and add new conditions
 4. User selects extend; existing checkpoints are preserved, new ones added
-5. Skill asks "May I write to `production/qa/soak-online-lobby-2026-04-06.md`?"
+5. Skill states "I will write to `production/qa/soak-online-lobby-2026-04-06.md`?"
    (new file, not overwriting old one)
 
 **Assertions:**
@@ -127,7 +127,7 @@ None. `/soak-test` is a QA planning utility. No director gates apply.
    - Check texture memory at checkpoint intervals
    - Add warning threshold at 300MB (mobile ceiling)
 3. Protocol also includes thermal/battery drain advisory notes
-4. Skill asks "May I write?" and writes on approval; verdict is COMPLETE
+4. Skill states "I will write?" and writes after verification; verdict is COMPLETE
 
 **Assertions:**
 - [ ] Mobile platform is detected from technical-preferences.md
@@ -162,7 +162,7 @@ None. `/soak-test` is a QA planning utility. No director gates apply.
 - [ ] Includes monitoring checkpoints at regular intervals
 - [ ] Includes pass/fail thresholds and early termination conditions
 - [ ] Adapts checkpoints to target platform (mobile vs. desktop)
-- [ ] Asks "May I write" before creating the protocol file
+- [ ] states "I will write" before creating the protocol file
 - [ ] Verdict is COMPLETE when file is written
 
 ---

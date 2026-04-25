@@ -1,4 +1,4 @@
-# Skill Test Spec: /ux-review
+﻿# Skill Test Spec: /ux-review
 
 ## Skill Summary
 
@@ -24,7 +24,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: APPROVED, NEEDS REVISION, MAJOR REVISION NEEDED
-- [ ] Does NOT contain "May I write" language (skill is read-only)
+- [ ] Does NOT contain "I will write" language (skill is read-only)
 - [ ] Has a next-step handoff (e.g., back to `/ux-design` for revision, or proceed to implementation)
 
 ---

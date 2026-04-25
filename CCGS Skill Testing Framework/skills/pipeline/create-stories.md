@@ -1,4 +1,4 @@
-# Skill Test Spec: /create-stories
+﻿# Skill Test Spec: /create-stories
 
 ## Skill Summary
 
@@ -10,7 +10,7 @@ Done. Stories are classified by type (Logic / Integration / Visual/Feel / UI /
 Config/Data) which determines the required test evidence path.
 
 In `full` review mode, a QL-STORY-READY check runs per story after creation. In
-`lean` or `solo` mode, QL-STORY-READY is skipped. The skill asks "May I write"
+`lean` or `solo` mode, QL-STORY-READY is skipped. The skill states "I will write"
 before writing each story file. Stories are written to
 `production/epics/[layer]/story-[name].md`.
 
@@ -23,7 +23,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED, NEEDS WORK
-- [ ] Contains "May I write" collaborative protocol language (per-story approval)
+- [ ] Contains "I will write" collaborative protocol language (per-story Verification)
 - [ ] Has a next-step handoff at the end (`/story-readiness`, `/dev-story`)
 - [ ] Documents story Status: Blocked when governing ADR is Proposed
 - [ ] Documents QL-STORY-READY gate: active in full mode, skipped in lean/solo
@@ -33,7 +33,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 ## Director Gate Checks
 
 In `full` mode: QL-STORY-READY check runs per story after creation. Stories that
-fail the check are noted as NEEDS WORK before the "May I write" ask.
+fail the check are noted as NEEDS WORK before the "I will write" ask.
 
 In `lean` mode: QL-STORY-READY is skipped. Output notes:
 "QL-STORY-READY skipped — lean mode" per story.
@@ -61,13 +61,13 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 2. Classifies each requirement into a story type (Logic / Integration / Visual/Feel / UI / Config/Data)
 3. Drafts 3 story files with correct frontmatter schema
 4. QL-STORY-READY is skipped (lean mode) — noted in output
-5. Asks "May I write" before writing each story file
-6. Writes all 3 story files after approval
+5. states "I will write" before writing each story file
+6. Writes all 3 story files after verification
 
 **Assertions:**
 - [ ] Each story's frontmatter contains: Title, Epic, Layer, Priority, Status, TR-ID, ADR reference, Acceptance Criteria, DoD
 - [ ] Story types are correctly classified (at least one Logic type in fixture)
-- [ ] "May I write" is asked per story (not once for the entire batch)
+- [ ] "I will write" is asked per story (not once for the entire batch)
 - [ ] QL-STORY-READY skip is noted in output
 - [ ] All 3 story files are written with correct naming: `story-[name].md`
 - [ ] Skill does NOT start implementation
@@ -110,7 +110,7 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 2. Story for Requirement 2 is drafted with `Status: Blocked`
 3. Blocking note references the specific ADR: "BLOCKED: ADR-NNN is Proposed"
 4. Story for Requirement 1 is drafted normally with `Status: Ready`
-5. Both stories are shown in the draft — user asked "May I write" for both
+5. Both stories are shown in the draft — user asked "I will write" for both
 
 **Assertions:**
 - [ ] Story 2 has `Status: Blocked` in its frontmatter
@@ -157,7 +157,7 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 2. QL-STORY-READY check runs for each story
 3. Story 1 passes QL-STORY-READY
 4. Story 2 fails QL-STORY-READY — noted as NEEDS WORK with specific feedback
-5. Both stories are shown to user with pass/fail status before "May I write"
+5. Both stories are shown to user with pass/fail status before "I will write"
 6. User can proceed (story written as-is with NEEDS WORK note) or revise first
 
 **Assertions:**
@@ -172,9 +172,9 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 ## Protocol Compliance
 
 - [ ] All context (EPIC, GDD, ADRs, manifest, TR registry) loaded before drafting stories
-- [ ] Story drafts shown in full before any "May I write" ask
-- [ ] "May I write" asked per story (not once for the entire batch)
-- [ ] Blocked stories flagged before write approval — not discovered after writing
+- [ ] Story drafts shown in full before any "I will write" ask
+- [ ] "I will write" asked per story (not once for the entire batch)
+- [ ] Blocked stories flagged before write Verification — not discovered after writing
 - [ ] TR-IDs reference the registry — requirement text is not embedded inline in story files
 - [ ] Control manifest rules quoted per-story from the manifest, not invented
 - [ ] Ends with next-step handoff: `/story-readiness` → `/dev-story`
@@ -184,7 +184,7 @@ In `solo` mode: QL-STORY-READY is skipped with equivalent notes.
 ## Coverage Notes
 
 - Integration story test evidence (playtest doc alternative) follows the same
-  approval pattern as Logic stories — not independently fixture-tested.
+  Verification pattern as Logic stories — not independently fixture-tested.
 - Story ordering (foundational first, UI last) is validated implicitly via
   Case 1's multi-story fixture.
 - The story sizing rule (splitting large requirement groups) is not tested here

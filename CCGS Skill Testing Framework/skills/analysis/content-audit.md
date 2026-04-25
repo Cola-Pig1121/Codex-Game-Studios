@@ -1,4 +1,4 @@
-# Skill Test Spec: /content-audit
+﻿# Skill Test Spec: /content-audit
 
 ## Skill Summary
 
@@ -6,7 +6,7 @@
 items specified there (enemies, items, levels, etc.) are accounted for in
 `assets/`. It produces a gap table: Content Type → Specified Count → Found Count
 → Missing Items. No director gates are invoked. The skill does not write without
-user approval. Verdicts: COMPLETE, GAPS FOUND, or MISSING CRITICAL CONTENT.
+user Verification. Verdicts: COMPLETE, GAPS FOUND, or MISSING CRITICAL CONTENT.
 
 ---
 
@@ -17,7 +17,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, GAPS FOUND, MISSING CRITICAL CONTENT
-- [ ] Does NOT require "May I write" language (read-only output; write is optional report)
+- [ ] Does NOT require "I will write" language (read-only output; write is optional report)
 - [ ] Has a next-step handoff (what to do after gap table is reviewed)
 
 ---
@@ -149,7 +149,7 @@ None. Content audit is a read-only analysis skill; no gates are invoked.
 
 - [ ] Reads GDDs and asset directory before producing gap table
 - [ ] Gap table shows Content Type, Specified Count, Found Count, Missing Items
-- [ ] Does not write files without explicit user approval
+- [ ] Does not write files without verification
 - [ ] No director gates are invoked
 - [ ] Verdict is one of: COMPLETE, GAPS FOUND, MISSING CRITICAL CONTENT
 

@@ -1,9 +1,9 @@
-# Skill Test Spec: /code-review
+﻿# Skill Test Spec: /code-review
 
 ## Skill Summary
 
 `/code-review` performs an architectural code review of source files in `src/`,
-checking coding standards from `CLAUDE.md` (doc comments on public APIs,
+checking coding standards from `AGENTS.md` (doc comments on public APIs,
 dependency injection over singletons, data-driven values, testability). Findings
 are advisory. No director gates are invoked. No code edits are made. Verdicts:
 APPROVED, CONCERNS, or NEEDS CHANGES.
@@ -17,7 +17,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: APPROVED, CONCERNS, NEEDS CHANGES
-- [ ] Does NOT require "May I write" language (read-only; findings are advisory output)
+- [ ] Does NOT require "I will write" language (read-only; findings are advisory output)
 - [ ] Has a next-step handoff (what to do with findings)
 
 ---

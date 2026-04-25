@@ -1,4 +1,4 @@
-# Skill Test Spec: /release-checklist
+﻿# Skill Test Spec: /release-checklist
 
 ## Skill Summary
 
@@ -9,7 +9,7 @@ and changelog readiness. It is an internal gate — not a platform/store checkli
 a delta of resolved and newly introduced issues.
 
 The skill writes its checklist report to `production/releases/release-checklist-[date].md`
-after a "May I write" ask. No director gates apply — `/gate-check` handles
+after a "I will write" ask. No director gates apply — `/gate-check` handles
 formal phase gate logic. Verdicts: RELEASE READY, RELEASE BLOCKED, or CONCERNS.
 
 ---
@@ -21,7 +21,7 @@ Verified automatically by `/skill-test static` — no fixture needed.
 - [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: RELEASE READY, RELEASE BLOCKED, CONCERNS
-- [ ] Contains "May I write" collaborative protocol language before writing the report
+- [ ] Contains "I will write" collaborative protocol language before writing the report
 - [ ] Has a next-step handoff (e.g., `/launch-checklist` for external or `/gate-check` for phase)
 
 ---
@@ -51,7 +51,7 @@ is managed by `/gate-check`.
 2. Skill reads bugs: no HIGH or CRITICAL open bugs
 3. Skill confirms QA plan has sign-off
 4. Skill confirms changelog entry exists
-5. All checks pass; skill asks "May I write to
+5. All checks pass; skill states "I will write to
    `production/releases/release-checklist-2026-04-06.md`?"
 6. Report written; verdict is RELEASE READY
 
@@ -59,7 +59,7 @@ is managed by `/gate-check`.
 - [ ] All 4 check categories are evaluated (stories, bugs, QA, changelog)
 - [ ] All items appear with PASS markers
 - [ ] Verdict is RELEASE READY
-- [ ] "May I write" is asked before writing
+- [ ] "I will write" is asked before writing
 
 ---
 
@@ -160,7 +160,7 @@ is managed by `/gate-check`.
 - [ ] Checks QA plan sign-off status
 - [ ] Checks changelog existence
 - [ ] Compares against previous checklist when one exists
-- [ ] Asks "May I write" before writing the report
+- [ ] states "I will write" before writing the report
 - [ ] Verdict is RELEASE READY, RELEASE BLOCKED, or CONCERNS
 
 ---

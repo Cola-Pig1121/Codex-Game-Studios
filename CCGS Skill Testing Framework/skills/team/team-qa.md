@@ -1,4 +1,4 @@
-# Skill Test Spec: /team-qa
+﻿# Skill Test Spec: /team-qa
 
 ## Skill Summary
 
@@ -18,9 +18,9 @@ independent stories.
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
 - [ ] Contains verdict keywords for sign-off report: APPROVED, APPROVED WITH CONDITIONS, NOT APPROVED
-- [ ] Contains "May I write" language for both the QA plan and the sign-off report
+- [ ] Contains "I will write" language for both the QA plan and the sign-off report
 - [ ] Has an Error Recovery Protocol section
-- [ ] Uses `AskUserQuestion` at phase transitions to capture user approval before proceeding
+- [ ] Uses `AskUserQuestion` at phase transitions to capture user Verification before proceeding
 - [ ] Phase 4 (smoke check) is a hard gate: FAIL stops the cycle
 - [ ] Bug reports are written to `production/qa/bugs/` with `BUG-[NNN]-[short-slug].md` naming
 - [ ] Next-step guidance differs by verdict (APPROVED / APPROVED WITH CONDITIONS / NOT APPROVED)
@@ -44,21 +44,21 @@ independent stories.
 **Expected behavior:**
 1. Phase 1: Reads all story files in `production/sprints/sprint-03/`; reads `production/stage.txt`; reports "Found 4 stories. Current stage: [stage]. Ready to begin QA strategy?"
 2. Phase 2: Spawns `qa-lead` via Task; produces strategy table classifying all 4 stories; no blockers flagged; presents to user; AskUserQuestion: user selects "Looks good — proceed to test plan"
-3. Phase 3: Produces QA plan document; asks "May I write the QA plan to `production/qa/qa-plan-sprint-03-[date].md`?"; writes after approval
+3. Phase 3: Produces QA plan document; states "I will write the QA plan to `production/qa/qa-plan-sprint-03-[date].md`?"; writes after verification
 4. Phase 4: Spawns `qa-lead` via Task; reviews `tests/smoke/`; returns PASS; reports "Smoke check passed. Proceeding to test case writing."
 5. Phase 5: Spawns `qa-tester` via Task for each Visual/Feel and Integration story (2–3 stories); run in parallel; presents test cases grouped by story; AskUserQuestion per group; user approves
 6. Phase 6: Walks through each approved story; user marks all as PASS; result summary: "Stories PASS: 4, FAIL: 0, BLOCKED: 0"
-7. Phase 7: Spawns `qa-lead` via Task to produce sign-off report; report shows all stories PASS; no bugs filed; Verdict: APPROVED; asks "May I write this QA sign-off report to `production/qa/qa-signoff-sprint-03-[date].md`?"; writes after approval
+7. Phase 7: Spawns `qa-lead` via Task to produce sign-off report; report shows all stories PASS; no bugs filed; Verdict: APPROVED; states "I will write this QA sign-off report to `production/qa/qa-signoff-sprint-03-[date].md`?"; writes after verification
 8. Verdict: COMPLETE — QA cycle finished
 
 **Assertions:**
 - [ ] Phase 1 correctly counts and reports 4 stories with current stage
 - [ ] Strategy table in Phase 2 classifies all 4 stories with correct types
-- [ ] QA plan written only after "May I write?" approval
+- [ ] QA plan written only after "I will write?" Verification
 - [ ] Smoke check PASS allows pipeline to continue without user intervention
 - [ ] Phase 5 qa-tester tasks for independent stories are issued in parallel
 - [ ] Sign-off report includes Test Coverage Summary table and Verdict: APPROVED
-- [ ] Sign-off report written only after "May I write?" approval
+- [ ] Sign-off report written only after "I will write?" Verification
 - [ ] Verdict: COMPLETE appears in final output
 - [ ] Next step: "Run `/gate-check` to validate advancement."
 
@@ -77,7 +77,7 @@ independent stories.
 2. Phase 4: Spawns `qa-lead` via Task; smoke check returns FAIL; two specific failures are identified
 3. Skill reports: "Smoke check failed. QA cannot begin until these issues are resolved: [list of 2 failures]. Fix them and re-run `/smoke-check`, or re-run `/team-qa` once resolved."
 4. Skill stops immediately after Phase 4 — no Phase 5, 6, or 7 is executed
-5. No sign-off report is produced; no "May I write?" for a sign-off is issued
+5. No sign-off report is produced; no "I will write?" for a sign-off is issued
 
 **Assertions:**
 - [ ] Smoke check FAIL causes the pipeline to halt at Phase 4 — Phases 5, 6, 7 are NOT executed
@@ -105,7 +105,7 @@ independent stories.
 3. Phase 6: Spawns `qa-tester` via Task to write a formal bug report; bug report written to `production/qa/bugs/BUG-001-animation-speed-jitter.md` (or next increment if bugs exist); report includes severity field
 4. Result summary: "Stories PASS: 1, FAIL: 1 — bugs filed: BUG-001"
 5. Phase 7: Spawns `qa-lead` to produce sign-off report; Bugs Found table lists BUG-001 with severity and status Open; Verdict: NOT APPROVED (S1/S2 bug open, or FAIL without documented workaround)
-6. Sign-off report write is offered; writes after approval
+6. Sign-off report write is offered; writes after verification
 7. Next step: "Resolve S1/S2 bugs and re-run `/team-qa` or targeted manual QA before advancing."
 
 **Assertions:**
@@ -168,7 +168,7 @@ independent stories.
 3. After Story C FAIL: qa-tester spawned to write bug report `BUG-001-crash-ability-activation.md` with S1 severity
 4. Result summary presented: "Stories PASS: 1, PASS WITH NOTES: 1, FAIL: 1 — bugs filed: BUG-001 (S1), BLOCKED: 1"
 5. Phase 7: qa-lead produces sign-off report covering all 4 stories; BUG-001 listed as S1/Open; Story D listed as BLOCKED; Verdict: NOT APPROVED
-6. Sign-off report written after "May I write?" approval
+6. Sign-off report written after "I will write?" Verification
 7. Next step: "Resolve S1/S2 bugs and re-run `/team-qa` or targeted manual QA before advancing."
 
 **Assertions:**
@@ -184,9 +184,9 @@ independent stories.
 
 ## Protocol Compliance
 
-- [ ] `AskUserQuestion` used at Phase 2 (strategy review), Phase 5 (test case approval per group), and Phase 6 (per-story manual QA result)
+- [ ] `AskUserQuestion` used at Phase 2 (strategy review), Phase 5 (test case Verification per group), and Phase 6 (per-story manual QA result)
 - [ ] Phase 4 smoke check is a hard gate: FAIL halts the pipeline at Phase 4 with no exceptions
-- [ ] "May I write?" asked separately for QA plan (Phase 3) and sign-off report (Phase 7)
+- [ ] "I will write?" asked separately for QA plan (Phase 3) and sign-off report (Phase 7)
 - [ ] Bug reports are always written by `qa-tester` via Task — orchestrator does not write directly
 - [ ] Phase 5 qa-tester tasks for independent stories are issued in parallel where possible
 - [ ] Error recovery: any BLOCKED agent is surfaced immediately with AskUserQuestion options

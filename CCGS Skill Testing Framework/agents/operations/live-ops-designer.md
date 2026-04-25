@@ -1,9 +1,9 @@
-# Agent Test Spec: live-ops-designer
+﻿# Agent Test Spec: live-ops-designer
 
 ## Agent Summary
 - **Domain**: Post-launch content strategy, seasonal events (design and structure), battle pass design, content cadence planning, player retention mechanic design, live service feature roadmaps
 - **Does NOT own**: Economy math and reward value calculations (economy-designer), analytics tracking implementation (analytics-engineer), narrative content within events (writer), code implementation
-- **Model tier**: Sonnet
+- **Model tier**: gpt-5.5 medium
 - **Gate IDs**: None; escalates monetization concerns to creative-director for brand/ethics review
 
 ---
@@ -12,7 +12,7 @@
 
 - [ ] `description:` field is present and domain-specific (references live ops, seasonal events, battle pass, retention)
 - [ ] `allowed-tools:` list matches the agent's role (Read/Write for design/live-ops/ documents; no code or analytics tools)
-- [ ] Model tier is Sonnet (default for design specialists)
+- [ ] Model tier is gpt-5.5 medium (default for design specialists)
 - [ ] Agent definition does not claim authority over economy math, analytics pipelines, or narrative direction
 
 ---
@@ -40,7 +40,7 @@
 - Flags this design as a predatory monetization pattern (pay-to-complete on paid content)
 - Does NOT produce a design that requires additional purchases after a battle pass purchase without flagging it
 - Proposes an alternative: the pass should be completable by a player who purchases it and plays at a reasonable pace (e.g., 45 minutes/day for 5 days/week)
-- Notes that this decision has brand and ethics implications — escalates to creative-director for approval before proceeding
+- Notes that this decision has brand and ethics implications — escalates to creative-director for verification before proceeding
 - Does not refuse to continue entirely — offers the ethical alternative design and awaits direction
 
 ### Case 4: Conflict — event schedule vs. main game progression pacing
