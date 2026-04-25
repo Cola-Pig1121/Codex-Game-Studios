@@ -30,6 +30,8 @@ bin/
 obj/
 out/
 dist/
+!.codex/mcp/godot-mcp/mcp-server/dist/
+!.codex/mcp/godot-mcp/mcp-server/dist/**
 *.exe
 *.dll
 *.so

@@ -1,0 +1,109 @@
+/**
+ * HTTP client for proxy mode.
+ * Communicates with the primary server to forward tool calls and probe health.
+ */
+import http from 'node:http';
+const REQUEST_TIMEOUT = 5000; // 5s for health probes
+/**
+ * Probe an existing primary server on the given port.
+ * Returns { alive: true } if a healthy godot-mcp-server responds.
+ */
+export async function probeExistingServer(port) {
+    try {
+        const body = await httpGet(`http://127.0.0.1:${port}/health`, REQUEST_TIMEOUT);
+        const data = JSON.parse(body);
+        if (data.server === 'godot-mcp-server') {
+            return { alive: true, version: data.version, toolCount: data.tool_count };
+        }
+        return { alive: false };
+    }
+    catch {
+        return { alive: false };
+    }
+}
+/**
+ * Register this proxy client with the primary (increments AI client count).
+ */
+export async function registerProxyClient(port) {
+    try {
+        await httpPost(`http://127.0.0.1:${port}/client/register`, '', REQUEST_TIMEOUT);
+    }
+    catch {
+        // Non-fatal — primary may not support this endpoint yet
+    }
+}
+/**
+ * Unregister this proxy client from the primary (decrements AI client count).
+ */
+export async function unregisterProxyClient(port) {
+    try {
+        await httpPost(`http://127.0.0.1:${port}/client/unregister`, '', REQUEST_TIMEOUT);
+    }
+    catch {
+        // Non-fatal
+    }
+}
+/**
+ * Forward a tool call to the primary server.
+ * Timeout is generous because Godot tool execution can be slow.
+ */
+export async function proxyToolCall(port, name, args, timeoutMs) {
+    const body = JSON.stringify({ name, args });
+    const response = await httpPost(`http://127.0.0.1:${port}/tool`, body, timeoutMs + 5000 // extra buffer over the tool timeout
+    );
+    return JSON.parse(response);
+}
+function httpGet(url, timeoutMs) {
+    return new Promise((resolve, reject) => {
+        const req = http.get(url, { timeout: timeoutMs }, (res) => {
+            if (res.statusCode !== 200) {
+                reject(new Error(`HTTP ${res.statusCode}`));
+                res.resume();
+                return;
+            }
+            const chunks = [];
+            res.on('data', (chunk) => chunks.push(chunk));
+            res.on('end', () => resolve(Buffer.concat(chunks).toString()));
+            res.on('error', reject);
+        });
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('Request timed out'));
+        });
+        req.on('error', reject);
+    });
+}
+function httpPost(url, body, timeoutMs) {
+    return new Promise((resolve, reject) => {
+        const parsed = new URL(url);
+        const options = {
+            hostname: parsed.hostname,
+            port: parsed.port,
+            path: parsed.pathname,
+            method: 'POST',
+            timeout: timeoutMs,
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(body),
+            },
+        };
+        const req = http.request(options, (res) => {
+            if (res.statusCode !== 200) {
+                reject(new Error(`HTTP ${res.statusCode}`));
+                res.resume();
+                return;
+            }
+            const chunks = [];
+            res.on('data', (chunk) => chunks.push(chunk));
+            res.on('end', () => resolve(Buffer.concat(chunks).toString()));
+            res.on('error', reject);
+        });
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('Request timed out'));
+        });
+        req.on('error', reject);
+        req.end(body);
+    });
+}
+//# sourceMappingURL=proxy-client.js.map

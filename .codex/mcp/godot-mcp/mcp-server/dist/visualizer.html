@@ -1,0 +1,4794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Godot Project Map</title>
+<style>
+/* Godot Project Map Visualizer Styles */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Claude-inspired palette */
+  --bg-primary: #1a1a1e;
+  --bg-secondary: #242428;
+  --bg-tertiary: #2e2e33;
+  --bg-hover: #35353b;
+  --bg-surface: #28282d;
+  --border: #3a3a40;
+  --border-light: #4a4a52;
+  --text-primary: #e8e4df;
+  --text-secondary: #a8a49e;
+  --text-muted: #706c66;
+  --accent: #d4a27f;
+  --accent-light: #e4b896;
+  --accent-dim: #8b6f55;
+
+  /* GDScript syntax colors */
+  --gd-keyword: #cc7832;
+  --gd-func-name: #ffc66d;
+  --gd-type: #6897bb;
+  --gd-string: #6a8759;
+  --gd-number: #6897bb;
+  --gd-comment: #808080;
+  --gd-var: #cc7832;
+  --gd-signal: #a6e3a1;
+  --gd-export: #bbb529;
+  --gd-builtin: #8888c6;
+
+  /* Edge colors */
+  --edge-extends: #7aa2f7;
+  --edge-preload: #d4a27f;
+  --edge-signal: #a6e3a1;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+
+canvas { display: block; cursor: grab; }
+canvas.dragging { cursor: grabbing; }
+
+/* Search bar */
+#search-bar {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+#search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  width: 260px;
+  font-family: inherit;
+}
+
+#search-bar input::placeholder { color: var(--text-muted); }
+#search-bar .stats { color: var(--text-muted); font-size: 12px; white-space: nowrap; }
+#search-bar svg { flex-shrink: 0; }
+
+/* View tabs */
+#view-tabs {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  display: flex;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+#view-tabs button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+#view-tabs button:hover { color: var(--text-secondary); background: var(--bg-hover); }
+#view-tabs button.active { color: var(--text-primary); background: var(--bg-tertiary); }
+
+/* Context menu */
+#context-menu {
+  position: fixed;
+  z-index: 500;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 0;
+  min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  display: none;
+}
+
+#context-menu.visible { display: block; }
+
+#context-menu .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+#context-menu .menu-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+#context-menu .menu-item svg { flex-shrink: 0; opacity: 0.7; }
+
+#context-menu .menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+
+/* Scene Context Menu - reuse context menu styles */
+#scene-context-menu {
+  position: fixed;
+  z-index: 500;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 0;
+  min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  display: none;
+}
+
+#scene-context-menu.visible { display: block; }
+
+#scene-context-menu .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+#scene-context-menu .menu-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+#scene-context-menu .menu-item.danger { color: #f38ba8; }
+#scene-context-menu .menu-item.danger:hover { background: rgba(243, 139, 168, 0.1); }
+
+#scene-context-menu .menu-item svg { flex-shrink: 0; opacity: 0.7; }
+
+#scene-context-menu .menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 16px 64px rgba(0,0,0,0.5);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-body .form-group {
+  margin-bottom: 16px;
+}
+
+.modal-body .form-group:last-child { margin-bottom: 0; }
+
+.modal-body label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.modal-body input, .modal-body select {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-family: 'SF Mono', Monaco, monospace;
+}
+
+.modal-body input:focus, .modal-body select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.modal-footer button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+
+.modal-footer .cancel {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.modal-footer .confirm {
+  background: var(--accent);
+  color: var(--bg-primary);
+  border-color: var(--accent);
+}
+
+.modal-footer .confirm:hover { background: var(--accent-light); }
+
+/* Legend */
+#legend {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 100;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+/* Zoom indicator - positioned bottom-left, offset from legend */
+#zoom-indicator {
+  position: fixed;
+  bottom: 16px;
+  left: 150px;
+  z-index: 100;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+#zoom-indicator:hover { background: var(--bg-hover); border-color: var(--border-light); }
+#zoom-indicator.faded { opacity: 0.4; }
+#zoom-indicator.faded:hover { opacity: 1; }
+#zoom-indicator svg { flex-shrink: 0; cursor: pointer; }
+#zoom-indicator svg:hover { stroke: var(--text-primary); }
+#zoom-indicator .zoom-input {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 12px;
+  width: 42px;
+  text-align: center;
+  padding: 2px 0;
+  cursor: text;
+}
+#zoom-indicator .zoom-input:focus {
+  outline: none;
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+  color: var(--text-primary);
+}
+
+#legend .item { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; color: var(--text-secondary); }
+#legend .item:last-child { margin-bottom: 0; }
+#legend .line { width: 28px; height: 2px; border-radius: 1px; }
+
+/* Detail panel */
+#detail-panel {
+  position: fixed;
+  top: 0;
+  right: -480px;
+  width: 460px;
+  min-width: 300px;
+  max-width: 80vw;
+  height: 100vh;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border);
+  z-index: 200;
+  overflow-y: auto;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.4);
+}
+
+#detail-panel.open { right: 0; }
+#detail-panel.resizing { transition: none; }
+
+/* Horizontal resize handle for panel */
+#panel-resize-handle {
+  position: absolute;
+  left: -4px;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 201;
+}
+#panel-resize-handle::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 50px;
+  background: var(--border);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#panel-resize-handle:hover::after,
+#detail-panel.resizing #panel-resize-handle::after {
+  opacity: 1;
+  background: var(--accent);
+}
+
+#detail-panel::-webkit-scrollbar { width: 6px; }
+#detail-panel::-webkit-scrollbar-track { background: transparent; }
+#detail-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.panel-header {
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 24px;
+  z-index: 10;
+}
+
+.panel-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--accent-light);
+  margin-bottom: 4px;
+  padding-right: 40px;
+}
+
+.panel-header .path {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  word-break: break-all;
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.close-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+.panel-body { padding: 16px 24px 32px; }
+
+.desc-block {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+  line-height: 1.5;
+}
+
+.meta-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.meta-badge {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.meta-badge span { color: var(--accent-light); font-weight: 600; }
+
+/* Sections */
+.section {
+  margin-bottom: 16px;
+}
+
+.section .item-list {
+  /* No max-height - show all items */
+}
+
+.section-resize-handle {
+  position: relative;
+  height: 12px;
+  cursor: row-resize;
+  z-index: 5;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-resize-handle::after {
+  content: '';
+  width: 40px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.section-resize-handle:hover::after,
+.section.resizing .section-resize-handle::after {
+  opacity: 1;
+  background: var(--accent);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+
+.section-count {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+.item-list { list-style: none; }
+
+.item-list li {
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 1px;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.item-list li:hover { background: var(--bg-secondary); }
+.item-list li.clickable { cursor: pointer; }
+.item-list li.clickable:hover { background: var(--bg-tertiary); }
+
+/* Scene usage list */
+.scene-usage-section { margin-bottom: 16px; }
+.scene-list li.scene-link {
+  cursor: pointer;
+  font-family: -apple-system, system-ui, sans-serif;
+}
+.scene-list li.scene-link:hover {
+  background: rgba(166, 227, 161, 0.1);
+}
+.scene-list .scene-icon {
+  font-size: 14px;
+}
+.scene-list .scene-name {
+  color: #a6e3a1;
+  font-weight: 500;
+}
+
+/* Inline editable items */
+.item-list li .item-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.item-list li:hover .item-actions { opacity: 1; }
+.item-list li:hover .delete { opacity: 1 !important; }
+.item-actions button {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.item-actions button:hover { background: var(--bg-hover); color: var(--text-primary); }
+.item-actions button.delete:hover { background: #3d2020; color: #f38ba8; }
+
+/* Inline editable spans */
+.editable {
+  cursor: text;
+  padding: 1px 4px;
+  margin: -1px -4px;
+  border-radius: 3px;
+  transition: background 0.15s;
+  min-width: 20px;
+  display: inline-block;
+}
+.editable:hover { background: rgba(255,255,255,0.08); }
+.editable:focus {
+  outline: none;
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.editable[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* @onready badge */
+.onready-badge {
+  display: inline-block;
+  font-size: 9px;
+  padding: 2px 5px;
+  background: rgba(137, 180, 250, 0.2);
+  color: #89b4fa;
+  border-radius: 3px;
+  margin-right: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+.onready-badge:hover { background: rgba(137, 180, 250, 0.3); }
+.onready-badge.inactive {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+/* Floating usage panel (to the left of detail panel) */
+#usage-float-panel {
+  position: fixed;
+  top: 80px;
+  right: 480px;
+  width: 380px;
+  min-width: 300px;
+  min-height: 250px;
+  max-height: calc(100vh - 100px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 150;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#usage-float-panel.visible { display: flex; }
+#usage-float-panel.dragging { user-select: none; }
+
+/* Resize handle */
+#usage-float-panel .ufp-resize {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  z-index: 10;
+}
+#usage-float-panel .ufp-resize::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--border);
+  border-bottom: 2px solid var(--border);
+  opacity: 0.5;
+}
+#usage-float-panel .ufp-resize:hover::after { opacity: 1; }
+
+#usage-float-panel .ufp-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(243, 139, 168, 0.12);
+  border-bottom: 1px solid var(--border);
+  cursor: grab;
+}
+
+#usage-float-panel .ufp-header:active { cursor: grabbing; }
+
+#usage-float-panel .ufp-header .ufp-info {
+  flex: 1;
+  min-width: 0;
+}
+
+#usage-float-panel .ufp-header .ufp-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f38ba8;
+  line-height: 1.3;
+}
+
+#usage-float-panel .ufp-header .ufp-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+#usage-float-panel .ufp-header .ufp-count .count-num {
+  font-weight: 700;
+  font-size: 14px;
+  color: #fab387;
+}
+
+#usage-float-panel .ufp-header .ufp-buttons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+#usage-float-panel .ufp-header .refresh-btn,
+#usage-float-panel .ufp-header .close-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+#usage-float-panel .ufp-header .close-btn {
+  font-size: 18px;
+}
+
+#usage-float-panel .ufp-header .refresh-btn:hover,
+#usage-float-panel .ufp-header .close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+#usage-float-panel .ufp-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+#usage-float-panel .ufp-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+#usage-float-panel .ufp-item:last-child { border-bottom: none; }
+#usage-float-panel .ufp-item:hover { background: var(--bg-hover); }
+#usage-float-panel .ufp-item.active { background: rgba(212, 162, 127, 0.2); border-left: 3px solid var(--accent); margin-left: -3px; padding-left: 19px; }
+
+#usage-float-panel .ufp-item .ufp-loc {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#usage-float-panel .ufp-item .ufp-file {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+#usage-float-panel .ufp-item .ufp-func {
+  color: #89dceb;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+#usage-float-panel .ufp-item .ufp-func::before {
+  content: 'func ';
+  color: var(--gd-keyword);
+  font-weight: normal;
+}
+
+#usage-float-panel .ufp-item .ufp-line {
+  color: var(--text-muted);
+  font-size: 10px;
+  margin-left: auto;
+}
+
+#usage-float-panel .ufp-item .ufp-code {
+  color: var(--text-secondary);
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 11px;
+  background: var(--bg-tertiary);
+  padding: 6px 10px;
+  border-radius: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#usage-float-panel .ufp-item .ufp-code .highlight {
+  color: #f38ba8;
+  font-weight: 600;
+  background: rgba(243, 139, 168, 0.15);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+#usage-float-panel .ufp-item .ufp-file {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+#usage-float-panel .ufp-actions {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-tertiary);
+}
+
+#usage-float-panel .ufp-actions button {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
+#usage-float-panel .ufp-actions .cancel {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+#usage-float-panel .ufp-actions .delete {
+  background: rgba(243, 139, 168, 0.2);
+  color: #f38ba8;
+  border-color: rgba(243, 139, 168, 0.4);
+}
+
+#usage-float-panel .ufp-actions .delete:hover {
+  background: rgba(243, 139, 168, 0.3);
+}
+
+/* Highlight line in function viewer */
+.code-line-highlight {
+  background: rgba(243, 139, 168, 0.25) !important;
+  border-left: 3px solid #f38ba8 !important;
+  margin-left: -14px !important;
+  padding-left: 11px !important;
+}
+
+/* Add item form */
+.add-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+.add-item-btn:hover { background: var(--bg-secondary); color: var(--text-secondary); }
+.add-item-btn svg { opacity: 0.6; }
+
+.add-item-form {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 8px;
+}
+.add-item-form .form-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.add-item-form .form-row:last-child { margin-bottom: 0; }
+.add-item-form input, .add-item-form select {
+  flex: 1;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+}
+.add-item-form input:focus, .add-item-form select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.add-item-form .form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.add-item-form button {
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+}
+.add-item-form button.cancel {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+.add-item-form button.confirm {
+  background: var(--accent);
+  color: var(--bg-primary);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+/* Syntax tokens */
+.kw { color: var(--gd-keyword); font-weight: 600; }
+.fn { color: var(--gd-func-name); }
+.tp { color: var(--gd-type); }
+.str { color: var(--gd-string); }
+.num { color: var(--gd-number); }
+.cmt { color: var(--gd-comment); font-style: italic; }
+.sig { color: var(--gd-signal); }
+.exp { color: var(--gd-export); }
+.param { color: var(--text-secondary); }
+.ret { color: var(--text-muted); }
+
+/* Tags */
+.tag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: -apple-system, system-ui, sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.tag-export { background: #3d3520; color: var(--gd-export); }
+.tag-signal { background: #1e3326; color: var(--gd-signal); }
+.tag-lines { background: var(--bg-tertiary); color: var(--text-muted); font-weight: normal; }
+.tag-return { background: #1e2a3a; color: var(--gd-type); }
+
+/* Function viewer */
+.func-viewer {
+  margin-top: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.func-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.func-viewer-header .func-title { color: var(--gd-func-name); font-weight: 600; }
+
+.func-viewer-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.func-viewer-close:hover { color: var(--text-primary); background: var(--bg-hover); }
+
+.func-viewer-code {
+  position: relative;
+  padding: 12px 0;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow: auto;
+  tab-size: 4;
+}
+
+/* Editable code area */
+.code-editor-container {
+  position: relative;
+  margin: 0 14px;
+}
+
+.code-editor-textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  tab-size: inherit;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--text-primary);
+  resize: none;
+  outline: none;
+  overflow: hidden;
+  white-space: pre;
+}
+
+.code-editor-textarea::selection {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.code-editor-highlight {
+  white-space: pre;
+  pointer-events: none;
+}
+
+.code-editor-container:focus-within {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.func-viewer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.func-viewer-footer .status { opacity: 0; transition: opacity 0.2s; }
+.func-viewer-footer .status.visible { opacity: 1; }
+.func-viewer-footer .save-btn {
+  background: var(--accent);
+  color: var(--bg-primary);
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.func-viewer-footer .save-btn.active { opacity: 1; }
+.func-viewer-footer .save-btn.active:hover { background: var(--accent-light); }
+
+.code-line {
+  display: block;
+  padding: 0 14px;
+  min-height: 1.4em;
+  white-space: pre;
+}
+
+.code-line:hover { background: rgba(255,255,255,0.03); }
+
+.line-num {
+  color: var(--text-muted);
+  min-width: 36px;
+  text-align: right;
+  padding-right: 16px;
+  user-select: none;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+.line-content {
+  white-space: pre;
+  flex: 1;
+}
+
+/* ============================================================================
+   SCENE VIEW STYLES
+   ============================================================================ */
+
+/* Scene Back Button - positioned well after the view toggle */
+#scene-back-btn {
+  position: fixed;
+  top: 20px;
+  left: 180px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  transition: all 0.15s;
+}
+
+#scene-back-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+#scene-back-btn svg { flex-shrink: 0; opacity: 0.7; width: 12px; height: 12px; }
+#scene-back-btn .scene-name {
+  color: var(--accent);
+  font-weight: 600;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Hide legend in expanded scene view */
+#legend.hidden { display: none; }
+
+/* ============================================================================
+   SCENE NODE PROPERTIES PANEL STYLES
+   ============================================================================ */
+
+/* Loading and error states */
+.loading-state, .error-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.error-state {
+  color: #f38ba8;
+}
+
+/* Property sections - styled like Godot inspector */
+.property-section {
+  margin-bottom: 4px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.property-section .section-header {
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg-secondary);
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.property-section .section-header:hover {
+  background: var(--bg-hover);
+}
+
+.property-section .section-count {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.property-section.collapsed .property-list {
+  display: none;
+}
+
+.property-section.collapsed .section-header span:first-child::before {
+  content: '▶ ';
+}
+
+.property-section:not(.collapsed) .section-header span:first-child::before {
+  content: '▼ ';
+}
+
+.property-section .section-header span:first-child {
+  display: flex;
+  align-items: center;
+}
+
+.property-section .section-header span:first-child::before {
+  margin-right: 4px;
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.property-list {
+  padding: 4px 0;
+  background: var(--bg-primary);
+}
+
+/* Property rows - cleaner layout */
+.property-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  margin-bottom: 1px;
+  transition: background 0.1s;
+}
+
+.property-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.property-name {
+  flex: 0 0 40%;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-right: 8px;
+}
+
+.property-value {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Property inputs */
+.property-input {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-family: 'SF Mono', Monaco, monospace;
+}
+
+.property-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.property-input::-webkit-inner-spin-button,
+.property-input::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+/* Property select */
+.property-select {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.property-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  transition: 0.15s;
+}
+
+.toggle-slider::before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+  background-color: var(--text-muted);
+  border-radius: 50%;
+  transition: 0.15s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: rgba(166, 227, 161, 0.3);
+  border-color: var(--gd-signal);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  background-color: var(--gd-signal);
+  transform: translateX(16px);
+}
+
+/* Range input group */
+.range-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.property-range {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  outline: none;
+}
+
+.property-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.property-range::-webkit-slider-thumb:hover {
+  background: var(--accent-light);
+}
+
+.range-number {
+  width: 60px !important;
+  flex: 0 0 auto;
+}
+
+/* Vector input group */
+.vector-input-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.vector-input-group label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.vector-input-group .property-input {
+  width: auto;
+  flex: 1;
+  min-width: 50px;
+}
+
+.vector-input-group.vec3 .property-input {
+  min-width: 40px;
+}
+
+/* Color input group */
+.color-input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.property-color {
+  width: 40px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.property-color::-webkit-color-swatch-wrapper {
+  padding: 2px;
+}
+
+.property-color::-webkit-color-swatch {
+  border-radius: 2px;
+  border: none;
+}
+
+.color-alpha {
+  width: 50px !important;
+  flex: 0 0 auto;
+}
+
+/* Readonly property */
+.property-readonly {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'SF Mono', Monaco, monospace;
+  background: var(--bg-tertiary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Resource path */
+.resource-path {
+  font-size: 11px;
+  color: var(--gd-string);
+  font-family: 'SF Mono', Monaco, monospace;
+  background: var(--bg-tertiary);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Script badge in meta row */
+.meta-badge.script-badge {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.meta-badge.script-badge:hover {
+  background: var(--bg-tertiary);
+}
+
+</style>
+</head>
+<body>
+<div id="search-bar">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+  <input type="text" id="search" placeholder="Search scripts..." />
+  <span class="stats" id="stats"></span>
+</div>
+
+<div id="legend">
+  <div class="item"><div class="line" style="background:var(--edge-extends)"></div> extends</div>
+  <div class="item"><div class="line" style="background:var(--edge-preload)"></div> preload</div>
+  <div class="item"><div class="line" style="background:var(--edge-signal);height:0;border-top:2px dotted var(--edge-signal)"></div> signal</div>
+</div>
+
+<div id="zoom-indicator" title="Click to reset, or type custom zoom">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" onclick="resetZoom()" style="cursor:pointer"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
+  <input type="text" class="zoom-input" id="zoom-text" value="100%" onchange="setCustomZoom(this.value)" onkeydown="if(event.key==='Enter'){this.blur()}" onclick="this.select()">
+</div>
+
+<div id="detail-panel">
+  <div id="panel-resize-handle"></div>
+  <div class="panel-header">
+    <button class="close-btn" onclick="closePanel()">&times;</button>
+    <h2 id="panel-title"></h2>
+    <div class="path" id="panel-path"></div>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<!-- View Tabs -->
+<div id="view-tabs">
+  <button class="active" onclick="switchView('scripts')">Scripts</button>
+  <button onclick="switchView('scenes')">Scenes</button>
+</div>
+
+<!-- Scene Back Button (shown when scene is expanded) -->
+<div id="scene-back-btn" style="display:none" onclick="goBackToSceneOverview()">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  <span>← Back to Scenes</span>
+  <span class="scene-name"></span>
+</div>
+
+<!-- Context Menu (Scripts) -->
+<div id="context-menu">
+  <div class="menu-item" onclick="createNewScript()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14,2 14,8 20,8"/>
+      <line x1="12" y1="18" x2="12" y2="12"/>
+      <line x1="9" y1="15" x2="15" y2="15"/>
+    </svg>
+    New Script
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="refreshProject()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M23 4v6h-6M1 20v-6h6"/>
+      <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+    </svg>
+    Refresh
+  </div>
+  <div class="menu-item" onclick="resetLayout()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="3" width="7" height="7"/>
+      <rect x="14" y="3" width="7" height="7"/>
+      <rect x="14" y="14" width="7" height="7"/>
+      <rect x="3" y="14" width="7" height="7"/>
+    </svg>
+    Reset Layout
+  </div>
+</div>
+
+<!-- Context Menu (Scene Nodes) -->
+<div id="scene-context-menu">
+  <div class="menu-item" onclick="sceneNodeAction('add_child')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="16"/>
+      <line x1="8" y1="12" x2="16" y2="12"/>
+    </svg>
+    Add Child Node
+  </div>
+  <div class="menu-item" onclick="sceneNodeAction('rename')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+    Rename
+  </div>
+  <div class="menu-item" onclick="sceneNodeAction('duplicate')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+    </svg>
+    Duplicate
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item" onclick="sceneNodeAction('move_up')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+    Move Up
+  </div>
+  <div class="menu-item" onclick="sceneNodeAction('move_down')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+    Move Down
+  </div>
+  <div class="menu-divider"></div>
+  <div class="menu-item danger" onclick="sceneNodeAction('delete')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="3 6 5 6 21 6"/>
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+    </svg>
+    Delete
+  </div>
+</div>
+
+<!-- Floating Usage Panel -->
+<div id="usage-float-panel">
+  <div class="ufp-header" id="ufp-header">
+    <div class="ufp-info">
+      <div class="ufp-title" id="ufp-title">⚠ Delete Variable</div>
+      <div class="ufp-count" id="ufp-count"></div>
+    </div>
+    <div class="ufp-buttons">
+      <button class="refresh-btn" onclick="refreshUsages()" title="Re-scan for usages">↻</button>
+      <button class="close-btn" onclick="closeUsagePanel()" title="Cancel">×</button>
+    </div>
+  </div>
+  <div class="ufp-list" id="ufp-list"></div>
+  <div class="ufp-actions">
+    <button class="cancel" onclick="closeUsagePanel()">Cancel</button>
+    <button class="delete" id="ufp-delete-btn">Delete Anyway</button>
+  </div>
+  <div class="ufp-resize" id="ufp-resize"></div>
+</div>
+
+<!-- New Script Modal -->
+<div id="new-script-modal" class="modal" style="display:none">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Create New Script</h3>
+      <button class="close-btn" onclick="closeNewScriptModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Script Path</label>
+        <input type="text" id="new-script-path" placeholder="res://scripts/my_script.gd">
+      </div>
+      <div class="form-group">
+        <label>Extends</label>
+        <select id="new-script-extends">
+          <option value="Node">Node</option>
+          <option value="Node2D">Node2D</option>
+          <option value="Node3D">Node3D</option>
+          <option value="CharacterBody2D">CharacterBody2D</option>
+          <option value="CharacterBody3D">CharacterBody3D</option>
+          <option value="RigidBody2D">RigidBody2D</option>
+          <option value="Area2D">Area2D</option>
+          <option value="Control">Control</option>
+          <option value="Resource">Resource</option>
+          <option value="RefCounted">RefCounted</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Class Name (optional)</label>
+        <input type="text" id="new-script-classname" placeholder="MyClass">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel" onclick="closeNewScriptModal()">Cancel</button>
+      <button class="confirm" onclick="submitNewScript()">Create</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+"use strict";
+(() => {
+  // src/visualizer/state.js
+  var PROJECT_DATA = "%%PROJECT_DATA%%";
+  var NODE_W = 200;
+  var NODE_H = 54;
+  var camera = { x: 0, y: 0, zoom: 1 };
+  var defaultZoom = 1;
+  var W = 0;
+  var H = 0;
+  function setDimensions(width, height) {
+    W = width;
+    H = height;
+  }
+  var dragging = null;
+  var hoveredNode = null;
+  var selectedNode = null;
+  var searchTerm = "";
+  function setDragging(value) {
+    dragging = value;
+  }
+  function setHoveredNode(value) {
+    hoveredNode = value;
+  }
+  function setSelectedNode(value) {
+    selectedNode = value;
+  }
+  function setSearchTerm(value) {
+    searchTerm = value;
+  }
+  var FOLDER_COLORS = [
+    "#d4a27f",
+    "#7aa2f7",
+    "#a6e3a1",
+    "#f38ba8",
+    "#89dceb",
+    "#fab387",
+    "#cba6f7",
+    "#f9e2af",
+    "#94e2d5",
+    "#eba0ac"
+  ];
+  var folderColorMap = {};
+  var folderColorIdx = 0;
+  function getFolderColor(folder) {
+    if (!folder)
+      return FOLDER_COLORS[0];
+    if (!folderColorMap[folder]) {
+      folderColorMap[folder] = FOLDER_COLORS[folderColorIdx % FOLDER_COLORS.length];
+      folderColorIdx++;
+    }
+    return folderColorMap[folder];
+  }
+  var nodes = PROJECT_DATA.nodes.map((n, i) => ({
+    ...n,
+    x: 0,
+    y: 0,
+    color: getFolderColor(n.folder),
+    highlighted: true,
+    visible: true
+  }));
+  var edges = PROJECT_DATA.edges;
+  var currentView = "scripts";
+  var sceneData = null;
+  var expandedScene = null;
+  var expandedSceneHierarchy = null;
+  var selectedSceneNode = null;
+  var hoveredSceneNode = null;
+  var sceneNodeProperties = null;
+  var scenePositions = {};
+  function setCurrentView(view) {
+    currentView = view;
+    if (view === "scripts") {
+      expandedScene = null;
+      expandedSceneHierarchy = null;
+      selectedSceneNode = null;
+      hoveredSceneNode = null;
+      sceneNodeProperties = null;
+    }
+  }
+  var scriptToScenes = {};
+  function setSceneData(data) {
+    sceneData = data;
+    for (const key in scriptToScenes) {
+      delete scriptToScenes[key];
+    }
+    if (data && data.scenes) {
+      for (const scene of data.scenes) {
+        const sceneName = scene.name || scene.path.split("/").pop().replace(".tscn", "");
+        if (scene.scripts) {
+          for (const scriptPath of scene.scripts) {
+            if (!scriptToScenes[scriptPath]) {
+              scriptToScenes[scriptPath] = [];
+            }
+            scriptToScenes[scriptPath].push({
+              path: scene.path,
+              name: sceneName
+            });
+          }
+        }
+      }
+    }
+  }
+  function setExpandedScene(scenePath) {
+    expandedScene = scenePath;
+    if (!scenePath) {
+      expandedSceneHierarchy = null;
+      selectedSceneNode = null;
+      hoveredSceneNode = null;
+      sceneNodeProperties = null;
+    }
+  }
+  function setExpandedSceneHierarchy(hierarchy) {
+    expandedSceneHierarchy = hierarchy;
+  }
+  function setSelectedSceneNode(node) {
+    selectedSceneNode = node;
+    sceneNodeProperties = null;
+  }
+  function setHoveredSceneNode(node) {
+    hoveredSceneNode = node;
+  }
+  function setSceneNodeProperties(props) {
+    sceneNodeProperties = props;
+  }
+  function setScenePosition(scenePath, x, y) {
+    scenePositions[scenePath] = { x, y };
+  }
+  var pendingDelete = null;
+  var currentUsages = [];
+  function setPendingDelete(value) {
+    pendingDelete = value;
+  }
+  function setCurrentUsages(value) {
+    currentUsages = value;
+  }
+  function esc(s) {
+    return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  // src/visualizer/websocket.js
+  var ws = null;
+  var wsConnected = false;
+  var pendingRequests = /* @__PURE__ */ new Map();
+  var requestId = 0;
+  function connectWebSocket() {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    ws = new WebSocket(`${protocol}//${window.location.host}`);
+    ws.onopen = () => {
+      wsConnected = true;
+      console.log("[visualizer] WebSocket connected");
+    };
+    ws.onclose = () => {
+      wsConnected = false;
+      console.log("[visualizer] WebSocket disconnected, reconnecting...");
+      setTimeout(connectWebSocket, 2e3);
+    };
+    ws.onerror = (err) => {
+      console.error("[visualizer] WebSocket error:", err);
+    };
+    ws.onmessage = (event) => {
+      try {
+        const msg = JSON.parse(event.data);
+        if (msg.id && pendingRequests.has(msg.id)) {
+          const { resolve, reject } = pendingRequests.get(msg.id);
+          pendingRequests.delete(msg.id);
+          if (msg.error) {
+            reject(new Error(msg.error));
+          } else {
+            resolve(msg.result || msg);
+          }
+        }
+      } catch (err) {
+        console.error("[visualizer] Failed to parse message:", err);
+      }
+    };
+  }
+  function sendCommand(command, args) {
+    return new Promise((resolve, reject) => {
+      if (!wsConnected || !ws) {
+        reject(new Error("WebSocket not connected"));
+        return;
+      }
+      const id = ++requestId;
+      pendingRequests.set(id, { resolve, reject });
+      ws.send(JSON.stringify({
+        type: "visualizer_command",
+        id,
+        command,
+        args
+      }));
+      setTimeout(() => {
+        if (pendingRequests.has(id)) {
+          pendingRequests.delete(id);
+          reject(new Error("Request timeout"));
+        }
+      }, 3e4);
+    });
+  }
+
+  // src/visualizer/layout.js
+  var MIN_SPACING_X = NODE_W + 40;
+  var MIN_SPACING_Y = NODE_H + 30;
+  function initLayout() {
+    if (nodes.length === 0)
+      return;
+    const adjacency = /* @__PURE__ */ new Map();
+    nodes.forEach((n) => adjacency.set(n.path, []));
+    edges.forEach((e) => {
+      if (adjacency.has(e.from) && adjacency.has(e.to)) {
+        adjacency.get(e.from).push(e.to);
+        adjacency.get(e.to).push(e.from);
+      }
+    });
+    const connectionCount = /* @__PURE__ */ new Map();
+    nodes.forEach((n) => {
+      const count = (adjacency.get(n.path) || []).length;
+      connectionCount.set(n.path, count);
+    });
+    const sortedNodes = [...nodes].sort(
+      (a, b) => connectionCount.get(b.path) - connectionCount.get(a.path)
+    );
+    const cols = Math.ceil(Math.sqrt(nodes.length));
+    const startX = -(cols * MIN_SPACING_X) / 2;
+    const startY = -(Math.ceil(nodes.length / cols) * MIN_SPACING_Y) / 2;
+    sortedNodes.forEach((n, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      n.x = startX + col * MIN_SPACING_X;
+      n.y = startY + row * MIN_SPACING_Y;
+    });
+    const iterations = 150;
+    for (let iter = 0; iter < iterations; iter++) {
+      const alpha = Math.pow(1 - iter / iterations, 2);
+      applyForces(alpha, adjacency);
+      resolveCollisions();
+    }
+    for (let i = 0; i < 10; i++) {
+      resolveCollisions();
+    }
+    centerLayout();
+  }
+  function applyForces(alpha, adjacency) {
+    const repulsion = 5e4;
+    const attraction = 0.08;
+    const idealEdgeLength = MIN_SPACING_X * 1.2;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i];
+        const b = nodes[j];
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        if (dx === 0 && dy === 0) {
+          dx = (Math.random() - 0.5) * 10;
+          dy = (Math.random() - 0.5) * 10;
+        }
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        const minDist = MIN_SPACING_X;
+        let force = repulsion / (dist * dist);
+        if (dist < minDist) {
+          force *= 3;
+        }
+        const fx = dx / dist * force * alpha;
+        const fy = dy / dist * force * alpha;
+        a.x -= fx;
+        a.y -= fy;
+        b.x += fx;
+        b.y += fy;
+      }
+    }
+    edges.forEach((e) => {
+      const from = nodes.find((n) => n.path === e.from);
+      const to = nodes.find((n) => n.path === e.to);
+      if (!from || !to)
+        return;
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      if (dist > idealEdgeLength) {
+        const force = (dist - idealEdgeLength) * attraction * alpha;
+        const fx = dx / dist * force;
+        const fy = dy / dist * force;
+        from.x += fx;
+        from.y += fy;
+        to.x -= fx;
+        to.y -= fy;
+      }
+    });
+  }
+  function resolveCollisions() {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i];
+        const b = nodes[j];
+        const overlapX = MIN_SPACING_X - Math.abs(b.x - a.x);
+        const overlapY = MIN_SPACING_Y - Math.abs(b.y - a.y);
+        if (overlapX > 0 && overlapY > 0) {
+          let dx = b.x - a.x;
+          let dy = b.y - a.y;
+          if (dx === 0)
+            dx = (Math.random() - 0.5) * 2;
+          if (dy === 0)
+            dy = (Math.random() - 0.5) * 2;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          if (overlapX < overlapY) {
+            const push = (overlapX / 2 + 5) * Math.sign(dx);
+            a.x -= push;
+            b.x += push;
+          } else {
+            const push = (overlapY / 2 + 5) * Math.sign(dy);
+            a.y -= push;
+            b.y += push;
+          }
+        }
+      }
+    }
+  }
+  function centerLayout() {
+    if (nodes.length === 0)
+      return;
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+    nodes.forEach((n) => {
+      minX = Math.min(minX, n.x);
+      maxX = Math.max(maxX, n.x);
+      minY = Math.min(minY, n.y);
+      maxY = Math.max(maxY, n.y);
+    });
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    nodes.forEach((n) => {
+      n.x -= centerX;
+      n.y -= centerY;
+    });
+  }
+
+  // src/visualizer/canvas.js
+  var canvas;
+  var ctx;
+  var zoomIndicator;
+  var zoomText;
+  var dpr = 1;
+  var STORAGE_KEY = "godot-visualizer-positions";
+  function initCanvas() {
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+    zoomIndicator = document.getElementById("zoom-indicator");
+    zoomText = document.getElementById("zoom-text");
+    dpr = window.devicePixelRatio || 1;
+    resize();
+    const positionsRestored = loadPositions();
+    return { canvas, ctx, positionsRestored };
+  }
+  function getCanvas() {
+    return canvas;
+  }
+  function resize() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    setDimensions(w, h);
+    dpr = window.devicePixelRatio || 1;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function screenToWorld(sx, sy) {
+    return {
+      x: (sx - W / 2) / camera.zoom + camera.x,
+      y: (sy - H / 2) / camera.zoom + camera.y
+    };
+  }
+  function updateZoomIndicator() {
+    const pct = Math.round(camera.zoom * 100);
+    zoomText.value = pct + "%";
+    zoomIndicator.classList.toggle("faded", Math.abs(camera.zoom - defaultZoom) < 0.01);
+  }
+  function resetZoom() {
+    camera.zoom = defaultZoom;
+    updateZoomIndicator();
+    draw();
+  }
+  function setCustomZoom(value) {
+    let parsed = parseFloat(value.replace("%", "").trim());
+    if (isNaN(parsed))
+      return;
+    if (parsed > 0 && parsed < 10) {
+      parsed = parsed * 100;
+    }
+    const newZoom = Math.max(0.1, Math.min(5, parsed / 100));
+    camera.zoom = newZoom;
+    updateZoomIndicator();
+    draw();
+  }
+  window.resetZoom = resetZoom;
+  window.setCustomZoom = setCustomZoom;
+  function savePositions() {
+    try {
+      const positions = {};
+      nodes.forEach((n) => {
+        positions[n.path] = { x: n.x, y: n.y };
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        positions,
+        camera: { x: camera.x, y: camera.y, zoom: camera.zoom }
+      }));
+    } catch (e) {
+      console.warn("Failed to save positions:", e);
+    }
+  }
+  function loadPositions() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved)
+        return false;
+      const data = JSON.parse(saved);
+      let restored = 0;
+      if (data.positions) {
+        nodes.forEach((n) => {
+          if (data.positions[n.path]) {
+            n.x = data.positions[n.path].x;
+            n.y = data.positions[n.path].y;
+            restored++;
+          }
+        });
+      }
+      if (data.camera && restored > 0) {
+        camera.x = data.camera.x;
+        camera.y = data.camera.y;
+        camera.zoom = data.camera.zoom;
+      }
+      return restored > 0;
+    } catch (e) {
+      console.warn("Failed to load positions:", e);
+      return false;
+    }
+  }
+  function clearPositions() {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+      console.warn("Failed to clear positions:", e);
+    }
+  }
+  function draw() {
+    if (currentView === "scenes") {
+      drawSceneView();
+      return;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    ctx.translate(Math.round(W / 2), Math.round(H / 2));
+    ctx.scale(camera.zoom, camera.zoom);
+    ctx.translate(-camera.x, -camera.y);
+    const pathIdx = {};
+    nodes.forEach((n, i) => pathIdx[n.path] = i);
+    const edgeGroups = {};
+    for (const e of edges) {
+      const si = pathIdx[e.from], ti = pathIdx[e.to];
+      if (si === void 0 || ti === void 0)
+        continue;
+      const key = `${si}-${ti}-${e.type}`;
+      if (!edgeGroups[key]) {
+        edgeGroups[key] = { from: e.from, to: e.to, type: e.type, edges: [], si, ti };
+      }
+      edgeGroups[key].edges.push(e);
+    }
+    for (const key of Object.keys(edgeGroups)) {
+      const group = edgeGroups[key];
+      const s = nodes[group.si], t = nodes[group.ti];
+      const count = group.edges.length;
+      if (searchTerm && s.visible === false && t.visible === false)
+        continue;
+      const bothVisible = s.visible !== false && t.visible !== false;
+      ctx.globalAlpha = !bothVisible || !s.highlighted && !t.highlighted ? 0.08 : 0.5;
+      const angle = Math.atan2(t.y - s.y, t.x - s.x);
+      const perpAngle = angle + Math.PI / 2;
+      const typeOffset = group.type === "extends" ? 0 : group.type === "preload" ? 8 : 16;
+      const offsetX = Math.cos(perpAngle) * typeOffset;
+      const offsetY = Math.sin(perpAngle) * typeOffset;
+      ctx.beginPath();
+      ctx.moveTo(s.x + offsetX, s.y + offsetY);
+      ctx.lineTo(t.x + offsetX, t.y + offsetY);
+      if (group.type === "extends") {
+        ctx.strokeStyle = "#7aa2f7";
+        ctx.setLineDash([]);
+        ctx.lineWidth = 2;
+      } else if (group.type === "preload") {
+        ctx.strokeStyle = "#d4a27f";
+        ctx.setLineDash([]);
+        ctx.lineWidth = 1.5;
+      } else {
+        ctx.strokeStyle = "#a6e3a1";
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1.5;
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+      const al = 10;
+      const mx = (s.x + t.x) / 2 + offsetX, my = (s.y + t.y) / 2 + offsetY;
+      ctx.beginPath();
+      ctx.moveTo(mx + Math.cos(angle) * al, my + Math.sin(angle) * al);
+      ctx.lineTo(mx + Math.cos(angle + 2.5) * al * 0.6, my + Math.sin(angle + 2.5) * al * 0.6);
+      ctx.lineTo(mx + Math.cos(angle - 2.5) * al * 0.6, my + Math.sin(angle - 2.5) * al * 0.6);
+      ctx.closePath();
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.fill();
+      if (count > 1) {
+        const badgeX = mx + Math.cos(perpAngle) * 12;
+        const badgeY = my + Math.sin(perpAngle) * 12;
+        const badgeSize = 16;
+        ctx.globalAlpha = bothVisible ? 0.9 : 0.3;
+        ctx.beginPath();
+        ctx.arc(badgeX, badgeY, badgeSize / 2, 0, Math.PI * 2);
+        ctx.fillStyle = ctx.strokeStyle;
+        ctx.fill();
+        ctx.fillStyle = "#1a1a1e";
+        ctx.font = `bold 10px -apple-system, system-ui, sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(count.toString(), badgeX, badgeY);
+      }
+    }
+    ctx.globalAlpha = 1;
+    for (const n of nodes) {
+      if (searchTerm && n.visible === false)
+        continue;
+      const x = Math.round(n.x - NODE_W / 2);
+      const y = Math.round(n.y - NODE_H / 2);
+      const isHovered = n === hoveredNode, isSelected = n === selectedNode;
+      ctx.globalAlpha = n.highlighted ? 1 : 0.12;
+      ctx.shadowColor = "rgba(0,0,0,0.4)";
+      ctx.shadowBlur = isHovered ? 16 : 8;
+      ctx.shadowOffsetY = 2;
+      ctx.beginPath();
+      roundRect(ctx, x, y, NODE_W, NODE_H, 10);
+      ctx.fillStyle = isSelected ? "#35353b" : isHovered ? "#303036" : "#242428";
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.strokeStyle = isSelected ? n.color : isHovered ? n.color : "#3a3a40";
+      ctx.lineWidth = isSelected ? 2 : 1;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.roundRect(x + 4, y + 8, 3, NODE_H - 16, 2);
+      ctx.fillStyle = n.color;
+      ctx.fill();
+      const titleSize = 14;
+      ctx.font = `600 ${titleSize}px -apple-system, system-ui, sans-serif`;
+      ctx.fillStyle = "#e8e4df";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "left";
+      const displayName = n.class_name || n.filename.replace(".gd", "");
+      ctx.fillText(displayName, x + 16, y + NODE_H / 2 - 6);
+      const subSize = 11;
+      const varCount = n.variables ? n.variables.length : 0;
+      const funcCount = n.functions ? n.functions.length : 0;
+      const sigCount = n.signals ? n.signals.length : 0;
+      ctx.font = `${subSize}px -apple-system, system-ui, sans-serif`;
+      const subY = y + NODE_H / 2 + 9;
+      let subX = x + 16;
+      ctx.fillStyle = "#706c66";
+      const extendsText = (n.extends || "Node") + " \xB7 ";
+      ctx.fillText(extendsText, subX, subY);
+      subX += ctx.measureText(extendsText).width;
+      ctx.fillStyle = "#89dceb";
+      ctx.fillText(funcCount + "f", subX, subY);
+      subX += ctx.measureText(funcCount + "f").width;
+      ctx.fillStyle = "#706c66";
+      ctx.fillText(" ", subX, subY);
+      subX += ctx.measureText(" ").width;
+      ctx.fillStyle = "#cba6f7";
+      ctx.fillText(varCount + "v", subX, subY);
+      subX += ctx.measureText(varCount + "v").width;
+      ctx.fillStyle = "#706c66";
+      ctx.fillText(" ", subX, subY);
+      subX += ctx.measureText(" ").width;
+      ctx.fillStyle = "#a6e3a1";
+      ctx.fillText(sigCount + "s", subX, subY);
+      subX += ctx.measureText(sigCount + "s").width;
+      ctx.fillStyle = "#706c66";
+      ctx.fillText(" \xB7 ", subX, subY);
+      subX += ctx.measureText(" \xB7 ").width;
+      ctx.fillStyle = "#f9e2af";
+      ctx.fillText(n.line_count + "L", subX, subY);
+      const usedInScenes = scriptToScenes[n.path];
+      if (usedInScenes && usedInScenes.length > 0) {
+        const badgeX = x + NODE_W - 8;
+        const badgeY = y + 8;
+        ctx.fillStyle = "rgba(166, 227, 161, 0.2)";
+        ctx.beginPath();
+        ctx.roundRect(badgeX - 20, badgeY - 4, 24, 14, 3);
+        ctx.fill();
+        ctx.fillStyle = "#a6e3a1";
+        ctx.font = `600 9px -apple-system, system-ui, sans-serif`;
+        ctx.textAlign = "right";
+        ctx.fillText("\u{1F4E6}" + usedInScenes.length, badgeX, badgeY + 4);
+        ctx.textAlign = "left";
+      }
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+  var SCENE_CARD_W = 200;
+  var SCENE_CARD_H = 54;
+  var SCENE_NODE_MIN_W = 80;
+  var SCENE_NODE_MAX_W = 200;
+  var SCENE_NODE_H = 36;
+  var SCENE_NODE_GAP_X = 15;
+  var SCENE_NODE_GAP_Y = 40;
+  function calculateNodeWidth(name) {
+    const textWidth = (name || "Node").length * 7;
+    const padding = 35;
+    return Math.min(SCENE_NODE_MAX_W, Math.max(SCENE_NODE_MIN_W, textWidth + padding));
+  }
+  function drawSceneView() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    ctx.translate(Math.round(W / 2), Math.round(H / 2));
+    ctx.scale(camera.zoom, camera.zoom);
+    ctx.translate(-camera.x, -camera.y);
+    if (!sceneData || !sceneData.scenes || sceneData.scenes.length === 0) {
+      drawSceneViewPlaceholder();
+      ctx.restore();
+      return;
+    }
+    if (expandedScene && expandedSceneHierarchy) {
+      drawExpandedSceneView();
+    } else {
+      drawSceneOverview();
+    }
+    ctx.restore();
+  }
+  function drawSceneOverview() {
+    const scenes = sceneData.scenes;
+    scenes.forEach((scene, i) => {
+      if (!scenePositions[scene.path]) {
+        const cols = Math.max(1, Math.floor(Math.sqrt(scenes.length * 1.5)));
+        setScenePosition(
+          scene.path,
+          i % cols * (SCENE_CARD_W + 40) - (cols - 1) * (SCENE_CARD_W + 40) / 2,
+          Math.floor(i / cols) * (SCENE_CARD_H + 30) - 100
+        );
+      }
+    });
+    if (sceneData.edges) {
+      ctx.globalAlpha = 0.4;
+      for (const edge of sceneData.edges) {
+        const fromScene = scenes.find((s) => s.path === edge.from);
+        const toScene = scenes.find((s) => s.path === edge.to);
+        if (!fromScene || !toScene)
+          continue;
+        const fromPos = scenePositions[edge.from];
+        const toPos = scenePositions[edge.to];
+        if (!fromPos || !toPos)
+          continue;
+        const fromX = fromPos.x + SCENE_CARD_W / 2;
+        const fromY = fromPos.y + SCENE_CARD_H;
+        const toX = toPos.x + SCENE_CARD_W / 2;
+        const toY = toPos.y;
+        ctx.beginPath();
+        ctx.moveTo(fromX, fromY);
+        ctx.lineTo(toX, toY);
+        ctx.strokeStyle = "#89dceb";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      ctx.globalAlpha = 1;
+    }
+    scenes.forEach((scene, i) => {
+      const pos = scenePositions[scene.path];
+      const x = pos.x;
+      const y = pos.y;
+      const isHovered = hoveredSceneNode && hoveredSceneNode.scenePath === scene.path && !hoveredSceneNode.nodePath;
+      const isExpanded = expandedScene === scene.path;
+      const sceneColor = getSceneColor(scene.path);
+      ctx.shadowColor = "rgba(0,0,0,0.4)";
+      ctx.shadowBlur = isHovered ? 16 : 8;
+      ctx.shadowOffsetY = 2;
+      ctx.beginPath();
+      roundRect(ctx, x, y, SCENE_CARD_W, SCENE_CARD_H, 10);
+      ctx.fillStyle = isExpanded ? "#35353b" : isHovered ? "#303036" : "#242428";
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.strokeStyle = isExpanded ? sceneColor : isHovered ? sceneColor : "#3a3a40";
+      ctx.lineWidth = isExpanded ? 2 : 1;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.roundRect(x + 4, y + 8, 3, SCENE_CARD_H - 16, 2);
+      ctx.fillStyle = sceneColor;
+      ctx.fill();
+      ctx.fillStyle = "#e8e4df";
+      ctx.font = `600 13px -apple-system, system-ui, sans-serif`;
+      ctx.textAlign = "left";
+      const sceneName = scene.name || scene.path.split("/").pop().replace(".tscn", "");
+      ctx.fillText(sceneName, x + 14, y + 22);
+      const nodeCount = scene.node_count || (scene.nodes ? scene.nodes.length : 0);
+      ctx.fillStyle = "#706c66";
+      ctx.font = `11px -apple-system, system-ui, sans-serif`;
+      ctx.fillText(`${scene.root_type || "Node"} \xB7 ${nodeCount} nodes`, x + 14, y + 40);
+    });
+  }
+  function drawExpandedSceneView() {
+    const hierarchy = expandedSceneHierarchy;
+    if (!hierarchy)
+      return;
+    const treeLayout = calculateTreeLayout(hierarchy);
+    drawTreeConnections(treeLayout.nodes);
+    for (const node of treeLayout.nodes) {
+      drawSceneNode(node);
+    }
+  }
+  function calculateTreeLayout(hierarchy) {
+    const nodes2 = [];
+    const LEVEL_HEIGHT = SCENE_NODE_H + SCENE_NODE_GAP_Y;
+    function processNode(node, depth, centerX) {
+      const nodeWidth = calculateNodeWidth(node.name);
+      const x = centerX - nodeWidth / 2;
+      const y = depth * LEVEL_HEIGHT;
+      const nodeLayout = {
+        ...node,
+        x,
+        y,
+        width: nodeWidth,
+        height: SCENE_NODE_H,
+        childPositions: []
+      };
+      nodes2.push(nodeLayout);
+      if (node.children && node.children.length > 0) {
+        let totalChildrenWidth = 0;
+        for (const child of node.children) {
+          totalChildrenWidth += calculateNodeWidth(child.name) + SCENE_NODE_GAP_X;
+        }
+        totalChildrenWidth -= SCENE_NODE_GAP_X;
+        let childX = centerX - totalChildrenWidth / 2;
+        for (const child of node.children) {
+          const childWidth = calculateNodeWidth(child.name);
+          const childCenterX = childX + childWidth / 2;
+          nodeLayout.childPositions.push({
+            x: childCenterX,
+            y: (depth + 1) * LEVEL_HEIGHT
+          });
+          processNode(child, depth + 1, childCenterX);
+          childX += childWidth + SCENE_NODE_GAP_X;
+        }
+      }
+      return nodeLayout;
+    }
+    processNode(hierarchy, 0, 0);
+    return { nodes: nodes2 };
+  }
+  function drawTreeConnections(nodes2) {
+    ctx.strokeStyle = "#4a5568";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    for (const node of nodes2) {
+      if (node.childPositions && node.childPositions.length > 0) {
+        const parentX = node.x + node.width / 2;
+        const parentY = node.y + SCENE_NODE_H;
+        for (const childPos of node.childPositions) {
+          ctx.beginPath();
+          ctx.moveTo(parentX, parentY);
+          const midY = parentY + (childPos.y - parentY) / 2;
+          ctx.lineTo(parentX, midY);
+          ctx.lineTo(childPos.x, midY);
+          ctx.lineTo(childPos.x, childPos.y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+  function drawSceneNode(node) {
+    const x = node.x;
+    const y = node.y;
+    const w = node.width;
+    const isSelected = selectedSceneNode && selectedSceneNode.path === node.path;
+    const isHovered = hoveredSceneNode && hoveredSceneNode.nodePath === node.path;
+    const isHighlighted = node.highlighted !== false;
+    const nodeColor = getNodeTypeColor(node.type);
+    ctx.globalAlpha = isHighlighted ? 1 : 0.25;
+    ctx.shadowColor = "rgba(0,0,0,0.25)";
+    ctx.shadowBlur = isHovered ? 12 : 6;
+    ctx.shadowOffsetY = 2;
+    ctx.beginPath();
+    roundRect(ctx, x, y, w, SCENE_NODE_H, 6);
+    ctx.fillStyle = isSelected ? "#35353b" : isHovered ? "#303036" : "#242428";
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+    const borderColor = isSelected ? nodeColor : isHovered ? nodeColor : isHighlighted && searchTerm ? "#f9e2af" : "#3a3a40";
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = isSelected || isHighlighted && searchTerm ? 2 : 1;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.roundRect(x + 3, y + 6, 2, SCENE_NODE_H - 12, 1);
+    ctx.fillStyle = nodeColor;
+    ctx.fill();
+    ctx.fillStyle = "#e8e4df";
+    ctx.font = `600 11px -apple-system, system-ui, sans-serif`;
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    const displayName = node.name || "Node";
+    ctx.fillText(displayName, x + 10, y + SCENE_NODE_H / 2 - 4);
+    ctx.fillStyle = "#706c66";
+    ctx.font = `9px -apple-system, system-ui, sans-serif`;
+    ctx.fillText(node.type, x + 10, y + SCENE_NODE_H / 2 + 7);
+    if (node.script) {
+      ctx.fillStyle = "#a6e3a1";
+      ctx.font = `10px -apple-system, system-ui, sans-serif`;
+      ctx.textAlign = "right";
+      ctx.fillText("\u{1F4DC}", x + w - 6, y + SCENE_NODE_H / 2);
+      ctx.textAlign = "left";
+    }
+    if (node.index !== void 0 && node.index > 0) {
+      ctx.fillStyle = "#4a5568";
+      ctx.font = `9px -apple-system, system-ui, sans-serif`;
+      ctx.textAlign = "right";
+      ctx.fillText(`#${node.index}`, x + w - 6, y + 10);
+      ctx.textAlign = "left";
+    }
+    ctx.globalAlpha = 1;
+  }
+  function getSceneColor(scenePath) {
+    const colors = ["#89dceb", "#a6e3a1", "#f9e2af", "#cba6f7", "#f38ba8", "#fab387"];
+    let hash = 0;
+    for (let i = 0; i < scenePath.length; i++) {
+      hash = scenePath.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  }
+  function getNodeTypeColor(nodeType) {
+    const GODOT_GREEN = "#8eef97";
+    const GODOT_BLUE = "#8da5f3";
+    const GODOT_RED = "#fc7f7f";
+    const GODOT_GRAY = "#b2b2b2";
+    const controlTypes = [
+      "Control",
+      "Label",
+      "Button",
+      "LineEdit",
+      "TextEdit",
+      "RichTextLabel",
+      "Panel",
+      "PanelContainer",
+      "Container",
+      "BoxContainer",
+      "VBoxContainer",
+      "HBoxContainer",
+      "GridContainer",
+      "MarginContainer",
+      "ScrollContainer",
+      "TabContainer",
+      "ProgressBar",
+      "TextureRect",
+      "ColorRect",
+      "NinePatchRect",
+      "CheckBox",
+      "CheckButton",
+      "OptionButton",
+      "SpinBox",
+      "Slider",
+      "HSlider",
+      "VSlider",
+      "Tree",
+      "ItemList",
+      "MenuButton",
+      "LinkButton",
+      "CanvasLayer"
+    ];
+    const node2DTypes = [
+      "Node2D",
+      "Sprite2D",
+      "AnimatedSprite2D",
+      "CharacterBody2D",
+      "RigidBody2D",
+      "StaticBody2D",
+      "Area2D",
+      "CollisionShape2D",
+      "CollisionPolygon2D",
+      "Camera2D",
+      "Path2D",
+      "PathFollow2D",
+      "Line2D",
+      "Polygon2D",
+      "TileMap",
+      "TileMapLayer",
+      "Marker2D",
+      "RemoteTransform2D",
+      "VisibleOnScreenNotifier2D",
+      "GPUParticles2D",
+      "CPUParticles2D",
+      "LightOccluder2D",
+      "PointLight2D",
+      "DirectionalLight2D",
+      "AudioStreamPlayer2D",
+      "NavigationRegion2D"
+    ];
+    const node3DTypes = [
+      "Node3D",
+      "Sprite3D",
+      "AnimatedSprite3D",
+      "CharacterBody3D",
+      "RigidBody3D",
+      "StaticBody3D",
+      "Area3D",
+      "CollisionShape3D",
+      "CollisionPolygon3D",
+      "Camera3D",
+      "MeshInstance3D",
+      "MultiMeshInstance3D",
+      "CSGBox3D",
+      "CSGCylinder3D",
+      "CSGSphere3D",
+      "CSGMesh3D",
+      "Path3D",
+      "PathFollow3D",
+      "GPUParticles3D",
+      "CPUParticles3D",
+      "OmniLight3D",
+      "SpotLight3D",
+      "DirectionalLight3D",
+      "AudioStreamPlayer3D",
+      "NavigationRegion3D"
+    ];
+    for (const type of controlTypes) {
+      if (nodeType === type || nodeType.includes(type))
+        return GODOT_GREEN;
+    }
+    for (const type of node2DTypes) {
+      if (nodeType === type || nodeType.includes(type))
+        return GODOT_BLUE;
+    }
+    for (const type of node3DTypes) {
+      if (nodeType === type || nodeType.includes(type))
+        return GODOT_RED;
+    }
+    if (nodeType.endsWith("2D"))
+      return GODOT_BLUE;
+    if (nodeType.endsWith("3D"))
+      return GODOT_RED;
+    return GODOT_GRAY;
+  }
+  function drawSceneViewPlaceholder() {
+    ctx.fillStyle = "#706c66";
+    ctx.font = `16px -apple-system, system-ui, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText("No scenes found", 0, 0);
+    ctx.fillText("Create a .tscn file in your project", 0, 24);
+    ctx.textAlign = "left";
+  }
+  function sceneHitTest(wx, wy) {
+    if (!sceneData || !sceneData.scenes)
+      return null;
+    if (expandedScene && expandedSceneHierarchy) {
+      const treeLayout = calculateTreeLayout(expandedSceneHierarchy);
+      for (let i = treeLayout.nodes.length - 1; i >= 0; i--) {
+        const node = treeLayout.nodes[i];
+        if (wx >= node.x && wx <= node.x + node.width && wy >= node.y && wy <= node.y + SCENE_NODE_H) {
+          return { type: "sceneNode", node, scenePath: expandedScene };
+        }
+      }
+      return null;
+    } else {
+      for (const scene of sceneData.scenes) {
+        const pos = scenePositions[scene.path];
+        if (!pos)
+          continue;
+        if (wx >= pos.x && wx <= pos.x + SCENE_CARD_W && wy >= pos.y && wy <= pos.y + SCENE_CARD_H) {
+          return { type: "sceneCard", scene, scenePath: scene.path };
+        }
+      }
+      return null;
+    }
+  }
+  function roundRect(ctx2, x, y, w, h, r) {
+    ctx2.moveTo(x + r, y);
+    ctx2.arcTo(x + w, y, x + w, y + h, r);
+    ctx2.arcTo(x + w, y + h, x, y + h, r);
+    ctx2.arcTo(x, y + h, x, y, r);
+    ctx2.arcTo(x, y, x + w, y, r);
+  }
+  function hitTest(wx, wy) {
+    for (let i = nodes.length - 1; i >= 0; i--) {
+      const n = nodes[i];
+      if (searchTerm && n.visible === false)
+        continue;
+      if (wx >= n.x - NODE_W / 2 && wx <= n.x + NODE_W / 2 && wy >= n.y - NODE_H / 2 && wy <= n.y + NODE_H / 2)
+        return n;
+    }
+    return null;
+  }
+  function centerOnNodes(nodeList) {
+    if (!nodeList || nodeList.length === 0)
+      return;
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    nodeList.forEach((n) => {
+      minX = Math.min(minX, n.x);
+      maxX = Math.max(maxX, n.x);
+      minY = Math.min(minY, n.y);
+      maxY = Math.max(maxY, n.y);
+    });
+    camera.x = (minX + maxX) / 2;
+    camera.y = (minY + maxY) / 2;
+    updateZoomIndicator();
+  }
+  function fitToView(nodeList) {
+    if (!nodeList || nodeList.length === 0)
+      return;
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    nodeList.forEach((n) => {
+      minX = Math.min(minX, n.x);
+      maxX = Math.max(maxX, n.x);
+      minY = Math.min(minY, n.y);
+      maxY = Math.max(maxY, n.y);
+    });
+    camera.x = (minX + maxX) / 2;
+    camera.y = (minY + maxY) / 2;
+    const spanX = maxX - minX + NODE_W * 2;
+    const spanY = maxY - minY + NODE_H * 2;
+    camera.zoom = Math.min(1, W / spanX, H / spanY) * 0.9;
+    updateZoomIndicator();
+  }
+
+  // src/visualizer/syntax.js
+  var GD_KEYWORDS = /* @__PURE__ */ new Set([
+    "var",
+    "func",
+    "signal",
+    "class_name",
+    "extends",
+    "class",
+    "enum",
+    "const",
+    "if",
+    "elif",
+    "else",
+    "for",
+    "while",
+    "match",
+    "break",
+    "continue",
+    "pass",
+    "return",
+    "and",
+    "or",
+    "not",
+    "in",
+    "is",
+    "as",
+    "self",
+    "super",
+    "true",
+    "false",
+    "null",
+    "void",
+    "await",
+    "yield",
+    "static",
+    "preload",
+    "load"
+  ]);
+  var GD_TYPES = /* @__PURE__ */ new Set([
+    "int",
+    "float",
+    "bool",
+    "String",
+    "Vector2",
+    "Vector3",
+    "Vector4",
+    "Color",
+    "Array",
+    "Dictionary",
+    "Object",
+    "Node",
+    "Node2D",
+    "Node3D",
+    "Control",
+    "Resource",
+    "Variant",
+    "void"
+  ]);
+  function highlightGDScript(code) {
+    const tokens = [];
+    let i = 0;
+    while (i < code.length) {
+      const ch = code[i];
+      const rest = code.slice(i);
+      if (ch === "#") {
+        const end = code.indexOf("\n", i);
+        const comment = end === -1 ? code.slice(i) : code.slice(i, end);
+        tokens.push({ type: "comment", text: comment });
+        i += comment.length;
+        continue;
+      }
+      if (ch === '"' || ch === "'") {
+        let j = i + 1;
+        while (j < code.length && code[j] !== ch) {
+          if (code[j] === "\\")
+            j++;
+          j++;
+        }
+        const str = code.slice(i, j + 1);
+        tokens.push({ type: "string", text: str });
+        i = j + 1;
+        continue;
+      }
+      if (ch === "@") {
+        const match = rest.match(/^@\w+/);
+        if (match) {
+          tokens.push({ type: "annotation", text: match[0] });
+          i += match[0].length;
+          continue;
+        }
+      }
+      if (rest.startsWith("->")) {
+        tokens.push({ type: "arrow", text: "->" });
+        i += 2;
+        continue;
+      }
+      if (/\d/.test(ch)) {
+        const match = rest.match(/^\d+\.?\d*/);
+        if (match) {
+          tokens.push({ type: "number", text: match[0] });
+          i += match[0].length;
+          continue;
+        }
+      }
+      if (/[a-zA-Z_]/.test(ch)) {
+        const match = rest.match(/^[a-zA-Z_]\w*/);
+        if (match) {
+          const word = match[0];
+          const afterWord = code.slice(i + word.length);
+          const isCallable = /^\s*\(/.test(afterWord);
+          let type = "identifier";
+          if (GD_KEYWORDS.has(word))
+            type = "keyword";
+          else if (GD_TYPES.has(word) || /^[A-Z]/.test(word))
+            type = "type";
+          else if (isCallable)
+            type = "function";
+          tokens.push({ type, text: word });
+          i += word.length;
+          continue;
+        }
+      }
+      tokens.push({ type: "plain", text: ch });
+      i++;
+    }
+    return tokens.map((t) => {
+      const escaped = t.text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      switch (t.type) {
+        case "keyword":
+          return `<span style="color:#FF7085">${escaped}</span>`;
+        case "type":
+          return `<span style="color:#8EFFDA">${escaped}</span>`;
+        case "function":
+          return `<span style="color:#66E6FF">${escaped}</span>`;
+        case "string":
+          return `<span style="color:#FFE566">${escaped}</span>`;
+        case "number":
+          return `<span style="color:#A3FFB4">${escaped}</span>`;
+        case "comment":
+          return `<span style="color:#9A9EA6">${escaped}</span>`;
+        case "annotation":
+          return `<span style="color:#FFB373">${escaped}</span>`;
+        case "arrow":
+          return `<span style="color:#ABC8FF">${escaped}</span>`;
+        case "identifier":
+          return `<span style="color:#CDCFD2">${escaped}</span>`;
+        default:
+          return escaped;
+      }
+    }).join("");
+  }
+
+  // src/visualizer/panel.js
+  var detailPanel;
+  var currentPanelMode = "script";
+  function initPanel() {
+    detailPanel = document.getElementById("detail-panel");
+    initPanelResizing();
+  }
+  function openPanel(node) {
+    setSelectedNode(node);
+    document.getElementById("panel-title").textContent = node.class_name || node.filename.replace(".gd", "");
+    document.getElementById("panel-path").textContent = node.path;
+    let html = "";
+    if (node.description) {
+      html += `<div class="desc-block">${esc(node.description)}</div>`;
+    }
+    html += `<div class="meta-row">`;
+    html += `<div class="meta-badge"><span>${node.line_count}</span> lines</div>`;
+    html += `<div class="meta-badge">extends <span>${node.extends || "Node"}</span></div>`;
+    if (node.class_name)
+      html += `<div class="meta-badge">class <span>${esc(node.class_name)}</span></div>`;
+    html += `</div>`;
+    const usedInScenes = scriptToScenes[node.path];
+    if (usedInScenes && usedInScenes.length > 0) {
+      html += `<div class="section scene-usage-section">`;
+      html += `<div class="section-header">Used in Scenes <span class="section-count">${usedInScenes.length}</span></div>`;
+      html += `<ul class="item-list scene-list">`;
+      for (const scene of usedInScenes) {
+        html += `<li class="scene-link" onclick="jumpToScene('${esc(scene.path)}')">`;
+        html += `<span class="scene-icon">\u{1F4E6}</span>`;
+        html += `<span class="scene-name">${esc(scene.name)}</span>`;
+        html += `</li>`;
+      }
+      html += `</ul>`;
+      html += `</div>`;
+    }
+    const exportVars = (node.variables || []).filter((v) => v.exported);
+    const regularVars = (node.variables || []).filter((v) => !v.exported);
+    html += `<div class="section">`;
+    html += `<div class="section-header">Exports <span class="section-count">${exportVars.length}</span></div>`;
+    html += `<ul class="item-list" id="exports-list">`;
+    for (let vi = 0; vi < exportVars.length; vi++) {
+      const v = exportVars[vi];
+      html += `<li data-var-index="${vi}" data-exported="true">`;
+      html += `<span class="exp">@export</span> `;
+      html += `<span class="kw">var</span> `;
+      html += `<span class="editable var-name" contenteditable="true" data-field="name" data-original="${esc(v.name)}">${esc(v.name)}</span>`;
+      html += `<span class="ret">:</span> `;
+      html += `<span class="tp editable var-type" contenteditable="true" data-field="type" data-placeholder="Type" data-original="${esc(v.type || "")}">${esc(v.type || "")}</span>`;
+      html += ` <span class="ret">=</span> `;
+      html += `<span class="num editable var-default" contenteditable="true" data-field="default" data-placeholder="value" data-original="${esc(v.default || "")}">${esc(v.default || "")}</span>`;
+      html += `<span class="item-actions">`;
+      html += `<button class="delete" onclick="showDeleteUsages(${vi}, true, 'variable')" title="Delete">\xD7</button>`;
+      html += `</span>`;
+      html += `</li>`;
+    }
+    html += `</ul>`;
+    html += `<div class="add-item-btn" onclick="addNewVariable(true)">`;
+    html += `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>`;
+    html += `Add export</div>`;
+    html += `</div>`;
+    html += `<div class="section">`;
+    html += `<div class="section-header">Variables <span class="section-count">${regularVars.length}</span></div>`;
+    html += `<ul class="item-list" id="vars-list">`;
+    for (let vi = 0; vi < regularVars.length; vi++) {
+      const v = regularVars[vi];
+      html += `<li data-var-index="${vi}" data-exported="false" data-onready="${v.onready || false}">`;
+      if (v.onready) {
+        html += `<span class="onready-badge" onclick="toggleOnready(${vi}, false)" title="Click to toggle @onready">@onready</span>`;
+      }
+      html += `<span class="kw">var</span> `;
+      html += `<span class="editable var-name" contenteditable="true" data-field="name" data-original="${esc(v.name)}">${esc(v.name)}</span>`;
+      html += `<span class="ret">:</span> `;
+      html += `<span class="tp editable var-type" contenteditable="true" data-field="type" data-placeholder="Type" data-original="${esc(v.type || "")}">${esc(v.type || "")}</span>`;
+      html += ` <span class="ret">=</span> `;
+      html += `<span class="num editable var-default" contenteditable="true" data-field="default" data-placeholder="value" data-original="${esc(v.default || "")}">${esc(v.default || "")}</span>`;
+      html += `<span class="item-actions">`;
+      if (!v.onready) {
+        html += `<button onclick="toggleOnready(${vi}, false)" title="Add @onready" style="font-size:9px;width:auto;padding:0 4px;">\u23F1</button>`;
+      }
+      html += `<button class="delete" onclick="showDeleteUsages(${vi}, false, 'variable')" title="Delete">\xD7</button>`;
+      html += `</span>`;
+      html += `</li>`;
+    }
+    html += `</ul>`;
+    html += `<div class="add-item-btn" onclick="addNewVariable(false)">`;
+    html += `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>`;
+    html += `Add variable</div>`;
+    html += `</div>`;
+    if ((node.functions || []).length > 0) {
+      html += `<div class="section">`;
+      html += `<div class="section-header">Functions <span class="section-count">${node.functions.length}</span></div>`;
+      html += `<ul class="item-list">`;
+      for (let fi = 0; fi < node.functions.length; fi++) {
+        const f = node.functions[fi];
+        html += `<li class="clickable" onclick="toggleFunc(${fi})">`;
+        html += `<span class="kw">func</span> <span class="fn">${esc(f.name)}</span>`;
+        html += `<span class="param">(${esc(f.params)})</span>`;
+        if (f.return_type)
+          html += ` <span class="ret">&rarr;</span> <span class="tp">${esc(f.return_type)}</span>`;
+        html += `<span style="margin-left:auto;display:flex;gap:4px;align-items:center">`;
+        if (f.body_lines)
+          html += `<span class="tag tag-lines">${f.body_lines}L</span>`;
+        html += `<button class="delete" onclick="event.stopPropagation();showDeleteUsages(${fi}, false, 'function')" title="Delete function" style="opacity:0">\xD7</button>`;
+        html += `</span>`;
+        html += `</li>`;
+        html += `<div id="func-viewer-${fi}" class="func-viewer" style="display:none"></div>`;
+      }
+      html += `</ul></div>`;
+    }
+    const signalsList = node.signals || [];
+    html += `<div class="section">`;
+    html += `<div class="section-header">Signals <span class="section-count">${signalsList.length}</span></div>`;
+    html += `<ul class="item-list" id="signals-list">`;
+    for (let si = 0; si < signalsList.length; si++) {
+      const s = signalsList[si];
+      const sigName = typeof s === "string" ? s : s.name;
+      const sigParams = typeof s === "object" ? s.params : "";
+      html += `<li data-signal-index="${si}">`;
+      html += `<span class="kw">signal</span> `;
+      html += `<span class="sig editable signal-name" contenteditable="true" data-field="name" data-original="${esc(sigName)}">${esc(sigName)}</span>`;
+      html += `<span class="param">(</span>`;
+      html += `<span class="editable signal-params" contenteditable="true" data-field="params" data-placeholder="params" data-original="${esc(sigParams)}">${esc(sigParams)}</span>`;
+      html += `<span class="param">)</span>`;
+      html += `<span class="item-actions">`;
+      html += `<button class="delete" onclick="showDeleteUsages(${si}, false, 'signal')" title="Delete">\xD7</button>`;
+      html += `</span>`;
+      html += `</li>`;
+    }
+    html += `</ul>`;
+    html += `<div class="add-item-btn" onclick="addNewSignal()">`;
+    html += `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>`;
+    html += `Add signal</div>`;
+    html += `</div>`;
+    const related = edges.filter((e) => e.from === node.path || e.to === node.path);
+    if (related.length > 0) {
+      const connGroups = {};
+      for (const e of related) {
+        const other = e.from === node.path ? e.to : e.from;
+        const dir = e.from === node.path ? "out" : "in";
+        const key = `${other}-${e.type}-${dir}`;
+        if (!connGroups[key]) {
+          connGroups[key] = { other, type: e.type, dir, signals: [] };
+        }
+        if (e.signal_name)
+          connGroups[key].signals.push(e.signal_name);
+      }
+      html += `<div class="section">`;
+      html += `<div class="section-header">Connections <span class="section-count">${related.length}</span></div>`;
+      html += `<ul class="item-list">`;
+      for (const key of Object.keys(connGroups)) {
+        const g = connGroups[key];
+        const dirIcon = g.dir === "out" ? "\u2192" : "\u2190";
+        const color = g.type === "extends" ? "var(--edge-extends)" : g.type === "preload" ? "var(--edge-preload)" : "var(--edge-signal)";
+        const filename = g.other.split("/").pop();
+        html += `<li style="flex-wrap:wrap">`;
+        html += `${dirIcon} <span style="color:${color}">${esc(filename)}</span> <span class="ret">(${g.type})</span>`;
+        if (g.type === "signal" && g.signals.length > 0) {
+          const uniqueSignals = [...new Set(g.signals)];
+          html += `<div style="width:100%;margin-top:4px;padding-left:20px;font-size:11px;color:var(--text-muted)">`;
+          html += uniqueSignals.map((s) => `<span class="sig">${esc(s)}</span>`).join(", ");
+          html += `</div>`;
+        }
+        html += `</li>`;
+      }
+      html += `</ul></div>`;
+    }
+    if ((node.preloads || []).length > 0) {
+      html += `<div class="section">`;
+      html += `<div class="section-header">Preloads <span class="section-count">${node.preloads.length}</span></div>`;
+      html += `<ul class="item-list">`;
+      for (const p of node.preloads) {
+        html += `<li><span class="str">"${esc(p)}"</span></li>`;
+      }
+      html += `</ul></div>`;
+    }
+    document.getElementById("panel-body").innerHTML = html;
+    detailPanel.classList.add("open");
+    initSectionResizing();
+    initInlineEditing();
+    draw();
+  }
+  function closePanel() {
+    setSelectedNode(null);
+    detailPanel.classList.remove("open");
+    draw();
+  }
+  window.closePanel = closePanel;
+  window.toggleFunc = function(fi) {
+    const viewer = document.getElementById(`func-viewer-${fi}`);
+    if (!viewer)
+      return;
+    if (viewer.style.display !== "none") {
+      viewer.style.display = "none";
+      viewer.innerHTML = "";
+      return;
+    }
+    const f = selectedNode.functions[fi];
+    if (!f.body)
+      return;
+    const editorId = `code-editor-${fi}`;
+    viewer.innerHTML = `
+    <div class="func-viewer-header">
+      <span><span class="func-title">${esc(f.name)}</span> \xB7 <span id="line-count-${fi}">${f.body.split("\n").length}</span> lines</span>
+      <button class="func-viewer-close" onclick="toggleFunc(${fi})">&times;</button>
+    </div>
+    <div class="func-viewer-code">
+      <div class="code-editor-container" id="${editorId}">
+        <div class="code-editor-highlight" id="highlight-${fi}"></div>
+        <textarea class="code-editor-textarea" id="textarea-${fi}" spellcheck="false"></textarea>
+      </div>
+    </div>
+    <div class="func-viewer-footer">
+      <span class="status" id="status-${fi}">Modified</span>
+      <span style="display:flex;gap:8px;align-items:center">
+        <span style="opacity:0.6">Ctrl+S to save</span>
+        <button class="save-btn" id="save-btn-${fi}" onclick="saveFunction(${fi})">Save</button>
+      </span>
+    </div>
+  `;
+    const textarea = document.getElementById(`textarea-${fi}`);
+    const highlight = document.getElementById(`highlight-${fi}`);
+    const statusEl = document.getElementById(`status-${fi}`);
+    const saveBtn = document.getElementById(`save-btn-${fi}`);
+    const lineCountEl = document.getElementById(`line-count-${fi}`);
+    textarea.dataset.original = f.body;
+    textarea.dataset.funcIndex = fi;
+    textarea.dataset.scriptPath = selectedNode.path;
+    textarea.dataset.funcName = f.name;
+    textarea.value = f.body;
+    updateHighlight(fi);
+    textarea.addEventListener("input", () => {
+      updateHighlight(fi);
+      const modified = textarea.value !== textarea.dataset.original;
+      statusEl.classList.toggle("visible", modified);
+      saveBtn.classList.toggle("active", modified);
+      lineCountEl.textContent = textarea.value.split("\n").length;
+    });
+    textarea.addEventListener("scroll", () => {
+      highlight.style.transform = `translate(-${textarea.scrollLeft}px, -${textarea.scrollTop}px)`;
+    });
+    textarea.addEventListener("keydown", (e) => {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        textarea.value = textarea.value.substring(0, start) + "	" + textarea.value.substring(end);
+        textarea.selectionStart = textarea.selectionEnd = start + 1;
+        textarea.dispatchEvent(new Event("input"));
+      }
+      if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        saveFunction(fi);
+      }
+    });
+    function autoResize() {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+      highlight.style.height = textarea.scrollHeight + "px";
+    }
+    textarea.addEventListener("input", autoResize);
+    setTimeout(autoResize, 0);
+    viewer.style.display = "block";
+  };
+  function updateHighlight(fi) {
+    const textarea = document.getElementById(`textarea-${fi}`);
+    const highlight = document.getElementById(`highlight-${fi}`);
+    if (!textarea || !highlight)
+      return;
+    const lines = textarea.value.split("\n");
+    highlight.innerHTML = lines.map(
+      (line, i) => `<div class="code-line" data-line="${i}">${highlightGDScript(line) || " "}</div>`
+    ).join("");
+  }
+  window.saveFunction = async function(fi) {
+    const textarea = document.getElementById(`textarea-${fi}`);
+    const statusEl = document.getElementById(`status-${fi}`);
+    const saveBtn = document.getElementById(`save-btn-${fi}`);
+    if (!textarea || textarea.value === textarea.dataset.original)
+      return;
+    const scriptPath = textarea.dataset.scriptPath;
+    const funcName = textarea.dataset.funcName;
+    const newCode = textarea.value;
+    statusEl.textContent = "Saving...";
+    statusEl.classList.add("visible");
+    try {
+      await sendCommand("modify_function", {
+        path: scriptPath,
+        name: funcName,
+        body: newCode
+      });
+      const funcIndex = parseInt(textarea.dataset.funcIndex);
+      selectedNode.functions[funcIndex].body = newCode;
+      selectedNode.functions[funcIndex].body_lines = newCode.split("\n").length;
+      textarea.dataset.original = newCode;
+      statusEl.textContent = "Saved!";
+      saveBtn.classList.remove("active");
+      setTimeout(() => {
+        statusEl.classList.remove("visible");
+      }, 2e3);
+      console.log(`Saved function "${funcName}" in ${scriptPath}`);
+    } catch (err) {
+      statusEl.textContent = "Error: " + err.message;
+      console.error("Failed to save:", err);
+    }
+  };
+  function initInlineEditing() {
+    document.querySelectorAll(".editable").forEach((el) => {
+      el.addEventListener("blur", handleInlineEdit);
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          el.blur();
+        }
+        if (e.key === "Escape") {
+          el.textContent = el.dataset.original || "";
+          el.blur();
+        }
+      });
+    });
+  }
+  async function handleInlineEdit(e) {
+    const el = e.target;
+    const li = el.closest("li");
+    if (!li)
+      return;
+    const newValue = el.textContent.trim();
+    const original = el.dataset.original || "";
+    const field = el.dataset.field;
+    if (newValue === original)
+      return;
+    const isSignal = li.dataset.signalIndex !== void 0;
+    const isExport = li.dataset.exported === "true";
+    const index = parseInt(isSignal ? li.dataset.signalIndex : li.dataset.varIndex);
+    try {
+      if (isSignal) {
+        const sig = selectedNode.signals[index];
+        const oldName = typeof sig === "string" ? sig : sig.name;
+        const oldParams = typeof sig === "object" ? sig.params : "";
+        const newSig = {
+          name: field === "name" ? newValue : oldName,
+          params: field === "params" ? newValue : oldParams
+        };
+        await sendCommand("modify_signal", {
+          path: selectedNode.path,
+          action: "update",
+          old_name: oldName,
+          name: newSig.name,
+          params: newSig.params
+        });
+        selectedNode.signals[index] = newSig;
+        console.log(`Updated signal in ${selectedNode.path}:`, newSig);
+      } else {
+        const vars = selectedNode.variables.filter((v2) => v2.exported === isExport);
+        const v = vars[index];
+        const actualIndex = selectedNode.variables.findIndex((vr) => vr.name === v.name);
+        if (actualIndex !== -1) {
+          const newVar = { ...selectedNode.variables[actualIndex] };
+          if (field === "name")
+            newVar.name = newValue;
+          if (field === "type")
+            newVar.type = newValue;
+          if (field === "default")
+            newVar.default = newValue;
+          await sendCommand("modify_variable", {
+            path: selectedNode.path,
+            action: "update",
+            old_name: v.name,
+            name: newVar.name,
+            type: newVar.type,
+            default: newVar.default,
+            exported: isExport
+          });
+          selectedNode.variables[actualIndex] = newVar;
+          console.log(`Updated variable in ${selectedNode.path}:`, newVar);
+        }
+      }
+      el.dataset.original = newValue;
+    } catch (err) {
+      console.error("Failed to update:", err);
+      el.textContent = original;
+      alert("Failed to save: " + err.message);
+    }
+  }
+  window.toggleOnready = async function(index, isExport) {
+    const vars = selectedNode.variables.filter((v2) => v2.exported === isExport);
+    const v = vars[index];
+    const actualIndex = selectedNode.variables.findIndex((vr) => vr.name === v.name);
+    if (actualIndex === -1)
+      return;
+    const newOnready = !v.onready;
+    try {
+      await sendCommand("modify_variable", {
+        path: selectedNode.path,
+        action: "update",
+        old_name: v.name,
+        name: v.name,
+        type: v.type || "",
+        default: v.default || "",
+        exported: isExport,
+        onready: newOnready
+      });
+      selectedNode.variables[actualIndex].onready = newOnready;
+      openPanel(selectedNode);
+    } catch (err) {
+      console.error("Failed to toggle @onready:", err);
+      alert("Failed to update: " + err.message);
+    }
+  };
+  window.addNewVariable = async function(isExport) {
+    const newVar = { name: "new_var", type: "", default: "", exported: isExport };
+    try {
+      await sendCommand("modify_variable", {
+        path: selectedNode.path,
+        action: "add",
+        name: newVar.name,
+        type: newVar.type,
+        default: newVar.default,
+        exported: isExport
+      });
+      selectedNode.variables.push(newVar);
+      openPanel(selectedNode);
+      setTimeout(() => {
+        const list = document.getElementById(isExport ? "exports-list" : "vars-list");
+        const lastItem = list?.querySelector("li:last-of-type .var-name");
+        if (lastItem) {
+          lastItem.focus();
+          const range = document.createRange();
+          range.selectNodeContents(lastItem);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      }, 50);
+    } catch (err) {
+      console.error("Failed to add variable:", err);
+      alert("Failed to add variable: " + err.message);
+    }
+  };
+  window.addNewSignal = async function() {
+    const newSig = { name: "new_signal", params: "" };
+    try {
+      await sendCommand("modify_signal", {
+        path: selectedNode.path,
+        action: "add",
+        name: newSig.name,
+        params: newSig.params
+      });
+      if (!selectedNode.signals)
+        selectedNode.signals = [];
+      selectedNode.signals.push(newSig);
+      openPanel(selectedNode);
+      setTimeout(() => {
+        const list = document.getElementById("signals-list");
+        const lastItem = list?.querySelector("li:last-of-type .signal-name");
+        if (lastItem) {
+          lastItem.focus();
+          const range = document.createRange();
+          range.selectNodeContents(lastItem);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      }, 50);
+    } catch (err) {
+      console.error("Failed to add signal:", err);
+      alert("Failed to add signal: " + err.message);
+    }
+  };
+  var resizingList = null;
+  var resizeStartY = 0;
+  var resizeStartHeight = 0;
+  function initSectionResizing() {
+    document.querySelectorAll(".section-resize-handle").forEach((handle) => {
+      handle.replaceWith(handle.cloneNode(true));
+    });
+    document.querySelectorAll(".section-resize-handle").forEach((handle) => {
+      handle.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const section = handle.closest(".section");
+        resizingList = section?.querySelector(".item-list");
+        if (!resizingList)
+          return;
+        section.classList.add("resizing");
+        resizeStartY = e.clientY;
+        resizeStartHeight = resizingList.offsetHeight;
+        document.addEventListener("mousemove", onSectionResize);
+        document.addEventListener("mouseup", onSectionResizeEnd);
+      });
+    });
+  }
+  function onSectionResize(e) {
+    if (!resizingList)
+      return;
+    const dy = e.clientY - resizeStartY;
+    const newHeight = Math.max(50, Math.min(500, resizeStartHeight + dy));
+    resizingList.style.maxHeight = newHeight + "px";
+  }
+  function onSectionResizeEnd() {
+    if (resizingList) {
+      const section = resizingList.closest(".section");
+      section?.classList.remove("resizing");
+      resizingList = null;
+    }
+    document.removeEventListener("mousemove", onSectionResize);
+    document.removeEventListener("mouseup", onSectionResizeEnd);
+  }
+  var panelResizing = false;
+  var panelResizeStartX = 0;
+  var panelStartWidth = 460;
+  function initPanelResizing() {
+    const handle = document.getElementById("panel-resize-handle");
+    const panel = document.getElementById("detail-panel");
+    handle.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      panelResizing = true;
+      panel.classList.add("resizing");
+      panelResizeStartX = e.clientX;
+      panelStartWidth = panel.offsetWidth;
+      document.addEventListener("mousemove", onPanelResize);
+      document.addEventListener("mouseup", onPanelResizeEnd);
+    });
+  }
+  function onPanelResize(e) {
+    if (!panelResizing)
+      return;
+    const panel = document.getElementById("detail-panel");
+    const dx = panelResizeStartX - e.clientX;
+    const newWidth = Math.max(300, Math.min(window.innerWidth * 0.8, panelStartWidth + dx));
+    panel.style.width = newWidth + "px";
+    panel.style.right = "0";
+  }
+  function onPanelResizeEnd() {
+    panelResizing = false;
+    const panel = document.getElementById("detail-panel");
+    panel.classList.remove("resizing");
+    document.removeEventListener("mousemove", onPanelResize);
+    document.removeEventListener("mouseup", onPanelResizeEnd);
+  }
+  function expandAndHighlightFunction(funcName, targetLine, nodeData) {
+    const node = nodeData || selectedNode;
+    const funcIndex = node.functions.findIndex((f) => f.name === funcName);
+    if (funcIndex === -1) {
+      console.log("Function not found:", funcName);
+      return;
+    }
+    console.log(`Expanding function ${funcName} (index ${funcIndex}) to line ${targetLine}`);
+    const viewer = document.getElementById(`func-viewer-${funcIndex}`);
+    if (!viewer) {
+      console.log("Viewer element not found for index:", funcIndex);
+      return;
+    }
+    const isExpanded = viewer.style.display !== "none";
+    if (!isExpanded) {
+      window.toggleFunc(funcIndex);
+    }
+    setTimeout(() => {
+      highlightLineInViewer(viewer, funcName, targetLine, node);
+      viewer.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, isExpanded ? 100 : 300);
+  }
+  function highlightLineInViewer(viewer, funcName, targetLine, nodeData) {
+    const node = nodeData || selectedNode;
+    const func = node.functions.find((f) => f.name === funcName);
+    if (!func) {
+      console.log("Function not found for highlighting:", funcName);
+      return;
+    }
+    const funcStartLine = func.line || 1;
+    const relativeLineIndex = targetLine - funcStartLine;
+    console.log(`Highlighting line ${targetLine} in ${funcName} (start: ${funcStartLine}, relative: ${relativeLineIndex})`);
+    const highlightDiv = viewer.querySelector(".code-editor-highlight");
+    if (!highlightDiv) {
+      console.log("Highlight div not found in viewer");
+      return;
+    }
+    document.querySelectorAll(".code-line-highlight").forEach((el) => {
+      el.classList.remove("code-line-highlight");
+    });
+    const lines = highlightDiv.querySelectorAll(".code-line");
+    console.log(`Found ${lines.length} lines in viewer`);
+    if (relativeLineIndex >= 0 && relativeLineIndex < lines.length) {
+      const targetLineEl = lines[relativeLineIndex];
+      targetLineEl.classList.add("code-line-highlight");
+      setTimeout(() => {
+        targetLineEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 50);
+    } else {
+      console.log(`Line index ${relativeLineIndex} out of range (0-${lines.length - 1})`);
+    }
+  }
+  async function openSceneNodePanel(scenePath, node) {
+    currentPanelMode = "sceneNode";
+    setSelectedSceneNode(node);
+    document.getElementById("panel-title").textContent = node.name;
+    document.getElementById("panel-path").textContent = `${node.type} \u2022 ${node.path}`;
+    document.getElementById("panel-body").innerHTML = '<div class="loading-state">Loading properties...</div>';
+    detailPanel.classList.add("open");
+    try {
+      const result = await sendCommand("get_scene_node_properties", {
+        scene_path: scenePath,
+        node_path: node.path
+      });
+      if (result.ok) {
+        setSceneNodeProperties(result);
+        renderSceneNodePanel(result, scenePath, node);
+      } else {
+        document.getElementById("panel-body").innerHTML = `<div class="error-state">Failed to load properties: ${result.error}</div>`;
+      }
+    } catch (err) {
+      console.error("Failed to fetch node properties:", err);
+      document.getElementById("panel-body").innerHTML = `<div class="error-state">Error: ${err.message}</div>`;
+    }
+  }
+  function closeSceneNodePanel() {
+    if (currentPanelMode === "sceneNode") {
+      setSelectedSceneNode(null);
+      setSceneNodeProperties(null);
+      detailPanel.classList.remove("open");
+      draw();
+    }
+  }
+  function renderSceneNodePanel(data, scenePath, node) {
+    document.getElementById("panel-title").textContent = data.node_name;
+    document.getElementById("panel-path").textContent = `${data.node_type} \u2022 ${data.node_path}`;
+    let html = "";
+    html += `<div class="meta-row">`;
+    html += `<div class="meta-badge"><span>${data.node_type}</span></div>`;
+    html += `<div class="meta-badge">${data.property_count} <span>properties</span></div>`;
+    if (node.script) {
+      html += `<div class="meta-badge script-badge" onclick="jumpToScript('${esc(node.script)}')">\u{1F4DC} <span>${node.script.split("/").pop()}</span></div>`;
+    }
+    html += `</div>`;
+    const categories = data.categories || {};
+    const categoryOrder = data.inheritance_chain || Object.keys(categories);
+    for (const category of categoryOrder) {
+      const props = categories[category];
+      if (!props || props.length === 0)
+        continue;
+      html += `<div class="section property-section" data-category="${esc(category)}">`;
+      html += `<div class="section-header clickable" onclick="togglePropertySection(this)">`;
+      html += `<span>${category}</span>`;
+      html += `<span class="section-count">${props.length}</span>`;
+      html += `</div>`;
+      html += `<div class="property-list">`;
+      for (const prop of props) {
+        html += renderPropertyRow(prop, scenePath, data.node_path);
+      }
+      html += `</div></div>`;
+    }
+    document.getElementById("panel-body").innerHTML = html;
+    initPropertyEditing(scenePath, data.node_path);
+  }
+  function formatPropertyName(name) {
+    return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  function renderPropertyRow(prop, scenePath, nodePath) {
+    const { name, type, type_name, value, hint, hint_string } = prop;
+    const displayName = formatPropertyName(name);
+    let html = `<div class="property-row" data-prop="${esc(name)}" data-type="${type}">`;
+    html += `<label class="property-name" title="${esc(name)}">${esc(displayName)}</label>`;
+    html += `<div class="property-value">`;
+    switch (type) {
+      case 1:
+        const boolChecked = value === true ? "checked" : "";
+        html += `<label class="toggle-switch">
+        <input type="checkbox" ${boolChecked} data-prop="${esc(name)}" data-type="${type}">
+        <span class="toggle-slider"></span>
+      </label>`;
+        break;
+      case 2:
+        if (hint === 2 && hint_string) {
+          html += renderEnumSelect(name, type, value, hint_string);
+        } else if (hint === 1 && hint_string) {
+          html += renderRangeSlider(name, type, value, hint_string, true);
+        } else {
+          html += `<input type="number" class="property-input" value="${value ?? 0}" step="1" data-prop="${esc(name)}" data-type="${type}">`;
+        }
+        break;
+      case 3:
+        if (hint === 1 && hint_string) {
+          html += renderRangeSlider(name, type, value, hint_string, false);
+        } else {
+          html += `<input type="number" class="property-input" value="${value ?? 0}" step="0.01" data-prop="${esc(name)}" data-type="${type}">`;
+        }
+        break;
+      case 4:
+        html += `<input type="text" class="property-input" value="${esc(value || "")}" data-prop="${esc(name)}" data-type="${type}">`;
+        break;
+      case 5:
+        html += renderVector2Input(name, type, value);
+        break;
+      case 6:
+        html += renderVector2Input(name, type, value, true);
+        break;
+      case 9:
+        html += renderVector3Input(name, type, value);
+        break;
+      case 10:
+        html += renderVector3Input(name, type, value, true);
+        break;
+      case 20:
+        html += renderColorInput(name, type, value);
+        break;
+      case 24:
+        if (value && value.type === "Resource") {
+          html += `<span class="resource-path">${esc(value.path || "null")}</span>`;
+        } else {
+          html += `<span class="resource-path">null</span>`;
+        }
+        break;
+      default:
+        const displayValue = typeof value === "object" ? JSON.stringify(value) : String(value ?? "null");
+        html += `<span class="property-readonly">${esc(displayValue.substring(0, 50))}${displayValue.length > 50 ? "..." : ""}</span>`;
+    }
+    html += `</div></div>`;
+    return html;
+  }
+  function renderEnumSelect(name, type, value, hintString) {
+    const options = hintString.split(",").map((opt) => {
+      const parts = opt.split(":");
+      return { value: parts.length > 1 ? parseInt(parts[0]) : opt.trim(), label: parts.length > 1 ? parts[1].trim() : opt.trim() };
+    });
+    let html = `<select class="property-select" data-prop="${esc(name)}" data-type="${type}">`;
+    for (const opt of options) {
+      const selected = opt.value === value ? "selected" : "";
+      html += `<option value="${opt.value}" ${selected}>${esc(opt.label)}</option>`;
+    }
+    html += `</select>`;
+    return html;
+  }
+  function renderRangeSlider(name, type, value, hintString, isInt) {
+    const parts = hintString.split(",");
+    const min = parseFloat(parts[0]) || 0;
+    const max = parseFloat(parts[1]) || 100;
+    const step = parts[2] ? parseFloat(parts[2]) : isInt ? 1 : 0.01;
+    return `<div class="range-input-group">
+    <input type="range" class="property-range" value="${value ?? min}" min="${min}" max="${max}" step="${step}" data-prop="${esc(name)}" data-type="${type}">
+    <input type="number" class="property-input range-number" value="${value ?? min}" min="${min}" max="${max}" step="${step}" data-prop="${esc(name)}" data-type="${type}">
+  </div>`;
+  }
+  function renderVector2Input(name, type, value, isInt = false) {
+    const x = value?.x ?? 0;
+    const y = value?.y ?? 0;
+    const step = isInt ? "1" : "0.01";
+    return `<div class="vector-input-group" data-prop="${esc(name)}" data-type="${type}">
+    <label>x</label><input type="number" class="property-input vec-x" value="${x}" step="${step}" data-component="x">
+    <label>y</label><input type="number" class="property-input vec-y" value="${y}" step="${step}" data-component="y">
+  </div>`;
+  }
+  function renderVector3Input(name, type, value, isInt = false) {
+    const x = value?.x ?? 0;
+    const y = value?.y ?? 0;
+    const z = value?.z ?? 0;
+    const step = isInt ? "1" : "0.01";
+    return `<div class="vector-input-group vec3" data-prop="${esc(name)}" data-type="${type}">
+    <label>x</label><input type="number" class="property-input vec-x" value="${x}" step="${step}" data-component="x">
+    <label>y</label><input type="number" class="property-input vec-y" value="${y}" step="${step}" data-component="y">
+    <label>z</label><input type="number" class="property-input vec-z" value="${z}" step="${step}" data-component="z">
+  </div>`;
+  }
+  function renderColorInput(name, type, value) {
+    const r = Math.round((value?.r ?? 1) * 255);
+    const g = Math.round((value?.g ?? 1) * 255);
+    const b = Math.round((value?.b ?? 1) * 255);
+    const a = value?.a ?? 1;
+    const hex = `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+    return `<div class="color-input-group" data-prop="${esc(name)}" data-type="${type}">
+    <input type="color" class="property-color" value="${hex}" data-prop="${esc(name)}">
+    <input type="number" class="property-input color-alpha" value="${a}" min="0" max="1" step="0.01" placeholder="\u03B1" data-component="a">
+  </div>`;
+  }
+  function initPropertyEditing(scenePath, nodePath) {
+    document.querySelectorAll('.property-row input[type="checkbox"]').forEach((el) => {
+      el.addEventListener("change", () => {
+        const propName = el.dataset.prop;
+        const value = el.checked;
+        saveSceneNodeProperty(scenePath, nodePath, propName, value, parseInt(el.dataset.type));
+      });
+    });
+    document.querySelectorAll(".property-row input.property-input:not(.vec-x):not(.vec-y):not(.vec-z):not(.color-alpha):not(.range-number)").forEach((el) => {
+      el.addEventListener("change", () => {
+        const propName = el.dataset.prop;
+        const type = parseInt(el.dataset.type);
+        let value = el.value;
+        if (type === 2 || type === 3)
+          value = parseFloat(value);
+        saveSceneNodeProperty(scenePath, nodePath, propName, value, type);
+      });
+    });
+    document.querySelectorAll(".property-row select.property-select").forEach((el) => {
+      el.addEventListener("change", () => {
+        const propName = el.dataset.prop;
+        const type = parseInt(el.dataset.type);
+        saveSceneNodeProperty(scenePath, nodePath, propName, parseInt(el.value), type);
+      });
+    });
+    document.querySelectorAll(".range-input-group").forEach((group) => {
+      const range = group.querySelector('input[type="range"]');
+      const number = group.querySelector('input[type="number"]');
+      range.addEventListener("input", () => {
+        number.value = range.value;
+      });
+      range.addEventListener("change", () => {
+        const propName = range.dataset.prop;
+        const type = parseInt(range.dataset.type);
+        saveSceneNodeProperty(scenePath, nodePath, propName, parseFloat(range.value), type);
+      });
+      number.addEventListener("change", () => {
+        range.value = number.value;
+        const propName = number.dataset.prop;
+        const type = parseInt(number.dataset.type);
+        saveSceneNodeProperty(scenePath, nodePath, propName, parseFloat(number.value), type);
+      });
+    });
+    document.querySelectorAll(".vector-input-group").forEach((group) => {
+      const propName = group.dataset.prop;
+      const type = parseInt(group.dataset.type);
+      const inputs = group.querySelectorAll("input");
+      inputs.forEach((input) => {
+        input.addEventListener("change", () => {
+          const x = parseFloat(group.querySelector(".vec-x").value);
+          const y = parseFloat(group.querySelector(".vec-y").value);
+          const zInput = group.querySelector(".vec-z");
+          const value = zInput ? { x, y, z: parseFloat(zInput.value) } : { x, y };
+          saveSceneNodeProperty(scenePath, nodePath, propName, value, type);
+        });
+      });
+    });
+    document.querySelectorAll(".color-input-group").forEach((group) => {
+      const propName = group.dataset.prop;
+      const type = parseInt(group.dataset.type);
+      const colorInput = group.querySelector('input[type="color"]');
+      const alphaInput = group.querySelector(".color-alpha");
+      const saveColor = () => {
+        const hex = colorInput.value;
+        const r = parseInt(hex.substr(1, 2), 16) / 255;
+        const g = parseInt(hex.substr(3, 2), 16) / 255;
+        const b = parseInt(hex.substr(5, 2), 16) / 255;
+        const a = parseFloat(alphaInput.value);
+        saveSceneNodeProperty(scenePath, nodePath, propName, { r, g, b, a }, type);
+      };
+      colorInput.addEventListener("change", saveColor);
+      alphaInput.addEventListener("change", saveColor);
+    });
+  }
+  async function saveSceneNodeProperty(scenePath, nodePath, propName, value, valueType) {
+    console.log(`Saving property: ${propName} =`, value);
+    try {
+      const result = await sendCommand("set_scene_node_property", {
+        scene_path: scenePath,
+        node_path: nodePath,
+        property_name: propName,
+        value,
+        value_type: valueType
+      });
+      if (result.ok) {
+        console.log(`Property ${propName} saved successfully`);
+      } else {
+        console.error("Failed to save property:", result.error);
+        alert("Failed to save: " + (result.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Failed to save property:", err);
+      alert("Failed to save: " + err.message);
+    }
+  }
+  window.togglePropertySection = function(header) {
+    const section = header.closest(".property-section");
+    section.classList.toggle("collapsed");
+  };
+  window.jumpToScript = function(scriptPath) {
+    window.switchView("scripts");
+    const scriptNode = nodes.find((n) => n.path === scriptPath);
+    if (scriptNode) {
+      setTimeout(() => openPanel(scriptNode), 100);
+    }
+  };
+  window.jumpToScene = function(scenePath) {
+    closePanel();
+    window.switchView("scenes");
+    setTimeout(() => {
+      window.expandSceneFromPanel && window.expandSceneFromPanel(scenePath);
+    }, 100);
+  };
+
+  // src/visualizer/events.js
+  var DRAG_THRESHOLD = 5;
+  function initEvents() {
+    const canvas2 = getCanvas();
+    const searchInput = document.getElementById("search");
+    const statsEl = document.getElementById("stats");
+    canvas2.addEventListener("mousedown", (e) => {
+      const w = screenToWorld(e.clientX, e.clientY);
+      if (currentView === "scenes") {
+        handleSceneMouseDown(e, w);
+      } else {
+        handleScriptsMouseDown(e, w);
+      }
+    });
+    canvas2.addEventListener("mousemove", (e) => {
+      if (currentView === "scenes") {
+        handleSceneMouseMove(e);
+      } else {
+        handleScriptsMouseMove(e);
+      }
+    });
+    canvas2.addEventListener("mouseup", (e) => {
+      if (currentView === "scenes") {
+        handleSceneMouseUp(e);
+      } else {
+        handleScriptsMouseUp(e);
+      }
+    });
+    canvas2.addEventListener("click", (e) => {
+    });
+    canvas2.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY > 0 ? 0.95 : 1.05;
+      const newZoom = Math.max(0.1, Math.min(5, camera.zoom * zoomFactor));
+      const wx = (e.clientX - W / 2) / camera.zoom + camera.x;
+      const wy = (e.clientY - H / 2) / camera.zoom + camera.y;
+      camera.zoom = newZoom;
+      camera.x = wx - (e.clientX - W / 2) / camera.zoom;
+      camera.y = wy - (e.clientY - H / 2) / camera.zoom;
+      updateZoomIndicator();
+      draw();
+    }, { passive: false });
+    canvas2.addEventListener("dblclick", (e) => {
+      if (currentView === "scenes" && expandedScene) {
+        const w = screenToWorld(e.clientX, e.clientY);
+        const hit = sceneHitTest(w.x, w.y);
+        if (hit && hit.type === "sceneNode") {
+          e.preventDefault();
+          startInlineRename(e.clientX, e.clientY, hit.node, hit.scenePath);
+        }
+      }
+    });
+    canvas2.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      if (currentView === "scenes" && expandedScene) {
+        const w = screenToWorld(e.clientX, e.clientY);
+        const hit = sceneHitTest(w.x, w.y);
+        if (hit && hit.type === "sceneNode") {
+          showSceneContextMenu(e.clientX, e.clientY, hit.node, hit.scenePath);
+          return;
+        }
+      }
+      hideSceneContextMenu();
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#scene-context-menu")) {
+        hideSceneContextMenu();
+      }
+    });
+    searchInput.addEventListener("input", () => {
+      const term = searchInput.value.toLowerCase().trim();
+      setSearchTerm(term);
+      if (currentView === "scripts") {
+        nodes.forEach((n) => {
+          if (!term) {
+            n.highlighted = true;
+            n.visible = true;
+            return;
+          }
+          const matches = n.filename.toLowerCase().includes(term) || n.class_name && n.class_name.toLowerCase().includes(term) || n.description && n.description.toLowerCase().includes(term) || n.path && n.path.toLowerCase().includes(term);
+          n.highlighted = matches;
+          n.visible = matches;
+        });
+        const matchingNodes = nodes.filter((n) => n.highlighted);
+        const count = matchingNodes.length;
+        statsEl.textContent = term ? `${count}/${nodes.length}` : `${nodes.length} scripts \xB7 ${edges.length} connections`;
+        if (term && matchingNodes.length > 0) {
+          centerOnNodes(matchingNodes);
+          if (matchingNodes.length === 1) {
+            camera.zoom = Math.max(defaultZoom, 1);
+          }
+          updateZoomIndicator();
+        }
+      }
+      if (currentView === "scenes") {
+        if (expandedScene && expandedSceneHierarchy) {
+          let searchNode2 = function(node) {
+            const matches = !term || node.name.toLowerCase().includes(term) || node.type && node.type.toLowerCase().includes(term);
+            node.highlighted = matches;
+            if (matches && term)
+              matchingPaths.push(node.path);
+            if (node.children) {
+              for (const child of node.children) {
+                searchNode2(child);
+              }
+            }
+          };
+          var searchNode = searchNode2;
+          const matchingPaths = [];
+          searchNode2(expandedSceneHierarchy);
+          const totalNodes = countNodes(expandedSceneHierarchy);
+          statsEl.textContent = term ? `${matchingPaths.length}/${totalNodes} nodes` : `${totalNodes} nodes`;
+        } else if (sceneData && sceneData.scenes) {
+          let matchCount = 0;
+          for (const scene of sceneData.scenes) {
+            const sceneName = scene.name || scene.path.split("/").pop().replace(".tscn", "");
+            scene.highlighted = !term || sceneName.toLowerCase().includes(term) || scene.root_type && scene.root_type.toLowerCase().includes(term);
+            if (scene.highlighted)
+              matchCount++;
+          }
+          statsEl.textContent = term ? `${matchCount}/${sceneData.scenes.length} scenes` : `${sceneData.scenes.length} scenes`;
+        }
+      }
+      draw();
+    });
+    function countNodes(node) {
+      let count = 1;
+      if (node.children) {
+        for (const child of node.children) {
+          count += countNodes(child);
+        }
+      }
+      return count;
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        hideSceneContextMenu();
+        if (currentView === "scenes") {
+          if (selectedSceneNode) {
+            setSelectedSceneNode(null);
+            closeSceneNodePanel();
+            draw();
+          } else if (expandedScene) {
+            goBackToSceneOverview();
+          }
+        } else {
+          closePanel();
+        }
+      }
+      if (e.key === "/" && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+      if ((e.key === "Delete" || e.key === "Backspace") && currentView === "scenes" && selectedSceneNode && !e.target.matches("input, textarea")) {
+        e.preventDefault();
+        sceneNodeAction("delete");
+      }
+      if (e.key === "Enter" && currentView === "scenes" && expandedScene && !e.target.matches("input, textarea")) {
+      }
+    });
+    window.addEventListener("resize", () => {
+      resize();
+      draw();
+    });
+  }
+  function handleScriptsMouseDown(e, w) {
+    const canvas2 = getCanvas();
+    const hit = hitTest(w.x, w.y);
+    if (hit && e.button === 0) {
+      setDragging({
+        type: "node",
+        node: hit,
+        offX: hit.x - w.x,
+        offY: hit.y - w.y,
+        startScreenX: e.clientX,
+        startScreenY: e.clientY,
+        moved: false
+      });
+      canvas2.classList.add("dragging");
+    } else {
+      setDragging({ type: "pan", startX: e.clientX, startY: e.clientY, camX: camera.x, camY: camera.y });
+      canvas2.classList.add("dragging");
+    }
+  }
+  function handleScriptsMouseMove(e) {
+    const canvas2 = getCanvas();
+    if (dragging) {
+      if (dragging.type === "node") {
+        const w = screenToWorld(e.clientX, e.clientY);
+        dragging.node.x = w.x + dragging.offX;
+        dragging.node.y = w.y + dragging.offY;
+        const dx = Math.abs(e.clientX - dragging.startScreenX);
+        const dy = Math.abs(e.clientY - dragging.startScreenY);
+        if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) {
+          dragging.moved = true;
+        }
+      } else {
+        const dx = (e.clientX - dragging.startX) / camera.zoom;
+        const dy = (e.clientY - dragging.startY) / camera.zoom;
+        camera.x = dragging.camX - dx;
+        camera.y = dragging.camY - dy;
+      }
+      draw();
+    } else {
+      const w = screenToWorld(e.clientX, e.clientY);
+      const prev = hoveredNode;
+      setHoveredNode(hitTest(w.x, w.y));
+      if (hoveredNode !== prev) {
+        canvas2.style.cursor = hoveredNode ? "pointer" : "grab";
+        draw();
+      }
+    }
+  }
+  function handleScriptsMouseUp(e) {
+    const canvas2 = getCanvas();
+    if (dragging && dragging.type === "node") {
+      if (dragging.moved) {
+        savePositions();
+      } else {
+        openPanel(dragging.node);
+      }
+    }
+    canvas2.classList.remove("dragging");
+    setDragging(null);
+  }
+  function handleSceneMouseDown(e, w) {
+    const canvas2 = getCanvas();
+    const hit = sceneHitTest(w.x, w.y);
+    if (hit && e.button === 0) {
+      if (hit.type === "sceneCard") {
+        const pos = scenePositions[hit.scenePath];
+        setDragging({
+          type: "sceneCard",
+          scene: hit.scene,
+          scenePath: hit.scenePath,
+          offX: pos.x - w.x,
+          offY: pos.y - w.y,
+          startScreenX: e.clientX,
+          startScreenY: e.clientY,
+          moved: false
+        });
+        canvas2.classList.add("dragging");
+      } else if (hit.type === "sceneNode") {
+        setDragging({
+          type: "sceneNode",
+          node: hit.node,
+          scenePath: hit.scenePath,
+          startScreenX: e.clientX,
+          startScreenY: e.clientY,
+          moved: false
+        });
+      }
+    } else {
+      setDragging({ type: "pan", startX: e.clientX, startY: e.clientY, camX: camera.x, camY: camera.y });
+      canvas2.classList.add("dragging");
+    }
+  }
+  function handleSceneMouseMove(e) {
+    const canvas2 = getCanvas();
+    if (dragging) {
+      if (dragging.type === "sceneCard") {
+        const w = screenToWorld(e.clientX, e.clientY);
+        const newX = w.x + dragging.offX;
+        const newY = w.y + dragging.offY;
+        setScenePosition(dragging.scenePath, newX, newY);
+        const dx = Math.abs(e.clientX - dragging.startScreenX);
+        const dy = Math.abs(e.clientY - dragging.startScreenY);
+        if (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD) {
+          dragging.moved = true;
+        }
+        draw();
+      } else if (dragging.type === "pan") {
+        const dx = (e.clientX - dragging.startX) / camera.zoom;
+        const dy = (e.clientY - dragging.startY) / camera.zoom;
+        camera.x = dragging.camX - dx;
+        camera.y = dragging.camY - dy;
+        draw();
+      }
+    } else {
+      const w = screenToWorld(e.clientX, e.clientY);
+      const hit = sceneHitTest(w.x, w.y);
+      if (hit) {
+        if (hit.type === "sceneCard") {
+          setHoveredSceneNode({ scenePath: hit.scenePath, nodePath: null });
+        } else if (hit.type === "sceneNode") {
+          setHoveredSceneNode({ scenePath: hit.scenePath, nodePath: hit.node.path });
+        }
+        canvas2.style.cursor = "pointer";
+      } else {
+        setHoveredSceneNode(null);
+        canvas2.style.cursor = "grab";
+      }
+      draw();
+    }
+  }
+  function handleSceneMouseUp(e) {
+    const canvas2 = getCanvas();
+    if (dragging) {
+      if (dragging.type === "sceneCard" && !dragging.moved) {
+        expandScene(dragging.scenePath);
+      } else if (dragging.type === "sceneNode" && !dragging.moved) {
+        selectSceneNode(dragging.node, dragging.scenePath);
+      }
+    }
+    canvas2.classList.remove("dragging");
+    setDragging(null);
+  }
+  async function expandScene(scenePath) {
+    console.log("Expanding scene:", scenePath);
+    try {
+      const result = await sendCommand("get_scene_hierarchy", { scene_path: scenePath });
+      if (result.ok) {
+        setExpandedScene(scenePath);
+        setExpandedSceneHierarchy(result.hierarchy);
+        camera.x = 0;
+        camera.y = 100;
+        updateSceneBackButton(true, scenePath);
+        draw();
+      } else {
+        console.error("Failed to get scene hierarchy:", result.error);
+        alert("Failed to load scene: " + (result.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Failed to expand scene:", err);
+      alert("Failed to load scene: " + err.message);
+    }
+  }
+  async function selectSceneNode(node, scenePath) {
+    console.log("Selected scene node:", node.name, "in", scenePath);
+    if (selectedSceneNode && selectedSceneNode.path === node.path) {
+      setSelectedSceneNode(null);
+      closeSceneNodePanel();
+      draw();
+      return;
+    }
+    setSelectedSceneNode(node);
+    await openSceneNodePanel(scenePath, node);
+    draw();
+  }
+  function goBackToSceneOverview() {
+    setExpandedScene(null);
+    setExpandedSceneHierarchy(null);
+    setSelectedSceneNode(null);
+    setHoveredSceneNode(null);
+    closeSceneNodePanel();
+    updateSceneBackButton(false);
+    draw();
+  }
+  function updateSceneBackButton(show, scenePath = "") {
+    const backBtn = document.getElementById("scene-back-btn");
+    const legend = document.getElementById("legend");
+    if (backBtn) {
+      backBtn.style.display = show ? "flex" : "none";
+      if (show) {
+        const sceneName = scenePath.split("/").pop().replace(".tscn", "");
+        backBtn.querySelector(".scene-name").textContent = sceneName;
+      }
+    }
+    if (legend) {
+      legend.classList.toggle("hidden", show);
+    }
+  }
+  window.goBackToSceneOverview = goBackToSceneOverview;
+  window.expandSceneFromPanel = expandScene;
+  function updateStats() {
+    const statsEl = document.getElementById("stats");
+    if (currentView === "scripts") {
+      statsEl.textContent = `${nodes.length} scripts \xB7 ${edges.length} connections`;
+    } else if (sceneData && sceneData.scenes) {
+      statsEl.textContent = `${sceneData.scenes.length} scenes`;
+    }
+  }
+  var contextMenuNode = null;
+  var contextMenuScenePath = null;
+  function showSceneContextMenu(x, y, node, scenePath) {
+    const menu = document.getElementById("scene-context-menu");
+    contextMenuNode = node;
+    contextMenuScenePath = scenePath;
+    menu.style.left = x + "px";
+    menu.style.top = y + "px";
+    menu.classList.add("visible");
+  }
+  function hideSceneContextMenu() {
+    const menu = document.getElementById("scene-context-menu");
+    menu.classList.remove("visible");
+    contextMenuNode = null;
+    contextMenuScenePath = null;
+  }
+  async function sceneNodeAction(action) {
+    const node = contextMenuNode;
+    const scenePath = contextMenuScenePath;
+    hideSceneContextMenu();
+    if (!node || !scenePath)
+      return;
+    try {
+      switch (action) {
+        case "add_child": {
+          const nodeType = prompt("Enter node type (e.g., Node2D, Sprite2D, Label):", "Node2D");
+          if (!nodeType)
+            return;
+          const nodeName = prompt("Enter node name:", "NewNode");
+          if (!nodeName)
+            return;
+          const result = await sendCommand("add_node", {
+            scene_path: scenePath,
+            parent_path: node.path,
+            node_type: nodeType,
+            node_name: nodeName
+          });
+          if (result.ok) {
+            await refreshExpandedScene(scenePath);
+          } else {
+            alert("Failed to add node: " + (result.error || "Unknown error"));
+          }
+          break;
+        }
+        case "rename": {
+          const newName = prompt("Enter new name:", node.name);
+          if (!newName || newName === node.name)
+            return;
+          const result = await sendCommand("rename_node", {
+            scene_path: scenePath,
+            node_path: node.path,
+            new_name: newName
+          });
+          if (result.ok) {
+            await refreshExpandedScene(scenePath);
+          } else {
+            alert("Failed to rename: " + (result.error || "Unknown error"));
+          }
+          break;
+        }
+        case "duplicate": {
+          const result = await sendCommand("duplicate_node", {
+            scene_path: scenePath,
+            node_path: node.path
+          });
+          if (result.ok) {
+            await refreshExpandedScene(scenePath);
+          } else {
+            alert("Failed to duplicate: " + (result.error || "Unknown error"));
+          }
+          break;
+        }
+        case "move_up": {
+          if (node.index === void 0 || node.index <= 0) {
+            alert("Cannot move node up - already at top");
+            return;
+          }
+          const result = await sendCommand("reorder_node", {
+            scene_path: scenePath,
+            node_path: node.path,
+            new_index: node.index - 1
+          });
+          if (result.ok) {
+            await refreshExpandedScene(scenePath);
+          } else {
+            alert("Failed to move: " + (result.error || "Unknown error"));
+          }
+          break;
+        }
+        case "move_down": {
+          const result = await sendCommand("reorder_node", {
+            scene_path: scenePath,
+            node_path: node.path,
+            new_index: (node.index || 0) + 1
+          });
+          if (result.ok) {
+            await refreshExpandedScene(scenePath);
+          } else {
+            alert("Failed to move: " + (result.error || "Unknown error"));
+          }
+          break;
+        }
+        case "delete": {
+          if (node.path === ".") {
+            alert("Cannot delete root node");
+            return;
+          }
+          if (!confirm(`Delete node "${node.name}" and all its children?`))
+            return;
+          const result = await sendCommand("remove_node", {
+            scene_path: scenePath,
+            node_path: node.path
+          });
+          if (result.ok) {
+            closeSceneNodePanel();
+            setSelectedSceneNode(null);
+            await refreshExpandedScene(scenePath);
+          } else {
+            alert("Failed to delete: " + (result.error || "Unknown error"));
+          }
+          break;
+        }
+      }
+    } catch (err) {
+      console.error("Scene action failed:", err);
+      alert("Action failed: " + err.message);
+    }
+  }
+  async function refreshExpandedScene(scenePath) {
+    const result = await sendCommand("get_scene_hierarchy", { scene_path: scenePath });
+    if (result.ok) {
+      setExpandedSceneHierarchy(result.hierarchy);
+      draw();
+    }
+  }
+  function startInlineRename(screenX, screenY, node, scenePath) {
+    const existingInput = document.getElementById("inline-rename-input");
+    if (existingInput)
+      existingInput.remove();
+    const input = document.createElement("input");
+    input.id = "inline-rename-input";
+    input.type = "text";
+    input.value = node.name;
+    input.style.cssText = `
+    position: fixed;
+    left: ${screenX - 50}px;
+    top: ${screenY - 12}px;
+    width: 120px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-family: -apple-system, system-ui, sans-serif;
+    font-weight: 600;
+    background: #242428;
+    border: 2px solid #7aa2f7;
+    border-radius: 4px;
+    color: #e8e4df;
+    z-index: 1000;
+    outline: none;
+  `;
+    document.body.appendChild(input);
+    input.focus();
+    input.select();
+    async function finishRename() {
+      const newName = input.value.trim();
+      input.remove();
+      if (newName && newName !== node.name) {
+        try {
+          const result = await sendCommand("rename_node", {
+            scene_path: scenePath,
+            node_path: node.path,
+            new_name: newName
+          });
+          if (result.ok) {
+            await refreshExpandedScene(scenePath);
+          } else {
+            alert("Failed to rename: " + (result.error || "Unknown error"));
+          }
+        } catch (err) {
+          alert("Failed to rename: " + err.message);
+        }
+      }
+    }
+    input.addEventListener("blur", finishRename);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        input.blur();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        input.value = node.name;
+        input.blur();
+      }
+    });
+  }
+  window.sceneNodeAction = sceneNodeAction;
+
+  // src/visualizer/modals.js
+  var contextMenu;
+  function initModals() {
+    contextMenu = document.getElementById("context-menu");
+    initContextMenu();
+  }
+  function initContextMenu() {
+    const canvas2 = getCanvas();
+    canvas2.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      contextMenu.style.left = e.clientX + "px";
+      contextMenu.style.top = e.clientY + "px";
+      contextMenu.classList.add("visible");
+    });
+    document.addEventListener("click", (e) => {
+      if (!contextMenu.contains(e.target)) {
+        contextMenu.classList.remove("visible");
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        contextMenu.classList.remove("visible");
+        closeNewScriptModal();
+      }
+    });
+  }
+  window.createNewScript = function() {
+    contextMenu.classList.remove("visible");
+    document.getElementById("new-script-modal").style.display = "flex";
+    document.getElementById("new-script-path").focus();
+  };
+  window.closeNewScriptModal = function() {
+    document.getElementById("new-script-modal").style.display = "none";
+  };
+  function closeNewScriptModal() {
+    document.getElementById("new-script-modal").style.display = "none";
+  }
+  window.submitNewScript = async function() {
+    const path = document.getElementById("new-script-path").value.trim();
+    const extendsType = document.getElementById("new-script-extends").value;
+    const className = document.getElementById("new-script-classname").value.trim();
+    if (!path) {
+      alert("Please enter a script path");
+      return;
+    }
+    if (!path.startsWith("res://") || !path.endsWith(".gd")) {
+      alert("Path must start with res:// and end with .gd");
+      return;
+    }
+    try {
+      const result = await sendCommand("create_script_file", {
+        path,
+        extends: extendsType,
+        class_name: className || ""
+      });
+      if (result.ok) {
+        closeNewScriptModal();
+        refreshProject();
+      } else {
+        alert("Failed to create script: " + (result.error || "Unknown error"));
+      }
+    } catch (err) {
+      alert("Failed to create script: " + err.message);
+    }
+  };
+  window.refreshProject = async function() {
+    contextMenu.classList.remove("visible");
+    try {
+      const result = await sendCommand("refresh_map", {});
+      if (result.ok && result.project_map) {
+        const newNodes = result.project_map.nodes.map((n, i) => ({
+          ...n,
+          x: nodes[i]?.x || 0,
+          y: nodes[i]?.y || 0,
+          color: getFolderColor(n.folder),
+          highlighted: true,
+          visible: true
+        }));
+        nodes.length = 0;
+        nodes.push(...newNodes);
+        edges.length = 0;
+        edges.push(...result.project_map.edges);
+        initLayout();
+        draw();
+      }
+    } catch (err) {
+      console.error("Failed to refresh:", err);
+    }
+  };
+  function refreshProject() {
+    window.refreshProject();
+  }
+  window.resetLayout = function() {
+    contextMenu.classList.remove("visible");
+    clearPositions();
+    initLayout();
+    fitToView(nodes);
+    draw();
+  };
+  window.switchView = function(view) {
+    const currentViewTab = document.querySelector("#view-tabs button.active")?.textContent.toLowerCase();
+    if (view === currentViewTab)
+      return;
+    if (view === "scripts") {
+      closeSceneNodePanel();
+      setExpandedScene(null);
+      setExpandedSceneHierarchy(null);
+      setSelectedSceneNode(null);
+      setHoveredSceneNode(null);
+      const backBtn = document.getElementById("scene-back-btn");
+      if (backBtn)
+        backBtn.style.display = "none";
+      const legend = document.getElementById("legend");
+      if (legend)
+        legend.classList.remove("hidden");
+    } else {
+      closePanel();
+    }
+    setCurrentView(view);
+    document.querySelectorAll("#view-tabs button").forEach((btn) => {
+      btn.classList.toggle("active", btn.textContent.toLowerCase() === view);
+    });
+    const searchInput = document.getElementById("search");
+    if (searchInput) {
+      searchInput.placeholder = view === "scripts" ? "Search scripts..." : "Search scenes...";
+    }
+    if (view === "scenes") {
+      loadSceneView();
+    } else {
+      updateStats();
+      draw();
+    }
+  };
+  async function loadSceneView() {
+    try {
+      const result = await sendCommand("map_scenes", { root: "res://" });
+      if (result.ok) {
+        setSceneData(result.scene_map);
+        updateStats();
+        draw();
+      } else {
+        console.error("Failed to load scenes:", result.error);
+        alert("Failed to load scenes: " + (result.error || "Unknown error"));
+      }
+    } catch (err) {
+      console.error("Failed to load scenes:", err);
+      draw();
+    }
+  }
+
+  // src/visualizer/usages.js
+  window.showDeleteUsages = async function(index, isExport, type) {
+    let itemName = "";
+    if (type === "signal") {
+      const sig = selectedNode.signals[index];
+      itemName = typeof sig === "string" ? sig : sig.name;
+    } else if (type === "function") {
+      const func = selectedNode.functions[index];
+      itemName = func?.name || "";
+    } else {
+      const vars = selectedNode.variables.filter((v) => v.exported === isExport);
+      itemName = vars[index]?.name || "";
+    }
+    setPendingDelete({ index, isExport, type, itemName, declaringNode: selectedNode });
+    const usages = findUsagesSmart(itemName, type);
+    setCurrentUsages(usages);
+    if (usages.length === 0) {
+      await performDelete(index, isExport, type, itemName);
+      return;
+    }
+    renderUsagePanel();
+  };
+  function renderUsagePanel() {
+    if (!pendingDelete)
+      return;
+    const { itemName, type } = pendingDelete;
+    const panel = document.getElementById("usage-float-panel");
+    const titleEl = document.getElementById("ufp-title");
+    const countEl = document.getElementById("ufp-count");
+    const listEl = document.getElementById("ufp-list");
+    const deleteBtn = document.getElementById("ufp-delete-btn");
+    const typeLabel = type === "signal" ? "Signal" : type === "function" ? "Function" : "Variable";
+    titleEl.innerHTML = `\u26A0 Delete ${typeLabel}: <span style="color:#f38ba8;font-weight:600">${itemName}</span>`;
+    if (currentUsages.length === 0) {
+      countEl.innerHTML = `<span style="color:#a6e3a1">\u2713 All usages fixed! Safe to delete.</span>`;
+      listEl.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted);">No more usages found</div>';
+      deleteBtn.textContent = "Delete Now";
+      deleteBtn.style.background = "rgba(166, 227, 161, 0.2)";
+      deleteBtn.style.color = "#a6e3a1";
+      deleteBtn.style.borderColor = "rgba(166, 227, 161, 0.4)";
+    } else {
+      countEl.innerHTML = `Found <span class="count-num">${currentUsages.length}</span> usage${currentUsages.length > 1 ? "s" : ""} \u2014 click to navigate`;
+      listEl.innerHTML = currentUsages.map((u, i) => {
+        const highlightedCode = highlightUsageInCode(u.code, itemName);
+        const fileName = u.file.split("/").pop().replace(".gd", "");
+        return `
+        <div class="ufp-item"
+             data-usage-index="${i}"
+             data-file="${u.file}"
+             data-line="${u.line}"
+             data-func="${u.funcName || ""}"
+             onclick="navigateToUsage(this)">
+          <div class="ufp-loc">
+            <span class="ufp-func">${u.funcName || "unknown"}</span>
+            <span class="ufp-line">line ${u.line}</span>
+          </div>
+          <div class="ufp-code">${highlightedCode}</div>
+          <div class="ufp-file">${fileName}.gd</div>
+        </div>
+      `;
+      }).join("");
+      deleteBtn.textContent = "Delete Anyway";
+      deleteBtn.style.background = "";
+      deleteBtn.style.color = "";
+      deleteBtn.style.borderColor = "";
+    }
+    deleteBtn.onclick = () => forceDeleteFromPanel();
+    if (!panel.dataset.positioned) {
+      const detailPanel2 = document.getElementById("detail-panel");
+      const detailWidth = detailPanel2.offsetWidth;
+      panel.style.right = detailWidth + 20 + "px";
+      panel.style.top = "80px";
+      panel.style.left = "auto";
+    }
+    panel.classList.add("visible");
+    initUsagePanelDrag();
+    initUsagePanelResize();
+  }
+  window.refreshUsages = function() {
+    if (!pendingDelete)
+      return;
+    const { itemName, type } = pendingDelete;
+    const usages = findUsagesSmart(itemName, type);
+    setCurrentUsages(usages);
+    renderUsagePanel();
+  };
+  var ufpDragging = false;
+  var ufpDragStart = { x: 0, y: 0 };
+  var ufpPanelStart = { x: 0, y: 0 };
+  function initUsagePanelDrag() {
+    const header = document.getElementById("ufp-header");
+    const panel = document.getElementById("usage-float-panel");
+    header.onmousedown = (e) => {
+      if (e.target.tagName === "BUTTON")
+        return;
+      ufpDragging = true;
+      panel.classList.add("dragging");
+      ufpDragStart = { x: e.clientX, y: e.clientY };
+      const rect = panel.getBoundingClientRect();
+      ufpPanelStart = { x: rect.left, y: rect.top };
+      document.addEventListener("mousemove", onUfpDrag);
+      document.addEventListener("mouseup", onUfpDragEnd);
+    };
+  }
+  function onUfpDrag(e) {
+    if (!ufpDragging)
+      return;
+    const panel = document.getElementById("usage-float-panel");
+    const dx = e.clientX - ufpDragStart.x;
+    const dy = e.clientY - ufpDragStart.y;
+    const newX = ufpPanelStart.x + dx;
+    const newY = ufpPanelStart.y + dy;
+    panel.style.left = Math.max(0, newX) + "px";
+    panel.style.top = Math.max(0, newY) + "px";
+    panel.style.right = "auto";
+    panel.dataset.positioned = "true";
+  }
+  function onUfpDragEnd() {
+    ufpDragging = false;
+    document.getElementById("usage-float-panel")?.classList.remove("dragging");
+    document.removeEventListener("mousemove", onUfpDrag);
+    document.removeEventListener("mouseup", onUfpDragEnd);
+  }
+  var ufpResizing = false;
+  var ufpResizeStart = { x: 0, y: 0, w: 0, h: 0 };
+  function initUsagePanelResize() {
+    const resizeHandle = document.getElementById("ufp-resize");
+    const panel = document.getElementById("usage-float-panel");
+    resizeHandle.onmousedown = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ufpResizing = true;
+      ufpResizeStart = {
+        x: e.clientX,
+        y: e.clientY,
+        w: panel.offsetWidth,
+        h: panel.offsetHeight
+      };
+      document.addEventListener("mousemove", onUfpResize);
+      document.addEventListener("mouseup", onUfpResizeEnd);
+    };
+  }
+  function onUfpResize(e) {
+    if (!ufpResizing)
+      return;
+    const panel = document.getElementById("usage-float-panel");
+    const dw = e.clientX - ufpResizeStart.x;
+    const dh = e.clientY - ufpResizeStart.y;
+    const newW = Math.max(300, ufpResizeStart.w + dw);
+    const newH = Math.max(200, ufpResizeStart.h + dh);
+    panel.style.width = newW + "px";
+    panel.style.height = newH + "px";
+  }
+  function onUfpResizeEnd() {
+    ufpResizing = false;
+    document.removeEventListener("mousemove", onUfpResize);
+    document.removeEventListener("mouseup", onUfpResizeEnd);
+  }
+  function highlightUsageInCode(code, name) {
+    const escaped = esc(code);
+    const regex = new RegExp(`\\b(${name})\\b`, "g");
+    return escaped.replace(regex, '<span class="highlight">$1</span>');
+  }
+  window.closeUsagePanel = function() {
+    const panel = document.getElementById("usage-float-panel");
+    panel.classList.remove("visible");
+    panel.dataset.positioned = "";
+    panel.style.left = "";
+    panel.style.right = "";
+    panel.style.top = "";
+    setPendingDelete(null);
+    setCurrentUsages([]);
+  };
+  window.navigateToUsage = function(el) {
+    document.querySelectorAll("#ufp-list .ufp-item").forEach((item) => {
+      item.classList.remove("active");
+    });
+    el.classList.add("active");
+    const file = el.dataset.file;
+    const line = parseInt(el.dataset.line);
+    const funcName = el.dataset.func;
+    const targetNode = nodes.find((n) => n.path === file);
+    if (!targetNode) {
+      console.log("Node not found for file:", file);
+      return;
+    }
+    if (selectedNode?.path !== targetNode.path) {
+      openPanel(targetNode);
+      setTimeout(() => {
+        if (funcName) {
+          expandAndHighlightFunction(funcName, line, targetNode);
+        }
+      }, 150);
+    } else {
+      if (funcName) {
+        expandAndHighlightFunction(funcName, line, targetNode);
+      }
+    }
+  };
+  async function performDelete(index, isExport, type, itemName) {
+    try {
+      if (type === "signal") {
+        await sendCommand("modify_signal", {
+          path: selectedNode.path,
+          action: "delete",
+          old_name: itemName
+        });
+        selectedNode.signals.splice(index, 1);
+      } else if (type === "function") {
+        await sendCommand("modify_function_delete", {
+          path: selectedNode.path,
+          name: itemName
+        });
+        selectedNode.functions.splice(index, 1);
+      } else {
+        await sendCommand("modify_variable", {
+          path: selectedNode.path,
+          action: "delete",
+          old_name: itemName
+        });
+        const vars = selectedNode.variables.filter((v) => v.exported === isExport);
+        const actualIndex = selectedNode.variables.findIndex((v) => v.name === vars[index].name);
+        if (actualIndex !== -1)
+          selectedNode.variables.splice(actualIndex, 1);
+      }
+      console.log(`Deleted ${type} "${itemName}" from ${selectedNode.path}`);
+      window.closeUsagePanel();
+      openPanel(selectedNode);
+    } catch (err) {
+      console.error("Failed to delete:", err);
+      alert("Failed to delete: " + err.message);
+    }
+  }
+  async function forceDeleteFromPanel() {
+    if (!pendingDelete)
+      return;
+    const { index, isExport, type, itemName } = pendingDelete;
+    await performDelete(index, isExport, type, itemName);
+  }
+  function findUsagesSmart(name, type) {
+    const usages = [];
+    const builtinMethods = ["new", "free", "queue_free", "get", "set", "call", "emit", "connect", "disconnect"];
+    const isBuiltinMethod = builtinMethods.includes(name);
+    for (const node of nodes) {
+      const isDeclaringNode = node.path === selectedNode?.path;
+      for (const func of node.functions || []) {
+        if (!func.body)
+          continue;
+        const lines = func.body.split("\n");
+        lines.forEach((line, i) => {
+          const lineNum = (func.line || 1) + i;
+          if (isDeclaringNode && isDeclarationLine(line, name, type)) {
+            return;
+          }
+          if (isActualUsage(line, name, type, isBuiltinMethod)) {
+            usages.push({
+              file: node.path,
+              line: lineNum,
+              code: line.trim(),
+              funcName: func.name
+            });
+          }
+        });
+      }
+    }
+    return usages;
+  }
+  function isDeclarationLine(line, name, type) {
+    const trimmed = line.trim();
+    if (type === "variable") {
+      return new RegExp(`^(@export\\s+)?(@onready\\s+)?var\\s+${name}\\b`).test(trimmed);
+    }
+    if (type === "signal") {
+      return new RegExp(`^signal\\s+${name}\\b`).test(trimmed);
+    }
+    if (type === "function") {
+      return new RegExp(`^func\\s+${name}\\s*\\(`).test(trimmed);
+    }
+    return false;
+  }
+  function isActualUsage(line, name, type, isBuiltinMethod) {
+    const namePattern = `\\b${name}\\b`;
+    if (!new RegExp(namePattern).test(line)) {
+      return false;
+    }
+    if (isBuiltinMethod) {
+      const constructorPattern = new RegExp(`\\.${name}\\s*\\(`);
+      if (constructorPattern.test(line)) {
+        const withoutConstructors = line.replace(new RegExp(`\\w+\\.${name}\\s*\\([^)]*\\)`, "g"), "");
+        if (!new RegExp(namePattern).test(withoutConstructors)) {
+          return false;
+        }
+      }
+    }
+    if (type === "signal") {
+      return new RegExp(`\\b${name}\\s*\\.\\s*(emit|connect|disconnect)\\b`).test(line) || new RegExp(`\\.${name}\\s*\\.\\s*(connect|emit)`).test(line);
+    }
+    if (type === "function") {
+      return new RegExp(`\\b${name}\\s*\\(`).test(line);
+    }
+    return true;
+  }
+
+  // src/visualizer/main.js
+  function init() {
+    connectWebSocket();
+    const { positionsRestored } = initCanvas();
+    initPanel();
+    initModals();
+    initEvents();
+    updateStats();
+    const zoomIndicator2 = document.getElementById("zoom-indicator");
+    if (nodes.length === 0) {
+      const ctx2 = document.getElementById("canvas").getContext("2d");
+      const W2 = window.innerWidth;
+      const H2 = window.innerHeight;
+      ctx2.font = "18px -apple-system, system-ui, sans-serif";
+      ctx2.fillStyle = "#706c66";
+      ctx2.textAlign = "center";
+      ctx2.fillText("No scripts found in project", W2 / 2, H2 / 2);
+      zoomIndicator2.style.display = "none";
+    } else {
+      if (positionsRestored) {
+        updateZoomIndicator();
+      } else {
+        initLayout();
+        fitToView(nodes);
+      }
+      draw();
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
+</script>
+</body>
+</html>
