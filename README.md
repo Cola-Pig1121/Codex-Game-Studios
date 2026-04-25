@@ -1,4 +1,4 @@
-﻿<p align="center">
+﻿﻿<p align="center">
   <h1 align="center">Codex Game Studios</h1>
   <p align="center">
     Turn a single Codex session into a full game development studio.
@@ -146,7 +146,7 @@ All hooks fail gracefully if optional tools are missing — nothing breaks, you 
 
 1. **Clone or use as template**:
    ```bash
-   git clone https://github.com/Donchitos/Codex-Code-Game-Studios.git my-game
+   git clone https://github.com/Cola-Pig1121/Codex-Code-Game-Studios.git my-game
    cd my-game
    ```
 
