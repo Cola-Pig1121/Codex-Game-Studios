@@ -1,4 +1,4 @@
-﻿﻿<p align="center">
+﻿﻿﻿<p align="center">
   <h1 align="center">Codex Game Studios</h1>
   <p align="center">
     Turn a single Codex session into a full game development studio.
@@ -13,12 +13,13 @@
   <a href=".codex/skills"><img src="https://img.shields.io/badge/skills-72-green" alt="72 Skills"></a>
   <a href=".codex/hooks"><img src="https://img.shields.io/badge/hooks-12-orange" alt="12 Hooks"></a>
   <a href=".codex/rules"><img src="https://img.shields.io/badge/rules-11-red" alt="11 Rules"></a>
-  <a href="https://docs.anthropic.com/en/docs/Codex-code"><img src="https://img.shields.io/badge/built%20for-Codex%20Code-f5f5f5?logo=anthropic" alt="Built for Codex"></a>
   <a href="https://www.buymeacoffee.com/donchitos3"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20this%20project-FFDD00?logo=buymeacoffee&logoColor=black" alt="Buy Me a Coffee"></a>
   <a href="https://github.com/sponsors/Donchitos"><img src="https://img.shields.io/badge/GitHub%20Sponsors-Support%20this%20project-ea4aaa?logo=githubsponsors&logoColor=white" alt="GitHub Sponsors"></a>
 </p>
 
 ---
+
+Based on [Donchitos/Claude-Code-Game-Studios](https://github.com/Donchitos/Claude-Code-Game-Studios)
 
 ## Why This Exists
 
@@ -137,7 +138,7 @@ Type `/` in Codex to access all 72 skills:
 ### Prerequisites
 
 - [Git](https://git-scm.com/)
-- [Codex](https://docs.anthropic.com/en/docs/Codex-code) (`npm install -g @anthropic-ai/Codex-code`)
+- Codex
 - **Recommended**: [jq](https://jqlang.github.io/jq/) (for hook validation) and Python 3 (for JSON validation)
 
 All hooks fail gracefully if optional tools are missing — nothing breaks, you just lose validation.
@@ -146,7 +147,7 @@ All hooks fail gracefully if optional tools are missing — nothing breaks, you 
 
 1. **Clone or use as template**:
    ```bash
-   git clone https://github.com/Cola-Pig1121/Codex-Code-Game-Studios.git my-game
+   git clone https://github.com/Cola-Pig1121/Codex-Game-Studios.git my-game
    cd my-game
    ```
 
@@ -283,8 +284,8 @@ Tested on **Windows 10** with Git Bash. All hooks use POSIX-compatible patterns 
 
 ## Community
 
-- **Discussions** — [GitHub Discussions](https://github.com/Donchitos/Codex-Code-Game-Studios/discussions) for questions, ideas, and showcasing what you've built
-- **Issues** — [Bug reports and feature requests](https://github.com/Donchitos/Codex-Code-Game-Studios/issues)
+- **Discussions** — [GitHub Discussions](https://github.com/Cola-Pig1121/Codex-Game-Studios/discussions) for questions, ideas, and showcasing what you've built
+- **Issues** — [Bug reports and feature requests](https://github.com/Cola-Pig1121/Codex-Game-Studios/issues)
 
 ---
 
@@ -305,7 +306,7 @@ Sponsorships help fund time spent maintaining skills, adding new agents, keeping
 
 ---
 
-*Built for Codex. Maintained and extended — contributions welcome via [GitHub Discussions](https://github.com/Donchitos/Codex-Code-Game-Studios/discussions).*
+*Built for Codex. Maintained and extended — contributions welcome via [GitHub Discussions](https://github.com/Cola-Pig1121/Codex-Game-Studios/discussions).*
 
 ## License
 
